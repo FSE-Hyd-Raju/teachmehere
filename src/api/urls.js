@@ -1,8 +1,8 @@
-export const REGISTRATION_URL = 'https://www.theskilldb.org/account/signup';
-export const RESET_PASSWORD_URL = 'https://www.theskilldb.org/account/reset-password';
+export const REGISTRATION_URL = 'https://www.themoviedb.org/account/signup';
+export const RESET_PASSWORD_URL = 'https://www.themoviedb.org/account/reset-password';
 
 export const API_KEY = '16920a1e34e3b08e3a720c33cfc1341c';
-export const ROOT_URL = 'https://api.theskilldb.org/3';
+export const ROOT_URL = 'https://api.themoviedb.org/3';
 const withKey = url => `${ROOT_URL}${url}?api_key=${API_KEY}`;
 
 // Account
