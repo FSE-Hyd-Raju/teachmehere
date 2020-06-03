@@ -25,25 +25,28 @@ export const requestToCreateNewGuestUser = () =>
 export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
   new Promise(async (resolve, reject) => {
     try {
-      const {
-        data: { request_token },
-      } = await axios.get(NEW_REQUEST_TOKEN);
+      // const {
+      //   data: { request_token },
+      // } = await axios.get(NEW_REQUEST_TOKEN);
 
-      await axios.post(VALIDATE_TOKEN_WITH_LOGIN, {
-        request_token,
-        username,
-        password,
+      // alert(request_token)
+
+      // alert(username, password)
+      const response = await axios.post(VALIDATE_TOKEN_WITH_LOGIN, {
+        devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+        email: username,
+        password: password,
       });
+      //alert(JSON.stringify(response.data[0]._id))
+      // console.log(response.json())
+      // const {
+      //   data: { session_id },
+      // } = await axios.post(NEW_SESSION, { request_token });
 
-      const {
-        data: { session_id },
-      } = await axios.post(NEW_SESSION, { request_token });
+      const accountId = JSON.stringify(response.data[0]._id)
 
-      const {
-        data: { id: accountId },
-      } = await axios.get(ACCOUNT_DETAILS, { params: { session_id } });
-
-      resolve({ accountId, sessionId: session_id });
+      // alert(accountId)
+      resolve({ accountId });
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
       reject(error);

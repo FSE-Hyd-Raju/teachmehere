@@ -6,6 +6,8 @@ export default {
   AuthWelcome: 'AuthWelcome',
   AuthLogin: 'AuthLogin',
 
+  AuthSignup: 'AuthSignup',
+
   Settings: 'Settings',
   SkillListScreen: 'SkillsListScreen',
   SkillDetailsScreen: 'SkillDetailsScreen',

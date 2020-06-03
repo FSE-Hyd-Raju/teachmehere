@@ -80,14 +80,13 @@ export const loginUser = ({
   dispatch({ type: Auth.LOGIN_USER_ATTEMPT });
 
   try {
-    const { accountId, sessionId } = await requestToCreateNewAuthenticatedUser({
+    const { accountId } = await requestToCreateNewAuthenticatedUser({
       username,
       password,
     });
-
     dispatch({
       type: Auth.LOGIN_USER_SUCCESS,
-      payload: createUser({ accountId, username, sessionId }),
+      payload: createUser({ accountId, username }),
     });
     onSuccess();
   } catch (error) {
@@ -103,9 +102,11 @@ export const loginUser = ({
 };
 
 // Local functions
-const createUser = ({ accountId, sessionId, username }) => {
+const createUser = ({ accountId, username }) => {
+
   const isGuest = !accountId;
-  const user = { isGuest, sessionId, accountId, username };
+  const user = { isGuest, accountId, username };
+
   Config.logGeneral && console.log('Creating user: ', user);
   stSaveUser(user);
   return user;

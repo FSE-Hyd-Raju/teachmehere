@@ -52,7 +52,7 @@ class AuthLogin extends React.Component {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContentContainer}>
           <LoginInput
-            label="Username"
+            label="Email"
             style={styles.input}
             subtext={loginUsernameError}
             error={loginUsernameError.length > 0}
