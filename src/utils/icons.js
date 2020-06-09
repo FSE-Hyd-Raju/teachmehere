@@ -136,7 +136,7 @@ export const getHeaderBackIcon = () => (
 // ------------------------------------------------------
 // Routes
 // ------------------------------------------------------
-export const getNavbarBrowseIcon = ({ tintColor }) => (
+export const getNavbarHomeIcon = ({ tintColor }) => (
   <IconEntypo name="home" color={tintColor} size={iconSize * 0.9} />
 );
 

@@ -59,7 +59,6 @@ class SkillDetailsButtons extends React.PureComponent {
 
   initialSkillFetch() {
     const { skill, user, refetch } = this.props;
-    if (user.isGuest) return;
 
     refetch
       .fetchUntilSuccess(() => fetchSkillAccountState({ skill }))
@@ -76,7 +75,7 @@ class SkillDetailsButtons extends React.PureComponent {
   render() {
     const { detailedSkill, user } = this.props;
     const { inWatchlist, inFavorite, isFavoriteFetching, isWatchlistFetching } = this.state;
-    const isAuthenticated = !user.isGuest;
+    const isAuthenticated = true;
     const imdbDisabled = !detailedSkill;
 
     return (

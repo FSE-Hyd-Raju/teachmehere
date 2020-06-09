@@ -10,7 +10,7 @@ import {
 import Splash from './screens/Splash';
 import AuthWelcome from './screens/Auth/AuthWelcome';
 import AuthLogin from './screens/Auth/AuthLogin';
-import Browse from './screens/Browse';
+import Home from './screens/Home';
 import Explore from './screens/Explore';
 import Library from './screens/Library';
 import Settings from './screens/Settings';
@@ -21,7 +21,7 @@ import NavbarWrapper from './components/NavbarWrapper';
 import NavbarButtonWrapper from './components/NavbarButtonWrapper';
 import Header from './components/Header';
 import {
-  getNavbarBrowseIcon,
+  getNavbarHomeIcon,
   getNavbarExploreIcon,
   getNavbarLibraryIcon,
 } from './utils/icons';
@@ -31,7 +31,7 @@ import RouteNames from './RouteNames';
 import Theme from './Theme';
 
 const TabNames = {
-  browse: 'Browse',
+  home: 'Home',
   explore: 'Explore',
   library: 'Library',
 };
@@ -54,9 +54,9 @@ const createDefaultStackNavigator = (screensObject, customOptions) =>
 // Navigation
 const BottomTabs = createBottomTabNavigator(
   {
-    [TabNames.browse]: {
+    [TabNames.home]: {
       screen: createDefaultStackNavigator({
-        Browse,
+        Home,
         [RouteNames.SkillListScreen]: SkillsListScreen,
         [RouteNames.SkillDetailsScreen]: SkillDetailsScreen,
       }),
@@ -91,8 +91,8 @@ const BottomTabs = createBottomTabNavigator(
       tabBarIcon: ({ tintColor }) => {
         const { routeName } = navigation.state;
         switch (routeName) {
-          case TabNames.browse:
-            return getNavbarBrowseIcon({ tintColor });
+          case TabNames.home:
+            return getNavbarHomeIcon({ tintColor });
           case TabNames.explore:
             return getNavbarExploreIcon({ tintColor });
           case TabNames.library:

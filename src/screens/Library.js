@@ -10,7 +10,7 @@ import { fetchFavoriteSkills, fetchWatchlistSkills } from '../api/skills';
 import {
   getLibrarySettingsIcon,
   getLibraryWatchlistIcon,
-  getLibraryFavoriteIcon
+  getLibraryFavoriteIcon,
 } from '../utils/icons';
 import Theme from '../Theme';
 
@@ -20,18 +20,17 @@ class Library extends React.Component {
       <TouchableScale
         onPress={() => {
           navigation.navigate(RouteNames.Settings);
-        }}
-      >
+        }}>
         {getLibrarySettingsIcon()}
       </TouchableScale>
-    )
+    ),
   });
 
   onWatchlistPressed = () => {
     const { navigation } = this.props;
     navigation.navigate(RouteNames.SkillListScreen, {
       title: 'Watchlist',
-      fetchFunction: fetchWatchlistSkills
+      fetchFunction: fetchWatchlistSkills,
     });
   };
 
@@ -39,7 +38,7 @@ class Library extends React.Component {
     const { navigation } = this.props;
     navigation.navigate(RouteNames.SkillListScreen, {
       title: 'Favorite Skills',
-      fetchFunction: fetchFavoriteSkills
+      fetchFunction: fetchFavoriteSkills,
     });
   };
 
@@ -48,24 +47,20 @@ class Library extends React.Component {
 
     return (
       <View style={styles.container}>
-        {user.isGuest ? (
-          <GuestInfo />
-        ) : (
-          <View>
-            <BlockButton
-              style={styles.button}
-              Icon={getLibraryWatchlistIcon()}
-              text="My Watchlist"
-              onPress={this.onWatchlistPressed}
-            />
-            <BlockButton
-              style={styles.button}
-              Icon={getLibraryFavoriteIcon()}
-              text="My Favorite Skills"
-              onPress={this.onFavoritesPressed}
-            />
-          </View>
-        )}
+        <View>
+          <BlockButton
+            style={styles.button}
+            Icon={getLibraryWatchlistIcon()}
+            text="My Watchlist"
+            onPress={this.onWatchlistPressed}
+          />
+          <BlockButton
+            style={styles.button}
+            Icon={getLibraryFavoriteIcon()}
+            text="My Favorite Skills"
+            onPress={this.onFavoritesPressed}
+          />
+        </View>
       </View>
     );
   }
@@ -74,16 +69,16 @@ class Library extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background
+    backgroundColor: Theme.colors.background,
   },
   button: {
-    height: 64
-  }
+    height: 64,
+  },
 });
 
 const mapStateToProps = ({ auth: { user } }) => ({ user });
 
 export default connect(
   mapStateToProps,
-  {}
+  {},
 )(withDelayedLoading(Library));

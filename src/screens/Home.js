@@ -32,12 +32,12 @@ const BROWSE_SECTIONS = [
   { title: 'Top Rated', fetchFunction: getFetchFunction(getTopRatedSkillsUrl) },
 ];
 
-class Browse extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
 
     const sectionsSkills = BROWSE_SECTIONS.reduce((obj, section) => {
-      obj[section.title] = []; // eslint-disable-line
+      obj[section.title] = [];
       return obj;
     }, {});
 
@@ -53,7 +53,6 @@ class Browse extends React.Component {
   }
 
   componentDidMount() {
-    // eslint-disable-next-line
     requestAnimationFrame(() => this.initialSectionsFetch());
   }
 
@@ -115,7 +114,7 @@ class Browse extends React.Component {
     );
   };
 
-  renderBrowseSections() {
+  renderHomeSections() {
     const { sectionsSkills } = this.state;
     const keyExtractor = section => section.title;
 
@@ -151,7 +150,7 @@ class Browse extends React.Component {
         />
 
         <View style={styles.bottomContainer} {...this.panResponder.panHandlers}>
-          {this.renderBrowseSections()}
+          {this.renderHomeSections()}
           {isSearchBlockFocused && (
             <SkillSearchResults
               initialSearch={isInitialSearch}
@@ -183,4 +182,4 @@ const mapStateToProps = ({ auth: { user } }) => ({ user });
 export default connect(
   mapStateToProps,
   {},
-)(withNavigationFocus(withRefetch(withDelayedLoading(Browse))));
+)(withNavigationFocus(withRefetch(withDelayedLoading(Home))));

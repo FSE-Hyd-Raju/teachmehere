@@ -1,0 +1,181 @@
+[
+    {
+        "id": "5ea860ada27c2d818c4348b8",
+        "uid": "5e9de3e3e34f0e53a70e0bd3",
+        "coursename": "ias",
+        "courselevel": "medium",
+        "category": "exams",
+        "totalhours": 10,
+        "price": {
+            "oneonone": 2000,
+            "group": {
+                "members": 6,
+                "price": 1000
+            }
+        },
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "rating": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
+        },
+        "avgrating": 5,
+        "usersrated": 0,
+        "createddate": "2020-04-28 22:28:21.587000",
+        "updateddate": "2020-04-28 22:28:21.587000"
+    },
+    {
+        "id": "5ea3d6e299306cc7f99b9d4c",
+        "uid": "5ed1d67917fb06f371418c64",
+        "coursename": "angular",
+        "courselevel": "medium",
+        "category": "software",
+        "totalhours": 10,
+        "price": {
+            "oneonone": 2000,
+            "group": {
+                "members": 6,
+                "price": 1000
+            }
+        },
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "avgrating": 4,
+        "usersrated": 0,
+        "createddate": "2020-04-25 11:51:22.705000",
+        "updateddate": "2020-04-25 11:51:22.705000"
+    },
+    {
+        "id": "5ea3239be75b624c81f71f56",
+        "uid": "5ed1d67917fb06f371418c64",
+        "coursename": "angularjs",
+        "courselevel": "medium",
+        "category": "art",
+        "totalhours": 10,
+        "price": 2000,
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "rating": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 1
+        },
+        "avgrating": 5,
+        "usersrated": 1,
+        "createddate": "2020-04-24 23:06:27.638000",
+        "updateddate": "2020-04-24 23:06:27.638000"
+    },
+    {
+        "id": "5ea860b5a27c2d818c4348b9",
+        "uid": "5e9de3e3e34f0e53a70e0bd3",
+        "coursename": "ips",
+        "courselevel": "medium",
+        "category": "exams",
+        "totalhours": 10,
+        "price": {
+            "oneonone": 2000,
+            "group": {
+                "members": 6,
+                "price": 1000
+            }
+        },
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "rating": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
+        },
+        "avgrating": 3,
+        "usersrated": 0,
+        "createddate": "2020-04-28 22:28:29.240000",
+        "updateddate": "2020-04-28 22:28:29.240000"
+    },
+    {
+        "id": "5ea8606ca27c2d818c4348b3",
+        "uid": "5eca4d33632665c9e0921f9d",
+        "coursename": "JS",
+        "courselevel": "medium",
+        "category": "software",
+        "totalhours": 10,
+        "price": {
+            "oneonone": 2000,
+            "group": {
+                "members": 6,
+                "price": 1000
+            }
+        },
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "rating": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
+        },
+        "avgrating": 3,
+        "usersrated": 0,
+        "createddate": "2020-04-28 22:27:16.404000",
+        "updateddate": "2020-04-28 22:27:16.404000"
+    },
+    {
+        "id": "5ea86093a27c2d818c4348b7",
+        "uid": "5ed1d67917fb06f371418c64",
+        "coursename": "nailart",
+        "courselevel": "medium",
+        "category": "art",
+        "totalhours": 10,
+        "price": {
+            "oneonone": 2000,
+            "group": {
+                "members": 6,
+                "price": 1000
+            }
+        },
+        "experience": 4,
+        "demo": "no",
+        "speakinglanguages": [
+            "telugu",
+            "english"
+        ],
+        "rating": {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
+        },
+        "avgrating": 5,
+        "usersrated": 0,
+        "createddate": "2020-04-28 22:27:55.555000",
+        "updateddate": "2020-04-28 22:27:55.555000"
+    }
+]

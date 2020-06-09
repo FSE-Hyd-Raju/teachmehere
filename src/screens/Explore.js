@@ -10,7 +10,7 @@ import Theme from '../Theme';
 class Explore extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const user = navigation.getParam('user', { isGuest: true });
-    return user.isGuest ? {} : { header: null };
+    return { header: null };
   };
 
   componentDidMount() {
@@ -23,14 +23,10 @@ class Explore extends React.Component {
 
     return (
       <View style={styles.container}>
-        {user.isGuest ? (
-          <GuestInfo />
-        ) : (
-          <View style={{ flex: 1 }}>
-            <StatusBarSpacer />
-            <ExploreSkillDeck />
-          </View>
-        )}
+        <View style={{ flex: 1 }}>
+          <StatusBarSpacer />
+          <ExploreSkillDeck />
+        </View>
       </View>
     );
   }
@@ -39,13 +35,13 @@ class Explore extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background
-  }
+    backgroundColor: Theme.colors.background,
+  },
 });
 
 const mapStateToProps = ({ auth: { user } }) => ({ user });
 
 export default connect(
   mapStateToProps,
-  {}
+  {},
 )(withDelayedLoading(Explore));
