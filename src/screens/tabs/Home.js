@@ -2,22 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withNavigationFocus } from 'react-navigation';
 import { View, FlatList, StyleSheet, PanResponder } from 'react-native';
-import SearchBlock from '../components/SearchBlock';
-import SkillsHorizontalScroll from '../components/SkillComponents/SkillsHorizontalScroll';
-import SkillSearchResults from '../components/SkillComponents/SkillSearchResults';
-import withRefetch from '../components/hoc/withRefetch';
-import withDelayedLoading from '../components/hoc/withDelayedLoading';
+import SearchBlock from '../../components/SearchBlock';
+import SkillsHorizontalScroll from '../../components/SkillComponents/SkillsHorizontalScroll';
+import SkillSearchResults from '../../components/SkillComponents/SkillSearchResults';
+import withRefetch from '../../components/hoc/withRefetch';
+import withDelayedLoading from '../../components/hoc/withDelayedLoading';
 import {
   getSectionFetchFunctionFromUrlGetter as getFetchFunction,
   getSearchFetchFunctionFromQuery,
-} from '../api/skills';
+} from '../../api/skills';
 import {
   getTrendingDailySkillsUrl,
   getTrendingWeeklySkillsUrl,
   getPopularSkillsUrl,
   getTopRatedSkillsUrl,
-} from '../api/urls';
-import Theme from '../Theme';
+} from '../../api/urls';
+import Theme from '../../Theme';
 
 const BROWSE_SECTIONS = [
   {

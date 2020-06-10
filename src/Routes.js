@@ -8,14 +8,14 @@ import {
 } from 'react-navigation';
 
 import Splash from './screens/Splash';
-import AuthLogin from './screens/Auth/AuthLogin';
-import Home from './screens/Home';
-import Search from './screens/Search';
-import Profile from './screens/Profile';
-import Post from './screens/Post';
-import Chat from './screens/Chat';
-import SkillsListScreen from './screens/Skill/SkillsListScreen';
-import SkillDetailsScreen from './screens/Skill/SkillDetailsScreen';
+import AuthLogin from './screens/login/Login';
+import Home from './screens/tabs/Home';
+import Search from './screens/tabs/Search';
+import Profile from './screens/tabs/Profile';
+import Post from './screens/tabs/Post';
+import Chat from './screens/tabs/Chat';
+import SkillsListScreen from './screens/skill/SkillsListScreen';
+import SkillDetailsScreen from './screens/skill/SkillDetailsScreen';
 
 import NavbarWrapper from './components/NavbarWrapper';
 import NavbarButtonWrapper from './components/NavbarButtonWrapper';
