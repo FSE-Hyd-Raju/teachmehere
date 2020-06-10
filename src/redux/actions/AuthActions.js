@@ -1,17 +1,17 @@
 import { Auth } from './types';
-import { validateUsername, validatePassword } from '../utils/validators';
+import { validateUsername, validatePassword } from '../../utils/validators';
 import {
   stSaveUser,
   stRemoveUser,
   stRemoveCurrentSkills,
-} from '../utils/storage';
+} from '../../utils/storage';
 import {
   requestToCreateNewGuestUser,
   requestToCreateNewAuthenticatedUser,
-} from '../api/auth';
-import { getTmdbErrorMessage } from '../api/codes';
-import RouteNames from '../RouteNames';
-import Config from '../Config';
+} from '../../api/auth';
+import { getTmdbErrorMessage } from '../../api/codes';
+import RouteNames from '../../RouteNames';
+import Config from '../../Config';
 
 export const clearLoginFields = () => ({ type: Auth.CLEAR_LOGIN_FIELDS });
 export const loadUserIntoRedux = user => ({

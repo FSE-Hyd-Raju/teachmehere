@@ -5,6 +5,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import IconEvilIcons from 'react-native-vector-icons/EvilIcons';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Theme from '../Theme';
 
@@ -171,5 +172,9 @@ export const getNavbarChatIcon = ({ tintColor }) => (
 );
 
 export const getNavbarPostIcon = ({ tintColor }) => (
-  <IconEntypo name="plus" color={tintColor} size={iconSize * 0.8} />
+  <Ionicons
+    name="md-add-circle-outline"
+    color={tintColor}
+    size={iconSize * 2.0}
+  />
 );

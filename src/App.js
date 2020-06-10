@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import { NetworkProvider } from 'react-native-offline';
 import { RootStack } from './Routes';
-import store from './store';
+import store from './redux/store';
 
 class App extends Component {
   render() {

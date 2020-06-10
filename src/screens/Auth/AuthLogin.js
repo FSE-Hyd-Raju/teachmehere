@@ -5,7 +5,7 @@ import {
   loginUsernameChanged,
   loginPasswordChanged,
   loginUser,
-} from '../../actions';
+} from '../../redux/actions';
 import { AppButton, PageSpinner } from '../../components/common';
 import AppToast from '../../components/AppToast';
 import LoginInput from '../../components/LoginInput';
