@@ -8,12 +8,12 @@ import {
 } from 'react-navigation';
 
 import Splash from './screens/Splash';
-import AuthWelcome from './screens/Auth/AuthWelcome';
 import AuthLogin from './screens/Auth/AuthLogin';
 import Home from './screens/Home';
-import Explore from './screens/Explore';
-import Library from './screens/Library';
-import Settings from './screens/Settings';
+import Search from './screens/Search';
+import Profile from './screens/Profile';
+import Post from './screens/Post';
+import Chat from './screens/Chat';
 import SkillsListScreen from './screens/Skill/SkillsListScreen';
 import SkillDetailsScreen from './screens/Skill/SkillDetailsScreen';
 
@@ -22,8 +22,10 @@ import NavbarButtonWrapper from './components/NavbarButtonWrapper';
 import Header from './components/Header';
 import {
   getNavbarHomeIcon,
-  getNavbarExploreIcon,
-  getNavbarLibraryIcon,
+  getNavbarSearchIcon,
+  getNavbarProfileIcon,
+  getNavbarChatIcon,
+  getNavbarPostIcon,
 } from './utils/icons';
 import { getFontStyleObject } from './utils/font';
 import { fromRightWithFade } from './utils/navigation';
@@ -32,8 +34,10 @@ import Theme from './Theme';
 
 const TabNames = {
   home: 'Home',
-  explore: 'Explore',
-  library: 'Library',
+  search: 'Search',
+  profile: 'Profile',
+  chat: 'Chat',
+  post: 'Post',
 };
 
 const defaultHeaderObject = {
@@ -61,15 +65,22 @@ const BottomTabs = createBottomTabNavigator(
         [RouteNames.SkillDetailsScreen]: SkillDetailsScreen,
       }),
     },
-    [TabNames.explore]: {
-      screen: createDefaultStackNavigator({ Explore }),
+    [TabNames.search]: {
+      screen: createDefaultStackNavigator({ Search }),
     },
-    [TabNames.library]: {
+    [TabNames.post]: {
       screen: createDefaultStackNavigator({
-        Library,
-        [RouteNames.Settings]: Settings,
-        [RouteNames.SkillListScreen]: SkillsListScreen,
-        [RouteNames.SkillDetailsScreen]: SkillDetailsScreen,
+        Post,
+      }),
+    },
+    [TabNames.chat]: {
+      screen: createDefaultStackNavigator({
+        Chat,
+      }),
+    },
+    [TabNames.profile]: {
+      screen: createDefaultStackNavigator({
+        Profile,
       }),
     },
   },
@@ -93,10 +104,14 @@ const BottomTabs = createBottomTabNavigator(
         switch (routeName) {
           case TabNames.home:
             return getNavbarHomeIcon({ tintColor });
-          case TabNames.explore:
-            return getNavbarExploreIcon({ tintColor });
-          case TabNames.library:
-            return getNavbarLibraryIcon({ tintColor });
+          case TabNames.search:
+            return getNavbarSearchIcon({ tintColor });
+          case TabNames.post:
+            return getNavbarPostIcon({ tintColor });
+          case TabNames.chat:
+            return getNavbarChatIcon({ tintColor });
+          case TabNames.profile:
+            return getNavbarProfileIcon({ tintColor });
           default:
             return null;
         }
@@ -112,7 +127,6 @@ const BottomTabs = createBottomTabNavigator(
 );
 
 const AuthStack = createDefaultStackNavigator({
-  [RouteNames.AuthWelcome]: { screen: AuthWelcome },
   [RouteNames.AuthLogin]: { screen: AuthLogin },
 });
 

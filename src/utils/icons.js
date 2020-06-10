@@ -8,13 +8,18 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import IconMaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Theme from '../Theme';
 
-const { smallIconSize, iconSize, largeIconSize, hugeIconSize } = Theme.specifications;
+const {
+  smallIconSize,
+  iconSize,
+  largeIconSize,
+  hugeIconSize,
+} = Theme.specifications;
 const { primary: primaryColor } = Theme.colors;
 const {
   lightest: lightestColor,
   lighter: lighterColor,
   light: lightColor,
-  darkest: darkestColor
+  darkest: darkestColor,
 } = Theme.gray;
 const { tiny } = Theme.spacing;
 
@@ -67,7 +72,12 @@ export const getGuestInfoIcon = () => (
 // SearchInput
 // ------------------------------------------------------
 export const getSearchInputBackIcon = ({ style }) => (
-  <IconEntypo name="chevron-thin-left" size={smallIconSize} color={darkestColor} style={style} />
+  <IconEntypo
+    name="chevron-thin-left"
+    size={smallIconSize}
+    color={darkestColor}
+    style={style}
+  />
 );
 
 export const getSearchInputLabelIcon = () => (
@@ -114,11 +124,19 @@ export const getLibrarySettingsIcon = () => (
 );
 
 export const getLibraryWatchlistIcon = () => (
-  <IconMaterialIcons name="watch-later" color={lightColor} size={iconSize * 0.8} />
+  <IconMaterialIcons
+    name="watch-later"
+    color={lightColor}
+    size={iconSize * 0.8}
+  />
 );
 
 export const getLibraryFavoriteIcon = () => (
-  <IconMaterialCommunityIcons name="heart-multiple" color={lightColor} size={iconSize * 0.8} />
+  <IconMaterialCommunityIcons
+    name="heart-multiple"
+    color={lightColor}
+    size={iconSize * 0.8}
+  />
 );
 
 // ------------------------------------------------------
@@ -137,13 +155,21 @@ export const getHeaderBackIcon = () => (
 // Routes
 // ------------------------------------------------------
 export const getNavbarHomeIcon = ({ tintColor }) => (
-  <IconEntypo name="home" color={tintColor} size={iconSize * 0.9} />
+  <IconEntypo name="home" color={tintColor} size={iconSize * 0.8} />
 );
 
-export const getNavbarExploreIcon = ({ tintColor }) => (
-  <IconMaterialIcons name="photo-library" color={tintColor} size={iconSize * 0.9} />
+export const getNavbarSearchIcon = ({ tintColor }) => (
+  <IconFontAwesome name="search" color={tintColor} size={iconSize * 0.8} />
 );
 
-export const getNavbarLibraryIcon = ({ tintColor }) => (
-  <IconEntypo name="folder-video" color={tintColor} size={iconSize * 0.85} />
+export const getNavbarProfileIcon = ({ tintColor }) => (
+  <IconEntypo name="user" color={tintColor} size={iconSize * 0.8} />
+);
+
+export const getNavbarChatIcon = ({ tintColor }) => (
+  <IconEntypo name="chat" color={tintColor} size={iconSize * 0.8} />
+);
+
+export const getNavbarPostIcon = ({ tintColor }) => (
+  <IconEntypo name="plus" color={tintColor} size={iconSize * 0.8} />
 );

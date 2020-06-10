@@ -3,7 +3,6 @@ export default {
   AuthStack: 'AuthStack',
   HomeStack: 'HomeStack',
 
-  AuthWelcome: 'AuthWelcome',
   AuthLogin: 'AuthLogin',
 
   Settings: 'Settings',

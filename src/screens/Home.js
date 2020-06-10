@@ -21,11 +21,11 @@ import Theme from '../Theme';
 
 const BROWSE_SECTIONS = [
   {
-    title: 'Trending Daily',
+    title: 'Trending Tech',
     fetchFunction: getFetchFunction(getTrendingDailySkillsUrl),
   },
   {
-    title: 'Trending Weekly',
+    title: 'Recomended',
     fetchFunction: getFetchFunction(getTrendingWeeklySkillsUrl),
   },
   { title: 'Popular', fetchFunction: getFetchFunction(getPopularSkillsUrl) },
@@ -130,33 +130,10 @@ class Home extends React.Component {
   }
 
   render() {
-    const {
-      searchText,
-      searchResultsFetchFunction,
-      isInitialSearch,
-      isSearchBlockFocused,
-    } = this.state;
-
     return (
       <View style={styles.container}>
-        <SearchBlock
-          value={searchText}
-          style={styles.search}
-          inputRef={this.onSearchTextInputRef}
-          onBlockBlur={this.onSearchBlockBlur}
-          onBlockFocus={this.onSearchBlockFocus}
-          onChangeText={this.onSearchTextChange}
-          onDelayedInput={this.onDelayedInput}
-        />
-
         <View style={styles.bottomContainer} {...this.panResponder.panHandlers}>
           {this.renderHomeSections()}
-          {isSearchBlockFocused && (
-            <SkillSearchResults
-              initialSearch={isInitialSearch}
-              fetchFunction={searchResultsFetchFunction}
-            />
-          )}
         </View>
       </View>
     );
@@ -177,9 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ auth: { user } }) => ({ user });
-
-export default connect(
-  mapStateToProps,
-  {},
-)(withNavigationFocus(withRefetch(withDelayedLoading(Home))));
+export default withNavigationFocus(withRefetch(withDelayedLoading(Home)));
