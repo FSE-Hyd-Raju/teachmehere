@@ -8,19 +8,6 @@ import {
 } from '../api/urls';
 import Config from '../Config';
 
-export const requestToCreateNewGuestUser = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const {
-        data: { guest_session_id: sessionId },
-      } = await axios.get(NEW_GUEST_SESSION);
-
-      resolve({ sessionId });
-    } catch (error) {
-      Config.logNetworkErrors && console.log(error);
-      reject(error);
-    }
-  });
 
 export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
   new Promise(async (resolve, reject) => {

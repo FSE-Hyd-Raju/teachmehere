@@ -1,5 +1,8 @@
 import axios from 'axios';
-import { getCurrentUsersSessionId, getCurrentUsersAccountId } from '../utils/store';
+import {
+  getCurrentUsersSessionId,
+  getCurrentUsersAccountId,
+} from '../utils/store';
 import {
   getAddToFavoriteUrl,
   getAddToWatchlistUrl,
@@ -9,7 +12,7 @@ import {
   getSkillAccountStateUrl,
   getDetailsSkillUrl,
   getSkillRecommendationsUrl,
-  getPopularSkillsUrl
+  getPopularSkillsUrl,
 } from './urls';
 import { parseSkillsArray } from '../utils/skills';
 import Config from '../Config';
@@ -21,7 +24,7 @@ export const fetchSkillAccountState = ({ skill }, reqParams = {}) =>
   new Promise(async (resolve, reject) => {
     const url = getSkillAccountStateUrl({
       skillId: skill.id,
-      sessionId: getCurrentUsersSessionId()
+      sessionId: getCurrentUsersSessionId(),
     });
 
     try {
@@ -46,7 +49,10 @@ export const fetchSkillDetailedInfo = ({ skill }, reqParams = {}) =>
     }
   });
 
-export const fetchSkillRecommendations = ({ skill, page = 1 }, reqParams = {}) =>
+export const fetchSkillRecommendations = (
+  { skill, page = 1 },
+  reqParams = {},
+) =>
   new Promise(async (resolve, reject) => {
     const url = getSkillRecommendationsUrl({ skillId: skill.id, page });
 
@@ -65,13 +71,13 @@ export const fetchSkillRecommendations = ({ skill, page = 1 }, reqParams = {}) =
 // ------------------------------------------------------
 export const changeSkillFavoriteStatus = (
   { skill, favorite, accountId, sessionId },
-  reqParams = {}
+  reqParams = {},
 ) =>
   new Promise(async (resolve, reject) => {
     const postData = { media_type: 'skill', media_id: skill.id, favorite };
     const url = getAddToFavoriteUrl({
       accountId: accountId || getCurrentUsersAccountId(),
-      sessionId: sessionId || getCurrentUsersSessionId()
+      sessionId: sessionId || getCurrentUsersSessionId(),
     });
 
     try {
@@ -85,13 +91,13 @@ export const changeSkillFavoriteStatus = (
 
 export const changeSkillWatchlistStatus = (
   { skill, watchlist, accountId, sessionId },
-  reqParams = {}
+  reqParams = {},
 ) =>
   new Promise(async (resolve, reject) => {
     const postData = { media_type: 'skill', media_id: skill.id, watchlist };
     const url = getAddToWatchlistUrl({
       accountId: accountId || getCurrentUsersAccountId(),
-      sessionId: sessionId || getCurrentUsersSessionId()
+      sessionId: sessionId || getCurrentUsersSessionId(),
     });
 
     try {
@@ -106,8 +112,11 @@ export const changeSkillWatchlistStatus = (
 // ------------------------------------------------------
 // Skills lists
 // ------------------------------------------------------
-export const getSectionFetchFunctionFromUrlGetter = urlGetter => (params, reqParams) =>
-  fetchSectionSkills(urlGetter, params, reqParams);
+export const getSectionFetchFunctionFromUrlGetter = urlGetter => (
+  params,
+  reqParams,
+) => fetchSectionSkills(urlGetter, params, reqParams);
+
 export const getSearchFetchFunctionFromQuery = query => ({ page }) =>
   fetchSearchSkills({ page, query });
 
@@ -144,7 +153,7 @@ export const fetchFavoriteSkills = ({ page }, reqParams = {}) =>
     const url = getFavoriteSkillUrl({
       page,
       sessionId: getCurrentUsersSessionId(),
-      accountId: getCurrentUsersAccountId()
+      accountId: getCurrentUsersAccountId(),
     });
 
     try {
@@ -162,7 +171,7 @@ export const fetchWatchlistSkills = ({ page }, reqParams = {}) =>
     const url = getWatchlistUrl({
       page,
       sessionId: getCurrentUsersSessionId(),
-      accountId: getCurrentUsersAccountId()
+      accountId: getCurrentUsersAccountId(),
     });
 
     try {
@@ -186,7 +195,9 @@ export const fetchSkillToExplore = isSkillSeen =>
 
     try {
       while (skillsToExplore.length < minFillAmount) {
-        const { skills } = await fetchSectionSkills(getPopularSkillsUrl, { page });
+        const { skills } = await fetchSectionSkills(getPopularSkillsUrl, {
+          page,
+        });
         skills.forEach(skill => {
           if (!isSkillSeen(skill)) {
             skillsToExplore.push(skill);
@@ -203,4 +214,5 @@ export const fetchSkillToExplore = isSkillSeen =>
   });
 
 // Local functions
-const addParsedSkillsToData = data => (data.skills = parseSkillsArray(data.results));
+const addParsedSkillsToData = data =>
+  (data.skills = parseSkillsArray(data.results));

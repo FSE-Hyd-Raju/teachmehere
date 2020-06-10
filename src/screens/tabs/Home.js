@@ -12,7 +12,7 @@ import {
   getSearchFetchFunctionFromQuery,
 } from '../../api/skills';
 import {
-  getTrendingDailySkillsUrl,
+  getAllCategories,
   getTrendingWeeklySkillsUrl,
   getPopularSkillsUrl,
   getTopRatedSkillsUrl,
@@ -22,14 +22,14 @@ import Theme from '../../Theme';
 const BROWSE_SECTIONS = [
   {
     title: 'Trending Tech',
-    fetchFunction: getFetchFunction(getTrendingDailySkillsUrl),
+    fetchFunction: getFetchFunction(getAllCategories),
   },
-  {
-    title: 'Recomended',
-    fetchFunction: getFetchFunction(getTrendingWeeklySkillsUrl),
-  },
-  { title: 'Popular', fetchFunction: getFetchFunction(getPopularSkillsUrl) },
-  { title: 'Top Rated', fetchFunction: getFetchFunction(getTopRatedSkillsUrl) },
+  // {
+  //   title: 'Recomended',
+  //   fetchFunction: getFetchFunction(getTrendingWeeklySkillsUrl),
+  // },
+  // { title: 'Popular', fetchFunction: getFetchFunction(getPopularSkillsUrl) },
+  // { title: 'Top Rated', fetchFunction: getFetchFunction(getTopRatedSkillsUrl) },
 ];
 
 class Home extends React.Component {

@@ -5,10 +5,10 @@ const fonts = {
     weights: {
       Bold: '700',
       SemiBold: '600',
-      Regular: '400'
+      Regular: '400',
     },
-    styles: {}
-  }
+    styles: {},
+  },
 };
 
 export const getFontStyleObject = (params = {}) => {
@@ -18,14 +18,15 @@ export const getFontStyleObject = (params = {}) => {
   const { weights, styles } = fonts[family];
 
   if (Config.isAndroid) {
-    const suffix = (weights[weight] ? weight : '') + (styles[style] ? style : '');
+    const suffix =
+      (weights[weight] ? weight : '') + (styles[style] ? style : '');
     return { fontFamily: family + (suffix.length ? `-${suffix}` : '') };
   }
 
   return {
     fontFamily: family,
     fontWeight: weights[weight] || weights.Regular,
-    fontStyle: styles[style] || 'normal'
+    fontStyle: styles[style] || 'normal',
   };
 };
 

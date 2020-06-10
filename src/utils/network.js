@@ -12,4 +12,5 @@ export const safeOpenURL = url => {
 };
 
 export const prefetchImage = url => Image.prefetch(url);
-export const prefetchImages = urls => Promise.all(urls.map(url => Image.prefetch(url)));
+export const prefetchImages = urls =>
+  Promise.all(urls.map(url => Image.prefetch(url)));
