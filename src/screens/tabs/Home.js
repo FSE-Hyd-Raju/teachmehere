@@ -12,8 +12,7 @@ import {
   getSearchFetchFunctionFromQuery,
 } from '../../api/skills';
 import {
-  getAllCategories,
-  getTrendingWeeklySkillsUrl,
+  getTrendingSkillsUrl,
   getPopularSkillsUrl,
   getTopRatedSkillsUrl,
 } from '../../api/urls';
@@ -22,7 +21,7 @@ import Theme from '../../Theme';
 const BROWSE_SECTIONS = [
   {
     title: 'Trending Tech',
-    fetchFunction: getFetchFunction(getAllCategories),
+    fetchFunction: getFetchFunction(getTrendingSkillsUrl),
   },
   // {
   //   title: 'Recomended',
@@ -56,15 +55,6 @@ class Home extends React.Component {
     requestAnimationFrame(() => this.initialSectionsFetch());
   }
 
-  onSearchBlockFocus = () => this.setState({ isSearchBlockFocused: true });
-  onSearchBlockBlur = () => this.setState({ isSearchBlockFocused: false });
-  onSearchTextInputRef = ref => (this.searchTextInput = ref);
-
-  onSearchTextChange = text => {
-    const additionalProps = text.length === 0 ? { isInitialSearch: true } : {};
-    this.setState({ searchText: text, ...additionalProps });
-  };
-
   onDelayedInput = async () => {
     const { searchText } = this.state;
     this.setState({
@@ -89,7 +79,6 @@ class Home extends React.Component {
     const {
       refetch: { fetchUntilSuccess },
     } = this.props;
-
     BROWSE_SECTIONS.forEach(section =>
       fetchUntilSuccess(() => section.fetchFunction({ page: 1 })).then(data => {
         const { sectionsSkills } = this.state;

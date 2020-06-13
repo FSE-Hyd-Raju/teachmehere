@@ -120,13 +120,11 @@ export const getSectionFetchFunctionFromUrlGetter = urlGetter => (
 export const getSearchFetchFunctionFromQuery = query => ({ page }) =>
   fetchSearchSkills({ page, query });
 
-export const fetchSectionSkills = (urlGetter, { page }, reqParams = {}) =>
+export const fetchSectionSkills = (url, { page }, reqParams = {}) =>
   new Promise(async (resolve, reject) => {
-    const url = urlGetter({ page });
-
     try {
       const { data } = await axios.get(url, reqParams);
-      addParsedSkillsToData(data);
+      //addParsedSkillsToData(data);
       resolve(data);
     } catch (error) {
       Config.logNetworkErrors && console.log(error);

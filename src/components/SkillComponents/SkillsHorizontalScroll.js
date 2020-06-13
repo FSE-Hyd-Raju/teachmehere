@@ -26,12 +26,14 @@ class SkillsHorizontalScroll extends React.PureComponent {
             onlyText
             style={styles.moreButton}
             textStyle={styles.moreButtonText}
-            onPress={this.onMorePress}
-          >
+            onPress={this.onMorePress}>
             MORE
           </AppButton>
         </View>
-        <SkillsHorizontalFlatList skills={skills} paddingLeft={styles.title.marginLeft} />
+        <SkillsHorizontalFlatList
+          skills={skills}
+          paddingLeft={styles.title.marginLeft}
+        />
       </View>
     );
   }
@@ -41,30 +43,30 @@ const styles = StyleSheet.create({
   container: {
     marginTop: Theme.spacing.tiny,
     marginBottom: Theme.spacing.base,
-    width: '100%'
+    width: '100%',
   },
   topWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   title: {
     marginLeft: Theme.spacing.small,
-    marginVertical: Theme.spacing.tiny
+    marginVertical: Theme.spacing.tiny,
   },
   moreButton: {
-    padding: Theme.spacing.tiny
+    padding: Theme.spacing.tiny,
   },
   moreButtonText: {
     fontSize: 15,
-    ...getFontStyleObject({ weight: 'SemiBold' })
-  }
+    ...getFontStyleObject({ weight: 'SemiBold' }),
+  },
 });
 
 SkillsHorizontalScroll.propTypes = {
   skills: PropTypes.array.isRequired,
   title: PropTypes.string,
-  fetchFunction: PropTypes.func
+  fetchFunction: PropTypes.func,
 };
 
 export default withNavigation(SkillsHorizontalScroll);
