@@ -12,7 +12,7 @@ import AuthLogin from './screens/login/Login';
 import Home from './screens/tabs/Home';
 import Search from './screens/tabs/Search';
 import Profile from './screens/tabs/Profile';
-import Post from './screens/tabs/Post';
+import Post from './screens/tabs/post/Post';
 import Chat from './screens/tabs/Chat';
 import SkillsListScreen from './screens/skill/SkillsListScreen';
 import SkillDetailsScreen from './screens/skill/SkillDetailsScreen';

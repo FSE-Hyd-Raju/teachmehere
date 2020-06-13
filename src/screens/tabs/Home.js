@@ -79,17 +79,17 @@ class Home extends React.Component {
     const {
       refetch: { fetchUntilSuccess },
     } = this.props;
-    BROWSE_SECTIONS.forEach(section =>
-      fetchUntilSuccess(() => section.fetchFunction({ page: 1 })).then(data => {
-        const { sectionsSkills } = this.state;
-        const newSections = {
-          ...sectionsSkills,
-          [section.title]: data.skills,
-        };
+    // BROWSE_SECTIONS.forEach(section =>
+    //   fetchUntilSuccess(() => section.fetchFunction({ page: 1 })).then(data => {
+    //     const { sectionsSkills } = this.state;
+    //     const newSections = {
+    //       ...sectionsSkills,
+    //       [section.title]: data.skills,
+    //     };
 
-        this.setState({ sectionsSkills: newSections });
-      }),
-    );
+    //     this.setState({ sectionsSkills: newSections });
+    //   }),
+    // );
   }
 
   renderSkillsScrollSection = ({ item: { title, fetchFunction } }) => {

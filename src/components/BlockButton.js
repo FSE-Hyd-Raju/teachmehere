@@ -12,11 +12,14 @@ class BlockButton extends React.PureComponent {
       <TouchableHighlightView
         scaleFactor={0.98}
         {...props}
-        contentStyle={[styles.container, style]}
-      >
+        contentStyle={[styles.container, style]}>
         <View style={styles.contentWrapper}>
           {Icon}
-          <View style={[styles.textWrapper, Icon && { marginLeft: Theme.spacing.small }]}>
+          <View
+            style={[
+              styles.textWrapper,
+              Icon && { marginLeft: Theme.spacing.small },
+            ]}>
             <AppText style={{ color }} type="headline">
               {text}
             </AppText>
@@ -36,20 +39,20 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     justifyContent: 'center',
-    height: 72
+    height: 72,
   },
   contentWrapper: {
     marginLeft: Theme.spacing.base,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   textWrapper: {
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   subText: {
     marginTop: Theme.spacing.xTiny,
-    color: Theme.gray.lighter
-  }
+    color: Theme.gray.lighter,
+  },
 });
 
 BlockButton.propTypes = {
@@ -57,12 +60,12 @@ BlockButton.propTypes = {
   text: PropTypes.string,
   subText: PropTypes.string,
   color: PropTypes.string,
-  style: PropTypes.any
+  style: PropTypes.any,
 };
 
 BlockButton.defaultProps = {
   text: 'Default button text',
-  color: Theme.gray.lightest
+  color: Theme.gray.lightest,
 };
 
 export default BlockButton;
