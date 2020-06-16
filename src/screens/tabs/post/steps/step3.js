@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, TextInput, Text } from 'react-native';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  TextInput,
+  Text,
+  Button,
+} from 'react-native';
 
 import styles from './styles';
 
@@ -25,39 +32,54 @@ export class step3 extends Component {
     return (
       <View style={[styles.container, styles.step1]}>
         <View>
-          <Text
-            style={
-              styles.currentStepText
-            }>{`Step ${currentStep} of ${totalSteps}`}</Text>
+          <Text style={styles.currentStepText}>Date and Time</Text>
         </View>
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'City'}
-          placeholderTextColor="#fff"
+          placeholder={'Available on ?'}
+          placeholderTextColor="#444"
         />
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'Country'}
-          placeholderTextColor="#fff"
+          placeholder={'Where ?'}
+          placeholderTextColor="#444"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={text => this.setState({ text })}
+          value={this.state.text}
+          placeholder={'Tags'}
+          placeholderTextColor="#444"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={text => this.setState({ text })}
+          value={this.state.text}
+          placeholder={'LinkedIn Profile'}
+          placeholderTextColor="#444"
         />
         <View style={[styles.btnContainer, styles.marginAround]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image
-              source={require('../../../../assets/img/arrow.png')}
+              source={require('../../../../assets/img/right-black-arrow-md.png')}
               style={[styles.btnImage, styles.backBtn]}
               resizeMode="cover"
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.props.next} style={styles.btnStyle}>
-            <Image
-              source={require('../../../../assets/img/arrow.png')}
-              style={styles.btnImage}
-              resizeMode="cover"
-            />
+          <TouchableOpacity
+            style={{
+              borderWidth: 1,
+              borderColor: 'rgba(0,0,0,0.2)',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              backgroundColor: '#444',
+              borderRadius: 50,
+            }}>
+            <Text style={{ padding: 18, color: 'white' }}>Submit</Text>
           </TouchableOpacity>
         </View>
       </View>

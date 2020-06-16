@@ -46,8 +46,12 @@ class step1 extends Component {
   render() {
     const { currentStep, totalSteps } = this.state;
     const options = [
-      { value: 0, label: 'Selwe sdfsd dsd' },
-      { value: 1, label: '1' },
+      { value: 0, label: 'Skill level' },
+      { value: 1, label: 'Beginer' },
+      { value: 2, label: 'Inermediate' },
+      { value: 3, label: 'Advanced' },
+      { value: 4, label: 'Thop' },
+      { value: 5, label: 'Thurum' },
     ];
     return (
       <View style={[styles.container, styles.step1]}>
@@ -61,25 +65,31 @@ class step1 extends Component {
           placeholder={'Skill Name'}
           placeholderTextColor="#444"
         />
-        <SelectInput style={styles.input} value={0} options={options} />
+        <SelectInput
+          placeholder="Skill Level"
+          placeholderTextColor="#444"
+          style={styles.input}
+          value={0}
+          options={options}
+        />
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'Sub Category'}
+          placeholder={'Course Duration'}
           placeholderTextColor="#444"
         />
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'Skill Level'}
+          placeholder={'Price'}
           placeholderTextColor="#444"
         />
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
             <Image
-              source={require('../../../../assets/img/arrow.png')}
+              source={require('../../../../assets/img/right-black-arrow-md.png')}
               style={styles.btnImage}
               resizeMode="cover"
             />

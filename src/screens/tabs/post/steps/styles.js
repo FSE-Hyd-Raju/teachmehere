@@ -41,8 +41,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   btnImage: {
-    width: '40%',
-    height: '40%',
+    width: '100%',
+    height: '100%',
   },
   backBtn: {
     transform: [{ rotate: '180deg' }],
