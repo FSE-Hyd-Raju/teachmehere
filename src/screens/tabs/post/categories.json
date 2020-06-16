@@ -1,0 +1,166 @@
+[
+    {
+        "id": "sdasd-asd-asd-as-dasd-2323",
+        "categoryName": "IT & Software",
+        "iconName": "computer",
+        "hidden": false,
+        "subCategories": [
+            {
+                "id": "web",
+                "name": "Web Development",
+                "hidden": false
+            },
+            {
+                "id": "data-science",
+                "name": "Data Science",
+                "hidden": false
+            },
+            {
+                "id": "mobile-apps",
+                "name": "Mobile Apps",
+                "hidden": false
+            },
+            {
+                "id": "programing",
+                "name": "Programming Languages",
+                "hidden": false
+            },
+            {
+                "id": "game-developement",
+                "name": "Game Development",
+                "hidden": false
+            },
+            {
+                "id": "database",
+                "name": "Databases",
+                "hidden": false
+            },
+            {
+                "id": "software-testing",
+                "name": "Software Testing",
+                "hidden": false
+            },
+            {
+                "id": "software-engineering",
+                "name": "Software Engineering",
+                "hidden": false
+            },
+            {
+                "id": "developement-tools",
+                "name": "Development Tools",
+                "hidden": false
+            },
+            {
+                "id": "e-commerce",
+                "name": "E-Commerce",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "sdasd-asd-asd-as-dasd-23123123",
+        "categoryName": "Business",
+        "iconName": "insert-chart",
+        "hidden": false,
+        "subCategories": [
+            {
+                "id": "finance",
+                "name": "Finance",
+                "hidden": false
+            },
+            {
+                "id": "entrepreneurship",
+                "name": "Entrepreneurship",
+                "hidden": false
+            },
+            {
+                "id": "comminications",
+                "name": "Communications",
+                "hidden": false
+            },
+            {
+                "id": "management",
+                "name": "Management",
+                "hidden": false
+            },
+            {
+                "id": "sales",
+                "name": "Sales",
+                "hidden": false
+            },
+            {
+                "id": "strategy",
+                "name": "Strategy",
+                "hidden": false
+            },
+            {
+                "id": "operations",
+                "name": "Operations",
+                "hidden": false
+            },
+            {
+                "id": "project-management",
+                "name": "Project Management",
+                "hidden": false
+            },
+            {
+                "id": "business-law",
+                "name": "Business Law",
+                "hidden": false
+            },
+            {
+                "id": "data-analyst",
+                "name": "Data & Analytics",
+                "hidden": false
+            },
+            {
+                "id": "home-business",
+                "name": "Home Business",
+                "hidden": false
+            },
+            {
+                "id": "human-resources",
+                "name": "Human Resourcess",
+                "hidden": false
+            },
+            {
+                "id": "industry",
+                "name": "Industry",
+                "hidden": false
+            },
+            {
+                "id": "media",
+                "name": "Media",
+                "hidden": false
+            },
+            {
+                "id": "real-estate",
+                "name": "Real Estate",
+                "hidden": false
+            },
+            {
+                "id": "other",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "sdasd-asd-asd-as-dasd-23154545",
+        "categoryName": "Photography",
+        "iconName": "camera",
+        "hidden": false,
+        "subCategories": [
+            {
+                "id": "dssadd",
+                "name": "asdasd",
+                "hidden": false
+            },
+            {
+                "id": "asdasd",
+                "name": "asasd",
+                "hidden": false
+            }
+        ]
+    }
+]

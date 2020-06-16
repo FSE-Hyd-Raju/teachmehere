@@ -25,7 +25,7 @@ export default StyleSheet.create({
   },
   input: {
     width: '80%',
-    borderColor: '#fff',
+    borderColor: '#444',
     borderWidth: 2,
     borderRadius: 6,
     paddingHorizontal: 8,
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   currentStepText: {
-    color: '#fff',
+    color: '#444',
     fontSize: 22,
   },
 });

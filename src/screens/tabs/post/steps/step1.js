@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
+import SelectInput from 'react-native-select-input-ios';
 
 class step1 extends Component {
   constructor(props) {
@@ -44,37 +45,36 @@ class step1 extends Component {
 
   render() {
     const { currentStep, totalSteps } = this.state;
+    const options = [
+      { value: 0, label: 'Selwe sdfsd dsd' },
+      { value: 1, label: '1' },
+    ];
     return (
       <View style={[styles.container, styles.step1]}>
         <View>
-          <Text style={styles.currentStepText}>
-            What do you want to Teach ?
-          </Text>
+          <Text style={styles.currentStepText}>Skill details</Text>
         </View>
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           placeholder={'Skill Name'}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#444"
         />
-        <Picker selectedValue="asas" style={{ height: 50, width: 150 }}>
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-        </Picker>
+        <SelectInput style={styles.input} value={0} options={options} />
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           placeholder={'Sub Category'}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#444"
         />
         <TextInput
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           placeholder={'Skill Level'}
-          placeholderTextColor="#fff"
+          placeholderTextColor="#444"
         />
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>

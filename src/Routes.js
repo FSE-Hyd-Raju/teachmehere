@@ -46,7 +46,7 @@ const defaultHeaderObject = {
 
 const createDefaultStackNavigator = (screensObject, customOptions) =>
   createStackNavigator(screensObject, {
-    defaultNavigationOptions: { ...defaultHeaderObject },
+    defaultNavigationOptions: { header: null},
     cardStyle: {
       backgroundColor: '#000',
     },
