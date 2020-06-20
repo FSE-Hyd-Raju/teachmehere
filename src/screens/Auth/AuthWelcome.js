@@ -30,7 +30,7 @@ class AuthWelcome extends React.Component {
 
   onToastRef = ref => (this.toast = ref);
   onLoginPress = () => this.props.navigation.navigate(RouteNames.AuthLogin);
-  onSignUpPress = () => safeOpenURL(REGISTRATION_URL);
+  onSignUpPress = () => this.props.navigation.navigate(RouteNames.AuthSignup);
   onScreenFocused = () => this.props.clearLoginFields();
 
   onGuestLoginPress = () => {

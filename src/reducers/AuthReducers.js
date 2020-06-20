@@ -5,7 +5,15 @@ const INITIAL_STATE = {
   loginPassword: '',
   loginUsernameError: '',
   loginPasswordError: '',
+  loginEmail: '',
+  loginEmailError: '',
+  loginPhoneNumber: '',
+  loginPhoneNumberError: '',
+  loginDescription:'',
+  loginOTP:'',
+  loginOTPError:'',
   loginIsLoading: false,
+  signupIsLoading: false,
   isGuestSessionCreating: false,
   user: null,
 };
@@ -28,6 +36,16 @@ export default (state = INITIAL_STATE, action) => {
       };
     case Auth.PASSWORD_INCORRECT:
       return { ...state, loginPasswordError: action.payload };
+  
+    case Auth.OTP_CHANGED:
+      return {
+        ...state,
+        loginOTP: action.payload,
+        loginOTPError: '',
+        
+      };
+    case Auth.OTP_INCORRECT:
+     return { ...state, loginOTPError: action.payload };
     case Auth.LOGIN_USER_ATTEMPT:
       return {
         ...state,
@@ -37,13 +55,53 @@ export default (state = INITIAL_STATE, action) => {
       };
     case Auth.LOGIN_USER_SUCCESS:
       return { ...INITIAL_STATE, user: action.payload };
-    case Auth.LOGIN_USER_FAIL:
+    
+    case Auth.SIGNUP2_USER_ATTEMPT:
       return {
         ...state,
-        loginPassword: '',
-        loginPasswordError: action.payload,
-        loginIsLoading: false,
+        loginOTPError: '',
+        loginPasswordError: '',
+        signupIsLoading: true,
       };
+    case Auth.SIGNUP_USER_ATTEMPT:
+      return {
+        ...state,
+        loginUsernameError: '',
+        loginEmailError: '',
+        loginPhoneNumberError: '',
+        signupIsLoading: true,
+    };
+    case Auth.PHONENUMBER_CHANGED:
+      return {
+        ...state,
+        loginPhoneNumber: action.payload,
+        loginPhoneNumberError: '',
+     
+      };
+    case Auth.EMAIL_CHANGED:
+      return {
+        ...state,
+        loginEmail: action.payload,
+        loginEmailError: '',
+       
+      };
+    case Auth.DESCRIPTION_CHANGED:
+      return {
+        ...state,
+        loginDescription: action.payload,
+        // loginEmailError: '',
+        
+      };
+    case Auth.EMAIL_INCORRECT:
+      return { ...state, loginEmailError: action.payload };  
+    case Auth.PHONENUMBER_INCORRECT:
+      return { ...state, loginPhoneNumberError: action.payload };
+    case Auth.SIGNUP_USER_SUCCESS:
+      return { ...INITIAL_STATE,  signupIsLoading: false };
+  
+    case Auth.SIGNUP2_USER_SUCCESS:
+      return { ...INITIAL_STATE, user: action.payload };
+  
     case Auth.CREATE_GUEST_SESSION_ATTEMPT:
       return { ...state, isGuestSessionCreating: true };
     case Auth.CREATE_GUEST_SESSION_SUCCESS:
@@ -57,6 +115,16 @@ export default (state = INITIAL_STATE, action) => {
         loginPassword: '',
         loginUsernameError: '',
         loginPasswordError: '',
+      };
+    case Auth.CLEAR_SIGNUP_FIELDS:
+      return {
+        ...state,
+        loginUsername: '',
+        loginUsernameError: '',
+        loginEmail: '',
+        loginEmailError: '',
+        loginPhoneNumber: '',
+        loginPhoneNumberError: '',
       };
     case Auth.USER_LOADED:
       return { ...INITIAL_STATE, user: action.payload };

@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
 import {
   loginUsernameChanged,
-  loginPasswordChanged,
-  loginUser,
+  loginDescriptionChanged,
+  loginPhoneNumberChanged,
+  updateProfile,
 } from '../../actions';
 import { AppButton, PageSpinner } from '../../components/common';
 import AppToast from '../../components/AppToast';
@@ -14,25 +15,34 @@ import { safeOpenURL } from '../../utils/network';
 import RouteNames from '../../RouteNames';
 import Theme from '../../Theme';
 
-class AuthLogin extends React.Component {
+class UpdateProfile extends React.Component {
   static navigationOptions = () => ({
-    title: 'Log In',
+    title: 'Update Profile',
   });
-
+ 
+  
   onToastRef = ref => (this.toast = ref);
   onForgotPress = () => this.props.navigation.navigate(RouteNames.ForgotPassword);
   onUsernameTextChange = text => this.props.loginUsernameChanged(text);
-  onPasswordTextChange = text => this.props.loginPasswordChanged(text);
+  onPhoneNumberTextChange = text => this.props.loginPhoneNumberChanged(text);
+  onDescriptionTextChange = text => this.props.loginDescriptionChanged(text);
 
-  onLoginPress = () => {
-    const { loginUsername, loginPassword, navigation } = this.props;
+  onUpdateProfilePress = () => {
+   
 
-    this.props.loginUser({
+    const { user, loginUsername, loginPhoneNumber, loginDescription } = this.props.auth;
+  
+    this.props.updateProfile({
       username: loginUsername,
-      password: loginPassword,
+      phonenumber:loginPhoneNumber,
+      description: loginDescription,
+      userId:user.accountId,
+      email:user.username,
+
       showToast: this.showToast,
       onSuccess: () => {
-        navigation.navigate(RouteNames.HomeStack);
+        
+        this.props.navigation.navigate(RouteNames.Settings);
       },
     });
   };
@@ -45,13 +55,21 @@ class AuthLogin extends React.Component {
       loginUsernameError,
       loginPassword,
       loginPasswordError,
+      loginEmail,
+      loginEmailError,
+      loginPhoneNumber,
+      loginDescription,
+      loginPhoneNumberError,
       loginIsLoading,
-    } = this.props;
+      user
+    } = this.props.auth;
+   
 
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContentContainer}>
           <LoginInput
+           
             label="Username"
             style={styles.input}
             subtext={loginUsernameError}
@@ -59,25 +77,23 @@ class AuthLogin extends React.Component {
             value={loginUsername}
             onChangeText={this.onUsernameTextChange}
           />
-          <LoginInput
-            secureTextEntry
-            label="Password"
-            textContentType="password"
-            style={styles.input}
-            subtext={loginPasswordError}
-            error={loginPasswordError.length > 0}
-            value={loginPassword}
-            onChangeText={this.onPasswordTextChange}
-          />
-          <AppButton style={styles.loginButton} onPress={this.onLoginPress}>
-            LOG IN
-          </AppButton>
-          <AppButton
-            onlyText
-            style={styles.forgotButton}
-            color={Theme.gray.lighter}
-            onPress={this.onForgotPress}>
-            Forgot the password?
+            <LoginInput
+              label="PhoneNumber"
+              style={styles.input}
+              subtext={loginPhoneNumberError}
+              error={loginPhoneNumberError.length > 0}
+              value={loginPhoneNumber}
+              onChangeText={this.onPhoneNumberTextChange}
+            />
+             <LoginInput
+              label="Description"
+              style={styles.input}
+              value={loginDescription}
+              onChangeText={this.onDescriptionTextChange}
+            />
+
+          <AppButton style={styles.loginButton} onPress={this.onUpdateProfilePress}>
+            Update
           </AppButton>
         </ScrollView>
 
@@ -111,13 +127,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ auth }) => auth;
+
+const mapStateToProps = ({ auth }) => ({ auth: auth });
+// const mapStateToProps = ({ auth }) => auth;
 
 export default connect(
   mapStateToProps,
+  
   {
     loginUsernameChanged,
-    loginPasswordChanged,
-    loginUser,
+    loginDescriptionChanged,
+    loginPhoneNumberChanged,
+
+    updateProfile
   },
-)(AuthLogin);
+)(UpdateProfile);

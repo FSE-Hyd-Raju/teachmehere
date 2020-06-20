@@ -20,16 +20,16 @@ import {
 import Theme from '../Theme';
 
 const BROWSE_SECTIONS = [
-  {
-    title: 'Trending Daily',
-    fetchFunction: getFetchFunction(getTrendingDailySkillsUrl),
-  },
-  {
-    title: 'Trending Weekly',
-    fetchFunction: getFetchFunction(getTrendingWeeklySkillsUrl),
-  },
-  { title: 'Popular', fetchFunction: getFetchFunction(getPopularSkillsUrl) },
-  { title: 'Top Rated', fetchFunction: getFetchFunction(getTopRatedSkillsUrl) },
+  // {
+  //   title: 'Trending Daily',
+  //   fetchFunction: getFetchFunction(getTrendingDailySkillsUrl),
+  // },
+  // {
+  //   title: 'Trending Weekly',
+  //   fetchFunction: getFetchFunction(getTrendingWeeklySkillsUrl),
+  // },
+  // { title: 'Popular', fetchFunction: getFetchFunction(getPopularSkillsUrl) },
+  // { title: 'Top Rated', fetchFunction: getFetchFunction(getTopRatedSkillsUrl) },
 ];
 
 class Browse extends React.Component {

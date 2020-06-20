@@ -10,6 +10,9 @@ import {
 import Splash from './screens/Splash';
 import AuthWelcome from './screens/Auth/AuthWelcome';
 import AuthLogin from './screens/Auth/AuthLogin';
+import AuthSignup from './screens/Auth/AuthSignup';
+import ForgotPassword from './screens/Auth/ForgotPassword';
+import UpdateProfile from './screens/Auth/UpdateProfile'
 import Browse from './screens/Browse';
 import Explore from './screens/Explore';
 import Library from './screens/Library';
@@ -114,6 +117,9 @@ const BottomTabs = createBottomTabNavigator(
 const AuthStack = createDefaultStackNavigator({
   [RouteNames.AuthWelcome]: { screen: AuthWelcome },
   [RouteNames.AuthLogin]: { screen: AuthLogin },
+  [RouteNames.AuthSignup]: { screen: AuthSignup },
+  [RouteNames.ForgotPassword]: { screen: ForgotPassword },
+  [RouteNames.UpdateProfile]: { screen: UpdateProfile },
 });
 
 const HomeStack = createStackNavigator(

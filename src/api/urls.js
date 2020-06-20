@@ -1,17 +1,20 @@
 export const REGISTRATION_URL = 'https://www.themoviedb.org/account/signup';
-export const RESET_PASSWORD_URL = 'https://www.themoviedb.org/account/reset-password';
+// export const RESET_PASSWORD_URL = 'https://www.themoviedb.org/account/reset-password';
 
 export const API_KEY = '16920a1e34e3b08e3a720c33cfc1341c';
-export const ROOT_URL = 'https://api.themoviedb.org/3';
-const withKey = url => `${ROOT_URL}${url}?api_key=${API_KEY}`;
+export const ROOT_URL = 'https://teachmeproject.herokuapp.com';
+const withKey = url => `${ROOT_URL}${url}`;
 
 // Account
 export const NEW_SESSION = withKey('/authentication/session/new');
 export const NEW_GUEST_SESSION = withKey('/authentication/guest_session/new');
 export const NEW_REQUEST_TOKEN = withKey('/authentication/token/new');
-export const VALIDATE_TOKEN_WITH_LOGIN = withKey('/authentication/token/validate_with_login');
+export const VALIDATE_TOKEN_WITH_LOGIN = withKey('/authorizeUserDetails');
+export const VALIDATE_USER_WITH_OTP = withKey('/registerUserDetails');
 export const ACCOUNT_DETAILS = withKey('/account');
-
+export const AUTHENTICATE_NEW_USER = withKey('/validateNewUser');
+export const RESET_PASSWORD_URL = withKey('/forgotPassword');
+export const UPDATE_PROFILE_WITH_ID_URL = withKey('/updateUserDetailsWithId');
 // Images
 const BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/';
 export const getW45ImageUrl = imagePath => `${BASE_IMAGE_URL}w45${imagePath}`;
@@ -36,7 +39,7 @@ export const getTrendingDailySkillsUrl = ({ page = 1 }) =>
   `${withKey('/trending/skill/day')}&page=${page}`;
 export const getTrendingWeeklySkillsUrl = ({ page = 1 }) =>
   `${withKey('/trending/skill/week')}&page=${page}`;
-  
+
 // Skills Account State
 export const getFavoriteSkillUrl = ({ accountId, sessionId, page = 1 }) =>
   `${withKey(`/account/${accountId}/favorite/skills`)}&session_id=${sessionId}&page=${page}`;
