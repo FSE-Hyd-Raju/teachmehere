@@ -12,6 +12,7 @@ import { Card, ListItem, Button, Divider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Steps from './steps/steps';
+import { ScrollView } from 'react-native-gesture-handler';
 const categories = require('./categories.json');
 
 export default class Post extends Component {
@@ -109,7 +110,7 @@ export default class Post extends Component {
           </View>
         )}
 
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
           {showMainCategories &&
             categories &&
             categories.map(category => (
@@ -134,7 +135,7 @@ export default class Post extends Component {
               renderItem={this.renderItem}
             />
           )}
-        </View>
+        </ScrollView>
         {showSteps && <Steps />}
       </View>
     );

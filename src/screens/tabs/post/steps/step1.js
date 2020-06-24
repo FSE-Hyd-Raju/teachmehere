@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import {
-  Image,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Text,
-  Picker,
-} from 'react-native';
+import { Image, View, TouchableOpacity, Text, Picker } from 'react-native';
 
 import styles from './styles';
-import SelectInput from 'react-native-select-input-ios';
+import { TextInput } from 'react-native-paper';
 
 class step1 extends Component {
   constructor(props) {
@@ -50,41 +43,41 @@ class step1 extends Component {
       { value: 1, label: 'Beginer' },
       { value: 2, label: 'Inermediate' },
       { value: 3, label: 'Advanced' },
-      { value: 4, label: 'Thop' },
-      { value: 5, label: 'Thurum' },
     ];
     return (
-      <View style={[styles.container, styles.step1]}>
+      <View>
         <View>
           <Text style={styles.currentStepText}>Skill details</Text>
         </View>
         <TextInput
+          label="Skill name"
+          mode="outlined"
           style={styles.input}
-          onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'Skill Name'}
-          placeholderTextColor="#444"
+          onChangeText={text => this.setState({ text })}
         />
-        <SelectInput
+        {/* <SelectInput
           placeholder="Skill Level"
           placeholderTextColor="#444"
           style={styles.input}
           value={0}
           options={options}
-        />
+        /> */}
         <TextInput
+          label="Course Duration"
           style={styles.input}
+          mode="outlined"
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           placeholder={'Course Duration'}
-          placeholderTextColor="#444"
         />
         <TextInput
+          label="Price"
+          mode="outlined"
           style={styles.input}
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           placeholder={'Price'}
-          placeholderTextColor="#444"
         />
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>

@@ -25,10 +25,6 @@ export default StyleSheet.create({
   },
   input: {
     width: '80%',
-    borderColor: '#444',
-    borderWidth: 2,
-    borderRadius: 6,
-    paddingHorizontal: 8,
     marginTop: '6%',
   },
   btnStyle: {
@@ -54,5 +50,12 @@ export default StyleSheet.create({
   currentStepText: {
     color: '#444',
     fontSize: 22,
+    fontWeight: 'bold',
+  },
+  datePicker: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: '6%',
+    backgroundColor: '#FFFFFF',
   },
 });

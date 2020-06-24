@@ -5,6 +5,7 @@ import AnimatedMultistep from '../lib';
 import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const allSteps = [
   { name: 'step 1', component: Step1 },
@@ -32,8 +33,8 @@ export default class Steps extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={styles.lowerContainer}>
+      <View style={{ flex:30, backgroundColor: '' }}>
+        <ScrollView>
           <AnimatedMultistep
             steps={allSteps}
             onFinish={this.finish}
@@ -41,7 +42,7 @@ export default class Steps extends Component {
             onBack={this.onBack}
             onNext={this.onNext}
           />
-        </View>
+        </ScrollView>
       </View>
     );
   }
