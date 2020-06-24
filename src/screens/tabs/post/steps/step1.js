@@ -2,7 +2,16 @@ import React, { Component } from 'react';
 import { Image, View, TouchableOpacity, Text, Picker } from 'react-native';
 
 import styles from './styles';
-import { TextInput } from 'react-native-paper';
+import {
+  TextInput,
+  Modal,
+  List,
+  Provider,
+  Portal,
+  Dialog,
+  Paragraph,
+  Button,
+} from 'react-native-paper';
 
 class step1 extends Component {
   constructor(props) {
@@ -10,6 +19,7 @@ class step1 extends Component {
     this.state = {
       totalSteps: '',
       currentStep: '',
+      visible: false,
     };
   }
 
@@ -36,33 +46,47 @@ class step1 extends Component {
     back();
   }
 
+  _showDialog = () => this.setState({ visible: true });
+  _hideDialog = () => this.setState({ visible: false });
+
   render() {
-    const { currentStep, totalSteps } = this.state;
+    const { currentStep, totalSteps, visible } = this.state;
     const options = [
-      { value: 0, label: 'Skill level' },
-      { value: 1, label: 'Beginer' },
-      { value: 2, label: 'Inermediate' },
-      { value: 3, label: 'Advanced' },
+      { value: 0, label: 'Beginer' },
+      { value: 1, label: 'Inermediate' },
+      { value: 2, label: 'Advanced' },
     ];
     return (
-      <View>
+      <View style={{ alignItems: 'center' }}>
         <View>
           <Text style={styles.currentStepText}>Skill details</Text>
         </View>
         <TextInput
-          label="Skill name"
+          label="Skill Name"
           mode="outlined"
           style={styles.input}
           value={this.state.text}
           onChangeText={text => this.setState({ text })}
         />
-        {/* <SelectInput
-          placeholder="Skill Level"
-          placeholderTextColor="#444"
+        <TextInput
+          label="Skill Level"
+          mode="outlined"
           style={styles.input}
-          value={0}
-          options={options}
-        /> */}
+          value={this.state.text}
+          onFocus={this._showDialog}
+        />
+        <Dialog
+          visible={this.state.visible}
+          onDismiss={this._hideDialog}
+          style={{ position: 'relative' }}>
+          <Dialog.Title>Alert</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>This is simple dialog</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={this._hideDialog}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
         <TextInput
           label="Course Duration"
           style={styles.input}

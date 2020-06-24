@@ -105,7 +105,7 @@ export default class Post extends Component {
             </TouchableOpacity>
             <Text style={styles.subCategoryHeading}>
               {activeCategory.categoryName}
-              {`> ${activeSubCategory.name}`}
+              {`  >  ${activeSubCategory.name}`}
             </Text>
           </View>
         )}
