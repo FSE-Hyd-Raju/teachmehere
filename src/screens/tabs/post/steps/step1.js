@@ -12,6 +12,7 @@ import {
   Paragraph,
   Button,
 } from 'react-native-paper';
+import SelectInput from 'react-native-select-input-ios';
 
 class step1 extends Component {
   constructor(props) {
