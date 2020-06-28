@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, Text, Picker } from 'react-native';
+import { Image, View, TouchableOpacity, Text, CheckBox } from 'react-native';
 
 import styles from './styles';
-import {
-  TextInput,
-  Modal,
-  List,
-  Provider,
-  Portal,
-  Dialog,
-  Paragraph,
-  Button,
-} from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import SelectInput from 'react-native-select-input-ios';
 
 class step1 extends Component {
@@ -21,6 +12,7 @@ class step1 extends Component {
       totalSteps: '',
       currentStep: '',
       visible: false,
+      skillLevel: '',
     };
   }
 
@@ -52,10 +44,12 @@ class step1 extends Component {
 
   render() {
     const { currentStep, totalSteps, visible } = this.state;
+    ('');
     const options = [
-      { value: 0, label: 'Beginer' },
-      { value: 1, label: 'Inermediate' },
-      { value: 2, label: 'Advanced' },
+      { value: 0, label: 'Skill Level' },
+      { value: 1, label: 'Beginer' },
+      { value: 2, label: 'Inermediate' },
+      { value: 3, label: 'Advanced' },
     ];
     return (
       <View style={{ alignItems: 'center' }}>
@@ -69,32 +63,24 @@ class step1 extends Component {
           value={this.state.text}
           onChangeText={text => this.setState({ text })}
         />
-        <TextInput
+        <SelectInput
           label="Skill Level"
-          mode="outlined"
-          style={styles.input}
-          value={this.state.text}
-          onFocus={this._showDialog}
+          placeholderTextColor="lightgray"
+          style={styles.selectInput}
+          value={this.state.skillLevel}
+          onChangeText={text => this.setState({ skillLevel: text })}
+          options={options}
         />
-        <Dialog
-          visible={this.state.visible}
-          onDismiss={this._hideDialog}
-          style={{ position: 'relative' }}>
-          <Dialog.Title>Alert</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>This is simple dialog</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={this._hideDialog}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
         <TextInput
-          label="Course Duration"
+          label="Description"
           style={styles.input}
           mode="outlined"
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
-          placeholder={'Course Duration'}
+          multiline={true}
+          numberOfLines={8}
+          scrollEnabled={true}
+          placeholder={'Course Description'}
         />
         <TextInput
           label="Price"
@@ -104,6 +90,25 @@ class step1 extends Component {
           value={this.state.text}
           placeholder={'Price'}
         />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginTop: 15,
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+          }}>
+          <CheckBox
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            title="checkbox 1"
+            checkedColor="red"
+            checked={true}
+          />
+          <Text style={{ marginTop: 5, marginRight: 5 }}>
+            Can teach to Group 
+          </Text>
+        </View>
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
             <Image

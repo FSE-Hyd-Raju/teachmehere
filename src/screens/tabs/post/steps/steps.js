@@ -33,7 +33,7 @@ export default class Steps extends Component {
 
   render() {
     return (
-      <View style={{ flex:30, backgroundColor: '' }}>
+      <View style={{ flex:30 }}>
         <ScrollView>
           <AnimatedMultistep
             steps={allSteps}

@@ -14,7 +14,11 @@ import InputRange from 'react-input-range';
 import styles from './styles';
 import * as moment from 'moment';
 import CalendarPicker from 'react-native-calendar-picker';
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
+import {
+  FormLabel,
+  FormInput,
+  FormValidationMessage,
+} from 'react-native-elements';
 
 export class step3 extends Component {
   constructor(props) {

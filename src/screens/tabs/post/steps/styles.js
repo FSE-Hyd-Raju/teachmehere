@@ -27,6 +27,15 @@ export default StyleSheet.create({
     width: '80%',
     marginTop: '6%',
   },
+  selectInput: {
+    width: '80%',
+    borderColor: 'darkgray',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    marginTop: '6%',
+  },
   btnStyle: {
     borderColor: '#fff',
     borderWidth: 2,
@@ -57,5 +66,25 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: '6%',
     backgroundColor: '#FFFFFF',
+  },
+
+  searchSection: {
+    // flex: 1,
+    // flexDirection: 'row',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: '#fff',
+  },
+  searchIcon: {
+   // padding: 10,
+  },
+  inputDate: {
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    backgroundColor: '#fff',
+    color: '#424242',
   },
 });
