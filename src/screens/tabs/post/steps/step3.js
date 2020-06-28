@@ -52,27 +52,28 @@ export class step3 extends Component {
 
   setDateTimeValue = value => {
     const { dateTimeType } = this.state;
+    const { saveState } = this.props;
     switch (dateTimeType) {
       case 'startDate':
-        this.setState({
+        saveState({
           startDate: moment(value).format('L'),
           showDatePicker: false,
         });
         break;
       case 'endDate':
-        this.setState({
+        saveState({
           endDate: moment(value).format('L'),
           showDatePicker: false,
         });
         break;
       case 'startTime':
-        this.setState({
+        saveState({
           startTime: moment(value).format('L'),
           showDatePicker: false,
         });
         break;
       case 'endTime':
-        this.setState({
+        saveState({
           endTime: moment(value).format('L'),
           showDatePicker: false,
         });

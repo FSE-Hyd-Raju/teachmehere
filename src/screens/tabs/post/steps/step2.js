@@ -43,7 +43,7 @@ class step2 extends Component {
   _hideDialog = () => this.setState({ visible: false });
 
   render() {
-    const { currentStep, totalSteps, visible } = this.state;
+    const { saveState } = this.state;
     ('');
     const options = [
       { value: 0, label: '\u20B9' },
@@ -57,7 +57,7 @@ class step2 extends Component {
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.currentStepText}>Price</Text>
           <SelectInput
-            label="Skill Level"
+            label="Currency"
             placeholderTextColor="lightgray"
             style={styles.selectInputPrice}
             value={this.state.skillLevel}
@@ -84,8 +84,8 @@ class step2 extends Component {
             label="Price"
             mode="outlined"
             style={styles.price}
-            value={this.state.text}
-            onChangeText={text => this.setState({ text })}
+            value={this.state.IndividualPrice}
+            onChangeText={price => saveState({ IndividualPrice: price })}
           />
           <Text style={{ marginTop: 20, fontSize: 15 }}> / per head.</Text>
         </View>
@@ -110,12 +110,43 @@ class step2 extends Component {
             label="Price"
             mode="outlined"
             style={styles.price}
-            value={this.state.text}
-            onChangeText={text => this.setState({ text })}
+            value={this.state.groupPrice}
+            onChangeText={price => saveState({ groupPrice: price })}
           />
           <Text style={{ marginTop: 20, fontSize: 15 }}> / per head.</Text>
         </View>
-        <View style={[styles.btnContainer, styles.marginAround, {marginTop: 150}]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: 20,
+            marginLeft: -220,
+          }}>
+          <Text style={{ marginTop: 5, marginRight: 5 }}>
+            Speaking Languages
+          </Text>
+        </View>
+        {['English', 'Hindhi', 'Telugu', 'Other'].map(lan => {
+          return (
+            <View style={{ flexDirection: 'row', marginLeft: -250 }}>
+              <CheckBox
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                title="checkbox 1"
+                checkedColor="red"
+                checked={true}
+              />
+              <Text style={{ marginTop: 5, marginRight: 5 }}>{lan}</Text>
+            </View>
+          );
+        })}
+        <TextInput
+          label="Language"
+          mode="outlined"
+          style={styles.price}
+          value={this.state.text}
+          onChangeText={text => this.setState({ text })}
+        />
+        <View style={[styles.btnContainer, styles.marginAround]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image
               source={require('../../../../assets/img/right-black-arrow-md.png')}

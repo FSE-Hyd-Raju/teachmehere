@@ -38,6 +38,7 @@ export class step4 extends Component {
   };
 
   render() {
+    const { getState, saveState } = this.props;
     return (
       <View style={{ alignItems: 'center' }}>
         <View>
@@ -48,39 +49,39 @@ export class step4 extends Component {
           mode="outlined"
           placeholder="Place where we can connect"
           style={styles.input}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          value={this.state.platform}
+          onChangeText={text => saveState({ platform: text })}
         />
         <TextInput
           label="Meeting URL"
           mode="outlined"
           placeholder="Meeting URL"
           style={styles.input}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          value={this.state.meetingUrl}
+          onChangeText={text => saveState({ meetingUrl: text })}
         />
         <TextInput
           label="Tags"
           placeholder="add tags for search. Ex: angular, react etc"
           mode="outlined"
           style={styles.input}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          value={this.state.Tags}
+          onChangeText={text => saveState({ Tags: text })}
         />
         <TextInput
           label="Experience"
           placeholder="2 years, 2.5 years etc."
           mode="outlined"
           style={styles.input}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          value={this.state.experience}
+          onChangeText={text => saveState({ experience: text })}
         />
         <TextInput
           label="LinkedIn Profile"
           mode="outlined"
           style={styles.input}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          value={this.state.LinkedInProfile}
+          onChangeText={text => saveState({ LinkedInProfile: text })}
         />
         <View style={[styles.btnContainer, styles.marginAround]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
@@ -98,7 +99,8 @@ export class step4 extends Component {
               justifyContent: 'flex-end',
               backgroundColor: '#444',
               borderRadius: 50,
-            }}>
+            }}
+            onPress={() => console.log('GET STATE', getState())}>
             <Text style={{ padding: 18, color: 'white' }}>Submit</Text>
           </TouchableOpacity>
         </View>

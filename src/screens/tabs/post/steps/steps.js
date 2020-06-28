@@ -49,18 +49,3 @@ export default class Steps extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  upperContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  loginText: {
-    fontSize: 32,
-    color: '#444',
-  },
-  lowerContainer: {
-    flex: 2,
-  },
-});

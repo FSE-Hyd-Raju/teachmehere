@@ -51,7 +51,7 @@ export default StyleSheet.create({
     borderColor: 'darkgray',
     backgroundColor: 'white',
     borderWidth: 1,
-    marginLeft: 220,
+    marginLeft: 70,
     fontSize: 25,
   },
   btnStyle: {

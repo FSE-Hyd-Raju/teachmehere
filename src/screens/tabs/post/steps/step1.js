@@ -25,10 +25,7 @@ class step1 extends Component {
   };
 
   nextStep = () => {
-    const { next, saveState } = this.props;
-    // Save state for use in other steps
-    saveState({ name: 'samad' });
-
+    const { next } = this.props;
     // Go to next step
     next();
   };
@@ -39,12 +36,9 @@ class step1 extends Component {
     back();
   }
 
-  _showDialog = () => this.setState({ visible: true });
-  _hideDialog = () => this.setState({ visible: false });
 
   render() {
-    const { currentStep, totalSteps, visible } = this.state;
-    ('');
+    const { saveState } = this.props;
     const options = [
       { value: 0, label: 'Skill Level' },
       { value: 1, label: 'Beginer' },
@@ -61,22 +55,22 @@ class step1 extends Component {
           mode="outlined"
           style={styles.input}
           value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          onChangeText={text => saveState({ skillName: text })}
         />
         <SelectInput
           label="Skill Level"
           placeholderTextColor="lightgray"
           style={styles.selectInput}
           value={this.state.skillLevel}
-          onChangeText={text => this.setState({ skillLevel: text })}
+          onChangeText={text => saveState({ skillLevel: text })}
           options={options}
         />
         <TextInput
           label="Description"
           style={styles.description}
           mode="outlined"
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
+          onChangeText={text => saveState({ description: text })}
+          value={this.state.description}
           multiline={true}
           numberOfLines={10}
           scrollEnabled={true}

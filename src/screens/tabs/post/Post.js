@@ -4,11 +4,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   FlatList,
   Dimensions,
 } from 'react-native';
-import { Card, ListItem, Button, Divider } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Steps from './steps/steps';
@@ -136,7 +135,9 @@ export default class Post extends Component {
             />
           )}
         </ScrollView>
-        {showSteps && <Steps />}
+        {showSteps && (
+          <Steps category={activeCategory} subCategory={activeSubCategory} />
+        )}
       </View>
     );
   }
