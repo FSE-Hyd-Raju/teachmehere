@@ -26,6 +26,15 @@ export default StyleSheet.create({
   input: {
     width: '80%',
     marginTop: '6%',
+    height: 48,
+  },
+  description: {
+    width: '80%',
+    marginTop: '6%',
+  },
+  price: {
+    width: '80%',
+    height: 48,
   },
   selectInput: {
     width: '80%',
@@ -35,6 +44,15 @@ export default StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 8,
     marginTop: '6%',
+  },
+  selectInputPrice: {
+    width: 80,
+    height: 50,
+    borderColor: 'darkgray',
+    backgroundColor: 'white',
+    borderWidth: 1,
+    marginLeft: 220,
+    fontSize: 25,
   },
   btnStyle: {
     borderColor: '#fff',

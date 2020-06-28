@@ -3,22 +3,18 @@ import {
   Image,
   View,
   TouchableOpacity,
-  TextInput,
   Text,
-  Button,
   CheckBox,
-  ListView,
+  Button,
 } from 'react-native';
-import InputRange from 'react-input-range';
+import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import SelectInput from 'react-native-select-input-ios';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { TextInput, RadioButton, Paragraph, Icon } from 'react-native-paper';
+import moment from 'moment';
 
 import styles from './styles';
-import * as moment from 'moment';
-import CalendarPicker from 'react-native-calendar-picker';
-import {
-  FormLabel,
-  FormInput,
-  FormValidationMessage,
-} from 'react-native-elements';
 
 export class step3 extends Component {
   constructor(props) {
@@ -26,23 +22,14 @@ export class step3 extends Component {
     this.state = {
       totalSteps: '',
       currentStep: '',
-      selectedStartDate: new Date(),
-      selectedEndDate: '',
+      showDatePicker: false,
+      startDate: '',
+      endDate: '',
+      startTime: '',
+      endTime: '',
+      dateTimeType: '',
+      value: 'Daily',
     };
-    this.onDateChange = this.onDateChange.bind(this);
-  }
-
-  onDateChange(date, type) {
-    if (type === 'END_DATE') {
-      this.setState({
-        selectedEndDate: date,
-      });
-    } else {
-      this.setState({
-        selectedStartDate: date,
-        selectedEndDate: null,
-      });
-    }
   }
 
   static getDerivedStateFromProps = props => {
@@ -53,71 +40,237 @@ export class step3 extends Component {
     };
   };
 
+  nextStep = () => {
+    const { next, saveState } = this.props;
+    saveState({ email: 'sam@test.com' });
+    next();
+  };
+
+  setValue = value => {
+    this.setState({ value: value });
+  };
+
+  setDateTimeValue = value => {
+    const { dateTimeType } = this.state;
+    switch (dateTimeType) {
+      case 'startDate':
+        this.setState({
+          startDate: moment(value).format('L'),
+          showDatePicker: false,
+        });
+        break;
+      case 'endDate':
+        this.setState({
+          endDate: moment(value).format('L'),
+          showDatePicker: false,
+        });
+        break;
+      case 'startTime':
+        this.setState({
+          startTime: moment(value).format('L'),
+          showDatePicker: false,
+        });
+        break;
+      case 'endTime':
+        this.setState({
+          endTime: moment(value).format('L'),
+          showDatePicker: false,
+        });
+        break;
+    }
+  };
+
   render() {
-    const { selectedStartDate, selectedEndDate } = this.state;
-    const minDate = new Date(); // Today
-    const maxDate = new Date(2021, 1, 1);
-    const startDate = selectedStartDate ? selectedStartDate.toString() : '';
-    const endDate = selectedEndDate ? selectedEndDate.toString() : '';
-    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const {
+      showDatePicker,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      value,
+      dateTimeType,
+    } = this.state;
+    const daysOfTheWeek = [
+      'Sun',
+      'Mon',
+      'Tue',
+      'Wed',
+      'Thu  ',
+      'Fri  ',
+      'Sat ',
+    ];
     return (
-      <View style={[styles.container, styles.step1]}>
+      <View style={{ alignItems: 'center' }}>
         <View>
-          <Text style={styles.currentStepText}>Place and Time</Text>
+          <Text style={styles.currentStepText}>My Schedule</Text>
         </View>
-        <View style={styles.datePicker}>
-          <CalendarPicker
-            startFromMonday={true}
-            allowRangeSelection={true}
-            minDate={minDate}
-            maxDate={maxDate}
-            startDate={startDate}
-            endDate={endDate}
-            todayBackgroundColor="#f2e6ff"
-            selectedDayColor="#7300e6"
-            selectedDayTextColor="#FFFFFF"
-            allowBackwardRangeSelect={true}
-            onDateChange={this.onDateChange}
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+          <>
+            <TextInput
+              label="From Date"
+              mode="outlined"
+              style={{ width: '40%', padding: 10, height: 40 }}
+              value={startDate}
+              onFocus={() =>
+                this.setState({
+                  showDatePicker: true,
+                  dateTimeType: 'startDate',
+                })
+              }
+            />
+            <IconFontAwesome
+              name="calendar"
+              style={{ position: 'absolute', marginTop: 28, marginLeft: 130 }}
+              size={18}
+            />
+          </>
+          <>
+            <TextInput
+              label="To Date"
+              mode="outlined"
+              style={{ width: '40%', padding: 10, height: 40 }}
+              value={endDate}
+              onFocus={() =>
+                this.setState({ showDatePicker: true, dateTimeType: 'endDate' })
+              }
+            />
+            <IconFontAwesome
+              name="calendar"
+              style={{ position: 'absolute', marginTop: 28, marginLeft: 300 }}
+              size={18}
+            />
+          </>
+        </View>
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+          <RadioButton.Group
+            onValueChange={value => this.setValue(value)}
+            value={value}>
+            <>
+              <RadioButton value="Daily" />
+              <Text style={{ marginTop: 8, marginRight: 20 }}>Daily</Text>
+            </>
+            <>
+              <RadioButton value="Weekends" />
+              <Text style={{ marginTop: 8, marginRight: 20 }}>Weekends</Text>
+            </>
+            <>
+              <RadioButton value="specificDays" />
+              <Text style={{ marginTop: 8, marginRight: 20 }}>
+                Specific Days
+              </Text>
+            </>
+          </RadioButton.Group>
+        </View>
+        {value === 'specificDays' && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginTop: 10,
+              alignItems: 'center',
+              width: '80%',
+              flexWrap: 'wrap',
+            }}>
+            {daysOfTheWeek &&
+              daysOfTheWeek.map(day => {
+                return (
+                  <>
+                    <CheckBox
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      title="checkbox 1"
+                      checkedColor="red"
+                      checked={true}
+                    />
+                    <Text style={{ marginTop: 5, marginRight: 5 }}>{day}</Text>
+                  </>
+                );
+              })}
+          </View>
+        )}
+        <View style={{ flexDirection: 'row' }}>
+          <>
+            <TextInput
+              label="Start Time"
+              mode="outlined"
+              style={{ width: '40%', padding: 10, height: 40 }}
+              value={startTime}
+              onFocus={() =>
+                this.setState({
+                  showDatePicker: true,
+                  dateTimeType: 'startTime',
+                })
+              }
+            />
+            <Ionicons
+              name="md-time"
+              style={{ position: 'absolute', marginTop: 28, marginLeft: 130 }}
+              size={18}
+            />
+          </>
+          <>
+            <TextInput
+              label="End Time"
+              mode="outlined"
+              style={{ width: '40%', padding: 10, height: 40 }}
+              value={endTime}
+              onFocus={() =>
+                this.setState({ showDatePicker: true, dateTimeType: 'endTime' })
+              }
+            />
+            <Ionicons
+              name="md-time"
+              style={{ position: 'absolute', marginTop: 28, marginLeft: 300 }}
+              size={18}
+            />
+          </>
+        </View>
+        <View style={{ alignItems: 'center', width: '80%', marginTop: 25 }}>
+          <Paragraph style={{ fontSize: 12 }}>
+            The schedule might change depending on you and your student
+            availability. Unless your not strict about the timings, Please check
+            the below check box to show it as tentative.
+          </Paragraph>
+          <Text style={{ marginTop: 10, fontSize: 12.5 }}>
+            Also skipping this page is considered as tentative schedule.
+          </Text>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              marginTop: 25,
+              flexWrap: 'wrap',
+              alignItems: 'flex-start',
+            }}>
+            <CheckBox
+              checkedIcon="dot-circle-o"
+              uncheckedIcon="circle-o"
+              title="checkbox 1"
+              checkedColor="red"
+              checked={true}
+            />
+            <Text style={{ marginTop: 5, marginRight: 5 }}>
+              My schedule is tentative
+            </Text>
+          </View>
+        </View>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode={
+              dateTimeType === 'startDate' || dateTimeType === 'endDate'
+                ? 'calendar'
+                : 'clock'
+            }
+            display={
+              dateTimeType === 'startDate' || dateTimeType === 'endDate'
+                ? 'calendar'
+                : 'clock'
+            }
+            onChange={date => this.setDateTimeValue(date)}
           />
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', marginTop: 20 }}>
-          {daysOfTheWeek &&
-            daysOfTheWeek.map(day => {
-              return (
-                <>
-                  <Text style={{ marginTop: 5, marginRight: 5 }}>{day}</Text>
-                  <CheckBox
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title="checkbox 1"
-                    checkedColor="red"
-                    checked={true}
-                  />
-                </>
-              );
-            })}
-        </View>
-        <TextInput
-          style={styles.input}
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
-          placeholder={'Where ?'}
-          placeholderTextColor="#444"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
-          placeholder={'Tags'}
-          placeholderTextColor="#444"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
-          placeholder={'LinkedIn Profile'}
-          placeholderTextColor="#444"
-        />
+        )}
         <View style={[styles.btnContainer, styles.marginAround]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image
@@ -126,16 +279,12 @@ export class step3 extends Component {
               resizeMode="cover"
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.2)',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-              backgroundColor: '#444',
-              borderRadius: 50,
-            }}>
-            <Text style={{ padding: 18, color: 'white' }}>Submit</Text>
+          <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
+            <Image
+              source={require('../../../../assets/img/right-black-arrow-md.png')}
+              style={styles.btnImage}
+              resizeMode="cover"
+            />
           </TouchableOpacity>
         </View>
       </View>

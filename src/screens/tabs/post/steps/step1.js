@@ -54,7 +54,7 @@ class step1 extends Component {
     return (
       <View style={{ alignItems: 'center' }}>
         <View>
-          <Text style={styles.currentStepText}>Skill details</Text>
+          <Text style={styles.currentStepText}>Skill Details</Text>
         </View>
         <TextInput
           label="Skill Name"
@@ -73,42 +73,15 @@ class step1 extends Component {
         />
         <TextInput
           label="Description"
-          style={styles.input}
+          style={styles.description}
           mode="outlined"
           onChangeText={text => this.setState({ text })}
           value={this.state.text}
           multiline={true}
-          numberOfLines={8}
+          numberOfLines={10}
           scrollEnabled={true}
-          placeholder={'Course Description'}
+          placeholder="Course Description"
         />
-        <TextInput
-          label="Price"
-          mode="outlined"
-          style={styles.input}
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
-          placeholder={'Price'}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 15,
-            flexWrap: 'wrap',
-            alignItems: 'flex-start',
-          }}>
-          <CheckBox
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            title="checkbox 1"
-            checkedColor="red"
-            checked={true}
-          />
-          <Text style={{ marginTop: 5, marginRight: 5 }}>
-            Can teach to Group 
-          </Text>
-        </View>
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
             <Image
