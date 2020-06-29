@@ -39,9 +39,6 @@ class step2 extends Component {
     back();
   }
 
-  _showDialog = () => this.setState({ visible: true });
-  _hideDialog = () => this.setState({ visible: false });
-
   render() {
     const { saveState } = this.state;
     ('');

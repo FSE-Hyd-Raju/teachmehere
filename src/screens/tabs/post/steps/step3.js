@@ -23,10 +23,6 @@ export class step3 extends Component {
       totalSteps: '',
       currentStep: '',
       showDatePicker: false,
-      startDate: '',
-      endDate: '',
-      startTime: '',
-      endTime: '',
       dateTimeType: '',
       value: 'Daily',
     };
@@ -41,8 +37,7 @@ export class step3 extends Component {
   };
 
   nextStep = () => {
-    const { next, saveState } = this.props;
-    saveState({ email: 'sam@test.com' });
+    const { next } = this.props;
     next();
   };
 
@@ -50,56 +45,59 @@ export class step3 extends Component {
     this.setState({ value: value });
   };
 
-  setDateTimeValue = value => {
+  setDateTimeValue = (event, selectedDate) => {
     const { dateTimeType } = this.state;
     const { saveState } = this.props;
     switch (dateTimeType) {
       case 'startDate':
         saveState({
-          startDate: moment(value).format('L'),
-          showDatePicker: false,
+          startDate: moment(selectedDate).format('L'),
         });
+        this.setState({ showDatePicker: false });
         break;
       case 'endDate':
         saveState({
-          endDate: moment(value).format('L'),
-          showDatePicker: false,
+          endDate: moment(selectedDate).format('L'),
         });
+        this.setState({ showDatePicker: false });
         break;
       case 'startTime':
         saveState({
-          startTime: moment(value).format('L'),
-          showDatePicker: false,
+          startTime: moment(event.nativeEvent.timeStamp).format('LT'),
         });
+        this.setState({ showDatePicker: false });
         break;
       case 'endTime':
         saveState({
-          endTime: moment(value).format('L'),
-          showDatePicker: false,
+          endTime: moment(event.nativeEvent.timeStamp).format('LT'),
         });
+        this.setState({ showDatePicker: false });
         break;
+      default:
+        this.setState({ showDatePicker: false });
+    }
+  };
+
+  getDateTime = () => {
+    const { dateTimeType } = this.state;
+    const { getState } = this.props;
+    switch (dateTimeType) {
+      case 'startDate':
+        return getState().startDate;
+      case 'endDate':
+        return getState().endDate;
+      case 'startTime':
+        return getState().startTime;
+      case 'endTime':
+        return getState().endTime;
     }
   };
 
   render() {
-    const {
-      showDatePicker,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      value,
-      dateTimeType,
-    } = this.state;
-    const daysOfTheWeek = [
-      'Sun',
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu  ',
-      'Fri  ',
-      'Sat ',
-    ];
+    const { showDatePicker, value, dateTimeType } = this.state;
+    const { getState } = this.props;
+    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const { startDate, endDate, startTime, endTime } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
         <View>
@@ -258,18 +256,21 @@ export class step3 extends Component {
 
         {showDatePicker && (
           <DateTimePicker
-            value={new Date()}
+            value={this.getDateTime}
+            is24Hour={true}
             mode={
               dateTimeType === 'startDate' || dateTimeType === 'endDate'
-                ? 'calendar'
-                : 'clock'
+                ? 'date'
+                : 'time'
             }
             display={
               dateTimeType === 'startDate' || dateTimeType === 'endDate'
                 ? 'calendar'
                 : 'clock'
             }
-            onChange={date => this.setDateTimeValue(date)}
+            onChange={(event, selectedDate) =>
+              this.setDateTimeValue(event, selectedDate)
+            }
           />
         )}
         <View style={[styles.btnContainer, styles.marginAround]}>
