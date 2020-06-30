@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, Text, CheckBox } from 'react-native';
+import { Image, View, TouchableOpacity, CheckBox } from 'react-native';
 
 import styles from './styles';
+import { Surface, Text, Button } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
 import SelectInput from 'react-native-select-input-ios';
 
@@ -52,7 +53,7 @@ class step2 extends Component {
     return (
       <View style={{ alignItems: 'center' }}>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.currentStepText}>Price</Text>
+          <Text style={styles.currentStepText}>Pricing</Text>
           <SelectInput
             label="Currency"
             placeholderTextColor="lightgray"
@@ -67,13 +68,6 @@ class step2 extends Component {
             marginTop: 20,
             marginLeft: -250,
           }}>
-          <CheckBox
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            title="checkbox 1"
-            checkedColor="red"
-            checked="true"
-          />
           <Text style={{ marginTop: 5, marginRight: 5 }}>One on One</Text>
         </View>
         <View style={{ flexDirection: 'row', width: '80%' }}>

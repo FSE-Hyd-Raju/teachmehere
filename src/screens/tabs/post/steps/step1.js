@@ -36,7 +36,6 @@ class step1 extends Component {
     back();
   }
 
-
   render() {
     const { saveState } = this.props;
     const options = [
@@ -45,11 +44,9 @@ class step1 extends Component {
       { value: 2, label: 'Inermediate' },
       { value: 3, label: 'Advanced' },
     ];
+
     return (
       <View style={{ alignItems: 'center' }}>
-        <View>
-          <Text style={styles.currentStepText}>Skill Details</Text>
-        </View>
         <TextInput
           label="Skill Name"
           mode="outlined"

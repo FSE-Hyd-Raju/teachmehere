@@ -46,36 +46,36 @@ export class step3 extends Component {
   };
 
   setDateTimeValue = (event, selectedDate) => {
+    console.log('TIMNE', event, selectedDate);
     const { dateTimeType } = this.state;
     const { saveState } = this.props;
-    switch (dateTimeType) {
-      case 'startDate':
-        saveState({
-          startDate: moment(selectedDate).format('L'),
-        });
-        this.setState({ showDatePicker: false });
-        break;
-      case 'endDate':
-        saveState({
-          endDate: moment(selectedDate).format('L'),
-        });
-        this.setState({ showDatePicker: false });
-        break;
-      case 'startTime':
-        saveState({
-          startTime: moment(event.nativeEvent.timeStamp).format('LT'),
-        });
-        this.setState({ showDatePicker: false });
-        break;
-      case 'endTime':
-        saveState({
-          endTime: moment(event.nativeEvent.timeStamp).format('LT'),
-        });
-        this.setState({ showDatePicker: false });
-        break;
-      default:
-        this.setState({ showDatePicker: false });
+    if (event.type === 'set') {
+      switch (dateTimeType) {
+        case 'startDate':
+          saveState({
+            startDate: moment(selectedDate).format('L'),
+          });
+          break;
+        case 'endDate':
+          saveState({
+            endDate: moment(selectedDate).format('L'),
+          });
+          break;
+        case 'startTime':
+          saveState({
+            startTime: moment(event.nativeEvent.timeStamp).format('LT'),
+          });
+          break;
+        case 'endTime':
+          saveState({
+            endTime: moment(event.nativeEvent.timeStamp).format('LT'),
+          });
+          break;
+        default:
+          this.setState({ showDatePicker: false });
+      }
     }
+    this.setState({ showDatePicker: false });
   };
 
   getDateTime = () => {
@@ -91,6 +91,7 @@ export class step3 extends Component {
       case 'endTime':
         return getState().endTime;
     }
+    this.setState({ showDatePicker: false });
   };
 
   render() {
@@ -101,9 +102,9 @@ export class step3 extends Component {
     return (
       <View style={{ alignItems: 'center' }}>
         <View>
-          <Text style={styles.currentStepText}>My Schedule</Text>
+          <Text style={styles.currentStepText}>Plan Your Time</Text>
         </View>
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        <View style={{ flexDirection: 'row', marginTop: 20 }}>
           <>
             <TextInput
               label="From Date"
@@ -253,7 +254,6 @@ export class step3 extends Component {
             </Text>
           </View>
         </View>
-
         {showDatePicker && (
           <DateTimePicker
             value={this.getDateTime}
@@ -268,9 +268,10 @@ export class step3 extends Component {
                 ? 'calendar'
                 : 'clock'
             }
-            onChange={(event, selectedDate) =>
-              this.setDateTimeValue(event, selectedDate)
-            }
+            onChange={(event, selectedDate) => {
+              this.setState({ showDatePicker: false });
+              this.setDateTimeValue(event, selectedDate);
+            }}
           />
         )}
         <View style={[styles.btnContainer, styles.marginAround]}>

@@ -86,15 +86,9 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  searchSection: {
-    // flex: 1,
-    // flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: '#fff',
-  },
-  searchIcon: {
-   // padding: 10,
+  surface: {
+    margin: 10,
+    elevation: 4,
   },
   inputDate: {
     flex: 1,
