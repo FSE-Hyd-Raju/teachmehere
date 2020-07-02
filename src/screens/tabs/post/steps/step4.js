@@ -41,13 +41,11 @@ export class step4 extends Component {
     const { getState, saveState } = this.props;
     return (
       <View style={{ alignItems: 'center' }}>
-        <View>
-          <Text style={styles.currentStepText}>Platform</Text>
-        </View>
+          <Text style={styles.currentStepText}>Where can we connect ?</Text>
         <TextInput
           label="Platform"
           mode="outlined"
-          placeholder="Place where we can connect"
+          placeholder="Place to connect. Ex: Skype, Zoom, etc."
           style={styles.input}
           value={this.state.platform}
           onChangeText={text => saveState({ platform: text })}

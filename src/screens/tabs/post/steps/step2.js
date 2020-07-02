@@ -17,12 +17,13 @@ class step2 extends Component {
     this.state = {
       totalSteps: '',
       currentStep: '',
-      isGroupSelected: false,
-      showCountrySelectionDailog: false,
-      skillLevel: '',
+      isGroupSelected: props.getState().isGroupSelected || false,
       countries: require('../../../../assets/countries.json') || [],
+      allLaunguages: require('../../../../assets/languages.json') || [],
       filteredCountries: [],
-      languages: ['English', 'Hindi', 'Telugu'],
+      filteredLanguages: [],
+      languages:
+        props.getState().languages || ['English', 'Hindi', 'Telugu'] || [],
     };
   }
 
@@ -36,21 +37,25 @@ class step2 extends Component {
 
   nextStep = () => {
     const { next, saveState } = this.props;
+    saveState({
+      languages: this.state.languages,
+      isGroupSelected: this.state.isGroupSelected,
+    });
     // Go to next step
     next();
   };
 
   goBack() {
-    const { back } = this.props;
+    const { back, saveState } = this.props;
     // Go to previous step
+    saveState({
+      languages: this.state.languages,
+      isGroupSelected: this.state.isGroupSelected,
+    });
     back();
   }
 
-  countryDailogHide = () => {
-    this.setState({ showCountrySelectionDailog: false });
-  };
-
-  selectCountry(value) {
+  selectCountry = value => {
     const languages = this.state.languages;
     const { saveState } = this.props;
     saveState({ country: value });
@@ -62,7 +67,19 @@ class step2 extends Component {
       filteredCountries: [],
       languages: languages,
     });
-  }
+  };
+
+  selectLanguage = value => {
+    const languages = this.state.languages;
+    const index = languages.indexOf(value);
+    if (index === -1) {
+      languages.push(value);
+    }
+    this.setState({
+      languages: languages,
+      filteredLanguages: [],
+    });
+  };
 
   removeLanguage = Language => {
     const languages = this.state.languages;
@@ -82,10 +99,24 @@ class step2 extends Component {
     this.setState({ filteredCountries: filteredCountries });
   };
 
+  filterLanguages = value => {
+    const filteredLanguages = this.state.allLaunguages.filter(language => {
+      return (
+        language && language.name.toLowerCase().includes(value.toLowerCase())
+      );
+    });
+    this.setState({ filteredLanguages: filteredLanguages });
+  };
+
   render() {
-    const { isGroupSelected, filteredCountries, languages } = this.state;
+    const {
+      isGroupSelected,
+      filteredCountries,
+      languages,
+      filteredLanguages,
+    } = this.state;
     const { saveState, getState } = this.props;
-    const { country } = getState();
+    const { country, IndividualPrice, groupPrice, noOfPeople } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
         <Text style={styles.currentStepText}>Pricing</Text>
@@ -118,8 +149,12 @@ class step2 extends Component {
           keyboardType="numeric"
           mode="outlined"
           style={styles.price}
-          value={this.state.IndividualPrice}
-          onChangeText={price => saveState({ IndividualPrice: price })}
+          value={IndividualPrice}
+          onChangeText={price =>
+            saveState({
+              IndividualPrice: country && `${country.currency.symbol} ${price}`,
+            })
+          }
         />
         <View
           style={{
@@ -147,8 +182,8 @@ class step2 extends Component {
               keyboardType="numeric"
               mode="outlined"
               style={{ width: 120, marginTop: '3%', height: 48 }}
-              value={this.state.groupPrice}
-              onChangeText={price => saveState({ groupPrice: price })}
+              value={noOfPeople}
+              onChangeText={people => saveState({ noOfPeople: people })}
             />
             <TextInput
               label="Group price"
@@ -161,7 +196,7 @@ class step2 extends Component {
                 height: 48,
                 marginTop: '3%',
               }}
-              value={this.state.groupPrice}
+              value={groupPrice}
               onChangeText={price => saveState({ groupPrice: price })}
             />
           </View>
@@ -176,7 +211,13 @@ class step2 extends Component {
             Speaking Languages
           </Text>
         </View>
-        <View style={{ width: '80%', flexDirection: 'row', marginTop: 10 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            width: '80%',
+            marginTop: 10,
+          }}>
           {languages &&
             languages.map(lan => {
               return (
@@ -190,12 +231,26 @@ class step2 extends Component {
             })}
         </View>
         <TextInput
-          label="Search for languages"
+          label="Search languages"
           mode="outlined"
           style={{ width: '80%', marginTop: '2%', height: 48 }}
-          value={this.state.text}
-          onChangeText={text => this.setState({ text })}
+          onChangeText={text => this.filterLanguages(text)}
         />
+        {filteredLanguages &&
+          filteredLanguages.map(language => {
+            return (
+              <List.Item
+                style={{
+                  backgroundColor: 'white',
+                  width: '80%',
+                  elevation: 5,
+                }}
+                key={language.code}
+                title={language.name}
+                onPress={this.selectLanguage.bind(this, language.name)}
+              />
+            );
+          })}
         <View style={[styles.btnContainer, styles.marginAround]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image

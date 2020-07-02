@@ -116,7 +116,7 @@ class step1 extends Component {
           label="Contents"
           style={styles.description}
           mode="outlined"
-          onChangeText={text => saveState({ description: text })}
+          onChangeText={text => saveState({ contents: text })}
           value={contents}
           multiline={true}
           numberOfLines={10}
