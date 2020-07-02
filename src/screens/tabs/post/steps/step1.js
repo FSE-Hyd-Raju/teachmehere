@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, Text, CheckBox } from 'react-native';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  Text,
+  CheckBox,
+  Keyboard,
+} from 'react-native';
 
 import styles from './styles';
-import { TextInput } from 'react-native-paper';
-import SelectInput from 'react-native-select-input-ios';
+import {
+  TextInput,
+  Dialog,
+  Portal,
+  Button,
+  List,
+  Provider,
+  TextInputMask,
+} from 'react-native-paper';
 
 class step1 extends Component {
   constructor(props) {
@@ -11,7 +25,7 @@ class step1 extends Component {
     this.state = {
       totalSteps: '',
       currentStep: '',
-      visible: false,
+      showSelectSkillLevelDailog: false,
       skillLevel: '',
     };
   }
@@ -36,42 +50,80 @@ class step1 extends Component {
     back();
   }
 
-  render() {
+  skillLevelDialogHide = () => {
+    this.setState({ showSelectSkillLevelDailog: false });
+  };
+
+  selectSkillLevel(value) {
     const { saveState } = this.props;
+    this.skillLevelDialogHide();
+    saveState({ skillLevel: value });
+  }
+
+  render() {
+    const { saveState, getState } = this.props;
     const options = [
-      { value: 0, label: 'Skill Level' },
-      { value: 1, label: 'Beginer' },
-      { value: 2, label: 'Inermediate' },
-      { value: 3, label: 'Advanced' },
+      { value: 'basic', label: 'Basic' },
+      { value: 'intermediate', label: 'Inermediate' },
+      { value: 'advanced', label: 'Advanced' },
     ];
+
+    const { skillName, skillLevel, contents } = getState();
 
     return (
       <View style={{ alignItems: 'center' }}>
+        <Text style={styles.currentStepText}>Skill Details</Text>
         <TextInput
           label="Skill Name"
+          placeholder="Title for the skill you are offering"
           mode="outlined"
+          inlineImageLeft="search_icon"
           style={styles.input}
-          value={this.state.text}
+          value={skillName}
+          selectTextOnFocus={true}
           onChangeText={text => saveState({ skillName: text })}
         />
-        <SelectInput
-          label="Skill Level"
-          placeholderTextColor="lightgray"
-          style={styles.selectInput}
-          value={this.state.skillLevel}
-          onChangeText={text => saveState({ skillLevel: text })}
-          options={options}
-        />
         <TextInput
-          label="Description"
+          label="Skill Level"
+          placeholder="Level of skill"
+          mode="outlined"
+          style={styles.input}
+          value={skillLevel}
+          onFocus={() => {
+            Keyboard.dismiss();
+            this.setState({ showSelectSkillLevelDailog: true });
+          }}
+        />
+        <Portal>
+          <Dialog
+            visible={this.state.showSelectSkillLevelDailog}
+            onDismiss={this.skillLevelDialogHide}>
+            <Dialog.Title>Select Skill Level</Dialog.Title>
+            <Dialog.Content>
+              {options.map(data => {
+                return (
+                  <List.Item
+                    key={data.key}
+                    title={data.label}
+                    onPress={this.selectSkillLevel.bind(this, data.label)}
+                  />
+                );
+              })}
+            </Dialog.Content>
+          </Dialog>
+        </Portal>
+        <TextInput
+          label="Contents"
           style={styles.description}
           mode="outlined"
           onChangeText={text => saveState({ description: text })}
-          value={this.state.description}
+          value={contents}
           multiline={true}
           numberOfLines={10}
           scrollEnabled={true}
-          placeholder="Course Description"
+          placeholder={
+            'contents to cover \n  example: \n 1. Agenda \n 2. Introduction\n 3. etc. '
+          }
         />
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>

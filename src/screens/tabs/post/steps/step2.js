@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, CheckBox } from 'react-native';
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
+} from 'react-native';
 
 import styles from './styles';
-import { Surface, Text, Button } from 'react-native-paper';
+import { Portal, Text, Checkbox, Chip, List } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
-import SelectInput from 'react-native-select-input-ios';
 
 class step2 extends Component {
   constructor(props) {
@@ -12,8 +17,12 @@ class step2 extends Component {
     this.state = {
       totalSteps: '',
       currentStep: '',
-      visible: false,
+      isGroupSelected: false,
+      showCountrySelectionDailog: false,
       skillLevel: '',
+      countries: require('../../../../assets/countries.json') || [],
+      filteredCountries: [],
+      languages: ['English', 'Hindi', 'Telugu'],
     };
   }
 
@@ -27,9 +36,6 @@ class step2 extends Component {
 
   nextStep = () => {
     const { next, saveState } = this.props;
-    // Save state for use in other steps
-    saveState({ name: 'samad' });
-
     // Go to next step
     next();
   };
@@ -40,72 +46,110 @@ class step2 extends Component {
     back();
   }
 
+  countryDailogHide = () => {
+    this.setState({ showCountrySelectionDailog: false });
+  };
+
+  selectCountry(value) {
+    const { saveState } = this.props;
+    //this.countryDailogHide();
+    saveState({ country: value });
+    this.setState({ filteredCountries: [] });
+  }
+
+  filterCountries = value => {
+    const filteredCountries = this.state.countries.filter(country => {
+      return (
+        country && country.name.toLowerCase().includes(value.toLowerCase())
+      );
+    });
+    this.setState({ filteredCountries: filteredCountries });
+  };
+
   render() {
-    const { saveState } = this.state;
-    ('');
-    const options = [
-      { value: 0, label: '\u20B9' },
-      { value: 1, label: '\u0024' },
-      { value: 2, label: '\u20AC' },
-      { value: 3, label: '\u00A5' },
-      { value: 4, label: '\u00A3' },
-    ];
+    const { isGroupSelected, filteredCountries, languages } = this.state;
+    const { saveState, getState } = this.props;
+    const { country } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={styles.currentStepText}>Pricing</Text>
-          <SelectInput
-            label="Currency"
-            placeholderTextColor="lightgray"
-            style={styles.selectInputPrice}
-            value={this.state.skillLevel}
-            options={options}
-          />
-        </View>
+        <Text style={styles.currentStepText}>Pricing</Text>
+        <TextInput
+          label="Country"
+          mode="outlined"
+          selectionColor={'red'}
+          style={styles.price}
+          value={country && country.name}
+          onChangeText={text => this.filterCountries(text)}
+        />
+        {filteredCountries &&
+          filteredCountries.map(country => {
+            return (
+              <List.Item
+                style={{
+                  backgroundColor: 'white',
+                  width: '80%',
+                  elevation: 5,
+                }}
+                key={country.code}
+                title={country.name}
+                onPress={this.selectCountry.bind(this, country)}
+              />
+            );
+          })}
+        <TextInput
+          label="One to one price"
+          placeholder="Price per head"
+          keyboardType="numeric"
+          mode="outlined"
+          style={styles.price}
+          value={this.state.IndividualPrice}
+          onChangeText={price => saveState({ IndividualPrice: price })}
+        />
         <View
           style={{
             flexDirection: 'row',
             marginTop: 20,
-            marginLeft: -250,
           }}>
-          <Text style={{ marginTop: 5, marginRight: 5 }}>One on One</Text>
-        </View>
-        <View style={{ flexDirection: 'row', width: '80%' }}>
-          <TextInput
-            label="Price"
-            mode="outlined"
-            style={styles.price}
-            value={this.state.IndividualPrice}
-            onChangeText={price => saveState({ IndividualPrice: price })}
-          />
-          <Text style={{ marginTop: 20, fontSize: 15 }}> / per head.</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 20,
-            marginLeft: -280,
-            alignItems: 'flex-start',
-          }}>
-          <CheckBox
+          <Checkbox
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             title="checkbox 1"
-            checkedColor="red"
-            checked={true}
+            onPress={() =>
+              this.setState({ isGroupSelected: !this.state.isGroupSelected })
+            }
+            status={isGroupSelected ? 'checked' : 'unchecked'}
           />
-          <Text style={{ marginTop: 5, marginRight: 5 }}>Group</Text>
+          <Text style={{ marginTop: 10 }}>
+            Interested in teaching group of people?
+          </Text>
         </View>
-        <View style={{ flexDirection: 'row', width: '80%' }}>
-          <TextInput
-            label="Price"
-            mode="outlined"
-            style={styles.price}
-            value={this.state.groupPrice}
-            onChangeText={price => saveState({ groupPrice: price })}
-          />
-          <Text style={{ marginTop: 20, fontSize: 15 }}> / per head.</Text>
-        </View>
+        {isGroupSelected && (
+          <View style={{ flexDirection: 'row' }}>
+            <TextInput
+              label="# of people"
+              placeholder="No of people"
+              keyboardType="numeric"
+              mode="outlined"
+              style={{ width: 120, marginTop: '3%', height: 48 }}
+              value={this.state.groupPrice}
+              onChangeText={price => saveState({ groupPrice: price })}
+            />
+            <TextInput
+              label="Group price"
+              placeholder="Price per head"
+              keyboardType="numeric"
+              mode="outlined"
+              style={{
+                width: 220,
+                marginLeft: 15,
+                height: 48,
+                marginTop: '3%',
+              }}
+              value={this.state.groupPrice}
+              onChangeText={price => saveState({ groupPrice: price })}
+            />
+          </View>
+        )}
         <View
           style={{
             flexDirection: 'row',
@@ -116,24 +160,23 @@ class step2 extends Component {
             Speaking Languages
           </Text>
         </View>
-        {['English', 'Hindhi', 'Telugu', 'Other'].map(lan => {
-          return (
-            <View style={{ flexDirection: 'row', marginLeft: -250 }}>
-              <CheckBox
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                title="checkbox 1"
-                checkedColor="red"
-                checked={true}
-              />
-              <Text style={{ marginTop: 5, marginRight: 5 }}>{lan}</Text>
-            </View>
-          );
-        })}
+        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+          {languages &&
+            languages.map(lan => {
+              return (
+                <Chip
+                  mode="outlined"
+                  style={{ padding: 2, margin: 5 }}
+                  onClose={text => console.log('hjg', text)}>
+                  {lan}
+                </Chip>
+              );
+            })}
+        </View>
         <TextInput
           label="Language"
           mode="outlined"
-          style={styles.price}
+          style={{ width: '80%', marginTop: '2%', height: 48 }}
           value={this.state.text}
           onChangeText={text => this.setState({ text })}
         />

@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import SelectInput from 'react-native-select-input-ios';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TextInput, RadioButton, Paragraph, Icon } from 'react-native-paper';
 import moment from 'moment';

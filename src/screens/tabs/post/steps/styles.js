@@ -34,6 +34,7 @@ export default StyleSheet.create({
   },
   price: {
     width: '80%',
+    marginTop: '4%',
     height: 48,
   },
   selectInput: {
