@@ -51,11 +51,27 @@ class step2 extends Component {
   };
 
   selectCountry(value) {
+    const languages = this.state.languages;
     const { saveState } = this.props;
-    //this.countryDailogHide();
     saveState({ country: value });
-    this.setState({ filteredCountries: [] });
+    const index = languages.indexOf(value.language.name);
+    if (index === -1) {
+      languages.push(value.language.name);
+    }
+    this.setState({
+      filteredCountries: [],
+      languages: languages,
+    });
   }
+
+  removeLanguage = Language => {
+    const languages = this.state.languages;
+    const index = languages.indexOf(Language);
+    if (index !== -1) {
+      languages.splice(index, 1);
+    }
+    this.setState({ languages: languages });
+  };
 
   filterCountries = value => {
     const filteredCountries = this.state.countries.filter(country => {
@@ -160,21 +176,21 @@ class step2 extends Component {
             Speaking Languages
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+        <View style={{ width: '80%', flexDirection: 'row', marginTop: 10 }}>
           {languages &&
             languages.map(lan => {
               return (
                 <Chip
                   mode="outlined"
                   style={{ padding: 2, margin: 5 }}
-                  onClose={text => console.log('hjg', text)}>
+                  onClose={() => this.removeLanguage(lan)}>
                   {lan}
                 </Chip>
               );
             })}
         </View>
         <TextInput
-          label="Language"
+          label="Search for languages"
           mode="outlined"
           style={{ width: '80%', marginTop: '2%', height: 48 }}
           value={this.state.text}
