@@ -53,10 +53,10 @@ class Settings extends React.Component {
           showAccessory
         /> */}
          <View style={styles.header}>
-            <View style={styles.headerContent}>
+            {/* <View style={styles.headerContent}>
                 <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar3.png'}}/>
                 <Text style={styles.title}>Sucharitha</Text>
-            </View>
+            </View> */}
           </View>
           <BlockButton
             text="Account"

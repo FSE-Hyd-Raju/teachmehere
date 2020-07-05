@@ -159,12 +159,12 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
   });
 
 
-  export const requestToUpdateAuthUser = ({ username, description, phonenumber, userId }) =>
+  export const requestToUpdateAuthUser = ({ username, description, phonenumber, userId}) =>
   new Promise(async (resolve, reject) => {
   
     try {
-      
-   
+      console.log("inside auth.js")
+       console.log(displaypic)
       const response = await axios.post(UPDATE_PROFILE_WITH_ID_URL, {
         devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
         description: description,
@@ -191,6 +191,47 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
 
     const accountId = response.data[0]._id
 
+    //alert(accountId)
+    resolve({ accountId });
+  } catch (error) {
+    Config.logNetworkErrors && console.log(error);
+    reject(error);
+  }
+  });
+
+
+  
+  export const requestToUpdateUserProfilePic = ({ userId, displaypic }) =>
+  new Promise(async (resolve, reject) => {
+  
+    try {
+      console.log("inside auth.js")
+       console.log(userId)
+      const response = await axios.post(UPDATE_PROFILE_WITH_ID_URL, {
+        devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+        displaypic:displaypic,
+        _id:userId
+      });
+  
+      //alert(JSON.stringify(response.data[0]._id))
+      // console.log(response.json())
+      // const {
+      //   data: { session_id },
+      // } = await axios.post(NEW_SESSION, { request_token });
+      //alert(JSON.stringify(response.data.status))
+
+    //   const responsestatus = JSON.stringify(response.data.status)
+
+
+    //   // alert(accountId)
+    //   resolve({ responsestatus });
+    // } catch (error) {
+    //   Config.logNetworkErrors && console.log(error);
+    //   reject(error);
+    // }
+
+    const accountId = response.data[0]._id
+    console.log("success")
     //alert(accountId)
     resolve({ accountId });
   } catch (error) {

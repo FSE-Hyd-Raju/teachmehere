@@ -11,7 +11,8 @@ import {
   requestToCreateNewAuthUser,
   requestToCreateNewAut2hUser,
   requestToCreateNewPassword,
-  requestToUpdateAuthUser
+  requestToUpdateAuthUser,
+  requestToUpdateUserProfilePic
 } from '../api/auth';
 import { getTmdbErrorMessage } from '../api/codes';
 import RouteNames from '../RouteNames';
@@ -272,7 +273,44 @@ export const ResetPassword = ({
     dispatch({ type: Auth.SIGNUP_USER_FAIL, payload: errMessage });
   }
 };
+export const updateProfilePic = ({
+  userId,
+  displaypic,
+  showToast,
+  onSuccess,
+}) => async dispatch => {
+  dispatch({ type: Auth.SIGNUP_USER_ATTEMPT });
 
+  console.log("inside profile pic auth action")
+  console.log(userId)
+  try {
+   
+    console.log("inside authaction")
+  
+    const { accountId } = await requestToUpdateUserProfilePic({
+      userId,
+      displaypic
+    
+    });
+    dispatch({
+      type: Auth.SIGNUP2_USER_SUCCESS,
+      payload: createUser( accountId, email ),
+    });
+    onSuccess();
+  }
+  catch (error) {
+    const isUnauthorized = error.response && error.response.status === 401;
+    if (!isUnauthorized && showToast) {
+      showToast('Something went wrong. Please try again later.');
+    }
+    const errMessage = isUnauthorized
+      ? getTmdbErrorMessage(error.response.data.status_code)
+      : '';
+    dispatch({ type: Auth.SIGNUP_USER_FAIL, payload: errMessage });
+  }
+};
+
+  
 export const updateProfile = ({
   username,
   description,
@@ -308,10 +346,9 @@ export const updateProfile = ({
       username,
       description,
       phonenumber,
-      userId
+      userId,
     
     });
-    alert(email)
     dispatch({
       type: Auth.SIGNUP2_USER_SUCCESS,
       payload: createUser( accountId, email ),

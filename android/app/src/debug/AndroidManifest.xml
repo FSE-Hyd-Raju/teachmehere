@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-sdk
+    android:minSdkVersion="16"
+    android:targetSdkVersion="28" />
+       <!-- minSdkVersion = 16
+        compileSdkVersion = 28
+        targetSdkVersion = 28 -->
+<!-- <uses-sdk android:minSdkVersion="integer"
+          android:targetSdkVersion="integer"
+          android:maxSdkVersion="integer" /> -->
+          
     <application android:usesCleartextTraffic="true" tools:targetApi="28" tools:ignore="GoogleAppIndexingWarning" />
 </manifest>
