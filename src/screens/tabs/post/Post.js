@@ -138,7 +138,10 @@ export default class Post extends Component {
             )}
           </ScrollView>
           {showSteps && (
-            <Steps category={activeCategory} subCategory={activeSubCategory} />
+            <Steps
+              category={activeCategory.categoryName}
+              subCategory={activeSubCategory.name}
+            />
           )}
         </View>
       </Provider>

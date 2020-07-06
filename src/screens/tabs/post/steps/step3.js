@@ -136,7 +136,9 @@ export class step3 extends Component {
         </TouchableOpacity>
         <View style={{ alignItems: 'center' }}>
           <View>
-            <Text style={styles.currentStepText}>Plan Your Time</Text>
+            <Text style={styles.currentStepText}>
+              Plan Your <Text style={{color: 'green'}}>{totalHours} hrs</Text>
+            </Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop: 20 }}>
             <>
@@ -266,21 +268,10 @@ export class step3 extends Component {
               />
             </>
           </View>
-          <TextInput
-            label="Total hours"
-            placeholder="Time in hrs to finish the course"
-            mode="outlined"
-            inlineImageLeft="search_icon"
-            style={{ width: '76%', marginTop: '6%', height: 48 }}
-            value={totalHours}
-            selectTextOnFocus={true}
-            keyboardType={'numeric'}
-            onChangeText={text => saveState({ totalHours: text })}
-          />
           <View style={{ alignItems: 'center', width: '80%', marginTop: 25 }}>
             <Paragraph style={{ fontSize: 12 }}>
               The schedule might change depending on you and your student
-              availability. Unless your not strict about the timings, Please
+              availability. Unless you are not strict about the timings, Please
               check the below check box to show it as tentative.
             </Paragraph>
             <Text style={{ marginTop: 10, fontSize: 12.5, color: '#d04437' }}>

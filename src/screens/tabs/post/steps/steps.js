@@ -39,31 +39,62 @@ class Steps extends Component {
       skillLevel,
       content,
       totalHours,
-      experience,
+      country,
+      individualPrice,
+      groupPrice,
+      noOfPeople,
       languages,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      onDays,
+      daysOfTheWeek,
+      tentativeScedule,
       platform,
       tags,
-      meetingUrl,
+      experience,
       linkedInProfile,
-      individualPrice,
+      availableForDemo,
     } = state;
+
     const postData = {
+      uid: '12122',
       coursename: skillName,
       courselevel: skillLevel,
+      content: content || '',
       category: category,
       subcategory: subCategory,
-      content: content,
       totalhours: totalHours,
-      price: individualPrice,
-      experience: experience,
-      demo: true,
+      country: country && country.name,
+      currency: country && country.currency && country.currency.symbol,
+      price: {
+        oneonone: individualPrice,
+        group: {
+          members: noOfPeople || '',
+          price: groupPrice || '',
+        },
+      },
       speakinglanguages: languages,
+      availability: {
+        coursestartdate: startDate || '',
+        courseenddate: endDate || '',
+        ondays: {
+          availableon: onDays || '',
+          daysofweek: daysOfTheWeek || [],
+        },
+        coursestarttime: startTime || '',
+        coursesendtime: endTime || '',
+        tentativeschedule: tentativeScedule,
+      },
       platform: platform,
-      meetingUrl: meetingUrl,
-      tags: tags,
+      tags: tags.split(','),
+      experience: experience,
       linkedinprofile: linkedInProfile,
-      availability: {},
+      demo: availableForDemo,
     };
+
+    console.log('POST FORMED', postData);
     this.props.actions.postSkill(postData);
   };
 

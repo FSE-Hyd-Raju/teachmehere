@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Image, View, TouchableOpacity, Text } from 'react-native';
 
 import styles from './styles';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Checkbox } from 'react-native-paper';
 
 export class step4 extends Component {
   constructor(props) {
@@ -46,10 +46,10 @@ export class step4 extends Component {
     const { getState, saveState } = this.props;
     const {
       platform,
-      meetingUrl,
       tags,
       experience,
       linkedInProfile,
+      availableForDemo,
     } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
@@ -63,14 +63,6 @@ export class step4 extends Component {
           style={styles.input}
           value={platform}
           onChangeText={text => saveState({ platform: text })}
-        />
-        <TextInput
-          label="Meeting URL"
-          mode="outlined"
-          placeholder="Meeting URL"
-          style={styles.input}
-          value={meetingUrl}
-          onChangeText={text => saveState({ meetingUrl: text })}
         />
         <TextInput
           label="tags"
@@ -95,6 +87,25 @@ export class step4 extends Component {
           value={linkedInProfile}
           onChangeText={text => saveState({ linkedInProfile: text })}
         />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            marginTop: 25,
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+          }}>
+          <Checkbox
+            checkedIcon="dot-circle-o"
+            uncheckedIcon="circle-o"
+            title="checkbox 1"
+            onPress={() => saveState({ availableForDemo: !availableForDemo })}
+            status={availableForDemo ? 'checked' : 'unchecked'}
+          />
+          <Text style={{ marginTop: 10, marginRight: 5 }}>
+            Available for Demo
+          </Text>
+        </View>
         <View style={[styles.btnContainer]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image

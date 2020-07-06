@@ -7,9 +7,9 @@ import { postSkillSuccess, postSkillFailed } from '../actions/SkillActions';
 
 function* onPostSkill(action) {
   try {
-    console.log("===>",action)
+    console.log("===>",action.payload)
     const skill = yield call(() => {
-      return postSkill(action);
+      return postSkill(action.payload);
     });
     console.log('POST SUCCESSFULL', skill);
     yield put(postSkillSuccess({ isPostSuccess: true }));

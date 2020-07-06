@@ -67,7 +67,7 @@ class step1 extends Component {
       { value: 'advanced', label: 'Advanced' },
     ];
 
-    const { skillName, skillLevel, contents } = getState();
+    const { skillName, skillLevel, contents, totalHours } = getState();
 
     return (
       <View style={{ alignItems: 'center' }}>
@@ -77,8 +77,8 @@ class step1 extends Component {
         <TextInput
           label="Skill Name"
           placeholder="Title for the skill you are offering"
+          inlineImageLeft={'../../../../assets/img/right-black-arrow-md.png'}
           mode="outlined"
-          inlineImageLeft="search_icon"
           style={styles.input}
           value={skillName}
           selectTextOnFocus={true}
@@ -113,6 +113,15 @@ class step1 extends Component {
             </Dialog.Content>
           </Dialog>
         </Portal>
+        <TextInput
+          label="Total Hours"
+          placeholder="# of hours to cover this course"
+          mode="outlined"
+          style={styles.input}
+          value={totalHours}
+          selectTextOnFocus={true}
+          onChangeText={hours => saveState({ totalHours: hours })}
+        />
         <TextInput
           label="Contents"
           style={styles.description}
