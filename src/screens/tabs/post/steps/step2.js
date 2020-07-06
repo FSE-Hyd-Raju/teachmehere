@@ -13,17 +13,20 @@ import { TextInput } from 'react-native-paper';
 
 class step2 extends Component {
   constructor(props) {
+    props.saveState({
+      languages: ['English', 'Hindi', 'Telugu'],
+      isGroupSelected: false,
+    });
     super(props);
     this.state = {
       totalSteps: '',
       currentStep: '',
-      isGroupSelected: props.getState().isGroupSelected || false,
       countries: require('../../../../assets/countries.json') || [],
       allLaunguages: require('../../../../assets/languages.json') || [],
       filteredCountries: [],
       filteredLanguages: [],
-      languages:
-        props.getState().languages || ['English', 'Hindi', 'Telugu'] || [],
+      languages: props.getState().languages || [],
+      isGroupSelected: props.getState().isGroupSelected || false,
     };
   }
 
@@ -48,10 +51,10 @@ class step2 extends Component {
   goBack() {
     const { back, saveState } = this.props;
     // Go to previous step
-    saveState({
-      languages: this.state.languages,
-      isGroupSelected: this.state.isGroupSelected,
-    });
+    // saveState({
+    //   languages: this.state.languages,
+    //   isGroupSelected: this.state.isGroupSelected,
+    // });
     back();
   }
 
@@ -110,16 +113,18 @@ class step2 extends Component {
 
   render() {
     const {
-      isGroupSelected,
       filteredCountries,
       languages,
       filteredLanguages,
+      isGroupSelected,
     } = this.state;
     const { saveState, getState } = this.props;
     const { country, IndividualPrice, groupPrice, noOfPeople } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.currentStepText}>Pricing</Text>
+        <View>
+          <Text style={styles.currentStepText}>Pricing</Text>
+        </View>
         <TextInput
           label="Country"
           mode="outlined"
@@ -152,7 +157,7 @@ class step2 extends Component {
           value={IndividualPrice}
           onChangeText={price =>
             saveState({
-              IndividualPrice: country && `${country.currency.symbol} ${price}`,
+              IndividualPrice: price,
             })
           }
         />
@@ -165,9 +170,7 @@ class step2 extends Component {
             checkedIcon="dot-circle-o"
             uncheckedIcon="circle-o"
             title="checkbox 1"
-            onPress={() =>
-              this.setState({ isGroupSelected: !this.state.isGroupSelected })
-            }
+            onPress={() => this.setState({ isGroupSelected: !isGroupSelected })}
             status={isGroupSelected ? 'checked' : 'unchecked'}
           />
           <Text style={{ marginTop: 10 }}>
@@ -175,7 +178,7 @@ class step2 extends Component {
           </Text>
         </View>
         {isGroupSelected && (
-          <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: 'row', width: '80%' }}>
             <TextInput
               label="# of people"
               placeholder="No of people"

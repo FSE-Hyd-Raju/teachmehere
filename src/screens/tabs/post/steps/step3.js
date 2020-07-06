@@ -1,22 +1,38 @@
 import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, Text, CheckBox } from 'react-native';
+import { Image, View, TouchableOpacity, Text } from 'react-native';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { TextInput, RadioButton, Paragraph, Button } from 'react-native-paper';
+import {
+  TextInput,
+  RadioButton,
+  Paragraph,
+  Checkbox,
+} from 'react-native-paper';
 import moment from 'moment';
 
 import styles from './styles';
 
 export class step3 extends Component {
   constructor(props) {
+    props.saveState({
+      daysOfTheWeek: [
+        { name: 'Sun', checked: false },
+        { name: 'Mon', checked: false },
+        { name: 'Tue', checked: false },
+        { name: 'Wed', checked: false },
+        { name: 'Thurs', checked: false },
+        { name: 'Fri', checked: false },
+        { name: 'Sat', checked: false },
+      ],
+      onDays: 'Daily',
+    });
     super(props);
     this.state = {
       totalSteps: '',
       currentStep: '',
       showDatePicker: false,
       dateTimeType: '',
-      value: 'Daily',
     };
   }
 
@@ -31,10 +47,6 @@ export class step3 extends Component {
   nextStep = () => {
     const { next } = this.props;
     next();
-  };
-
-  setValue = value => {
-    this.setState({ value: value });
   };
 
   setDateTimeValue = (event, selectedDate) => {
@@ -86,11 +98,27 @@ export class step3 extends Component {
     this.setState({ showDatePicker: false });
   };
 
+  updateState = day => {
+    const { saveState, getState } = this.props;
+    const { daysOfTheWeek } = getState();
+    const i = daysOfTheWeek.findIndex(weekDay => weekDay.name === day.name);
+    daysOfTheWeek[i].checked = true;
+    saveState({ daysOfTheWeek: daysOfTheWeek });
+  };
+
   render() {
-    const { showDatePicker, value, dateTimeType } = this.state;
-    const { getState } = this.props;
-    const daysOfTheWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const { startDate, endDate, startTime, endTime } = getState();
+    const { showDatePicker, days, dateTimeType } = this.state;
+    const { saveState, getState } = this.props;
+    const {
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      onDays,
+      daysOfTheWeek,
+      tentativeScedule,
+      totalHours,
+    } = getState();
     return (
       <View>
         <TouchableOpacity
@@ -152,8 +180,8 @@ export class step3 extends Component {
           </View>
           <View style={{ flexDirection: 'row', marginTop: 10 }}>
             <RadioButton.Group
-              onValueChange={value => this.setValue(value)}
-              value={value}>
+              onValueChange={value => saveState({ onDays: value })}
+              value={onDays}>
               <>
                 <RadioButton value="Daily" />
                 <Text style={{ marginTop: 8, marginRight: 20 }}>Daily</Text>
@@ -170,7 +198,7 @@ export class step3 extends Component {
               </>
             </RadioButton.Group>
           </View>
-          {value === 'specificDays' && (
+          {onDays === 'specificDays' && (
             <View
               style={{
                 flex: 1,
@@ -184,16 +212,15 @@ export class step3 extends Component {
                 daysOfTheWeek.map(day => {
                   return (
                     <>
-                      <CheckBox
+                      <Checkbox
                         checkedIcon="dot-circle-o"
                         uncheckedIcon="circle-o"
                         title="checkbox 1"
                         checkedColor="red"
-                        checked={true}
+                        onPress={() => this.updateState(day)}
+                        status={day.checked ? 'checked' : 'unchecked'}
                       />
-                      <Text style={{ marginTop: 5 }}>
-                        {day}
-                      </Text>
+                      <Text style={{ marginTop: 5 }}>{day.name}</Text>
                     </>
                   );
                 })}
@@ -239,6 +266,17 @@ export class step3 extends Component {
               />
             </>
           </View>
+          <TextInput
+            label="Total hours"
+            placeholder="Time in hrs to finish the course"
+            mode="outlined"
+            inlineImageLeft="search_icon"
+            style={{ width: '76%', marginTop: '6%', height: 48 }}
+            value={totalHours}
+            selectTextOnFocus={true}
+            keyboardType={'numeric'}
+            onChangeText={text => saveState({ totalHours: text })}
+          />
           <View style={{ alignItems: 'center', width: '80%', marginTop: 25 }}>
             <Paragraph style={{ fontSize: 12 }}>
               The schedule might change depending on you and your student
@@ -256,14 +294,16 @@ export class step3 extends Component {
                 flexWrap: 'wrap',
                 alignItems: 'flex-start',
               }}>
-              <CheckBox
+              <Checkbox
                 checkedIcon="dot-circle-o"
                 uncheckedIcon="circle-o"
                 title="checkbox 1"
-                checkedColor="red"
-                checked={true}
+                onPress={() =>
+                  saveState({ tentativeScedule: !tentativeScedule })
+                }
+                status={tentativeScedule ? 'checked' : 'unchecked'}
               />
-              <Text style={{ marginTop: 5, marginRight: 5 }}>
+              <Text style={{ marginTop: 10, marginRight: 5 }}>
                 My schedule is tentative
               </Text>
             </View>

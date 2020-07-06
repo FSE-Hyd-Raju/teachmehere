@@ -15,3 +15,9 @@ export const Auth = {
   USER_LOADED: 'auth/USER_LOADED',
   LOG_OUT: 'auth/LOG_OUT',
 };
+
+export const Post = {
+  POST_SKILL: 'post_POST_SKILL',
+  POST_SKILL_SUCCESS: 'post_POST_SKILL_SUCCESS',
+  POST_SKILL_FAILED: 'post_POST_SKILL_FAILED',
+};

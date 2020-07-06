@@ -37,17 +37,31 @@ export class step4 extends Component {
     };
   };
 
+  postMySkill = () => {
+    const { getState } = this.props;
+    console.log('---->', getState());
+  };
+
   render() {
     const { getState, saveState } = this.props;
+    const {
+      platform,
+      meetingUrl,
+      Tags,
+      experience,
+      LinkedInProfile,
+    } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
+        <View>
           <Text style={styles.currentStepText}>Where can we connect ?</Text>
+        </View>
         <TextInput
           label="Platform"
           mode="outlined"
           placeholder="Place to connect. Ex: Skype, Zoom, etc."
           style={styles.input}
-          value={this.state.platform}
+          value={platform}
           onChangeText={text => saveState({ platform: text })}
         />
         <TextInput
@@ -55,7 +69,7 @@ export class step4 extends Component {
           mode="outlined"
           placeholder="Meeting URL"
           style={styles.input}
-          value={this.state.meetingUrl}
+          value={meetingUrl}
           onChangeText={text => saveState({ meetingUrl: text })}
         />
         <TextInput
@@ -63,7 +77,7 @@ export class step4 extends Component {
           placeholder="add tags for search. Ex: angular, react etc"
           mode="outlined"
           style={styles.input}
-          value={this.state.Tags}
+          value={Tags}
           onChangeText={text => saveState({ Tags: text })}
         />
         <TextInput
@@ -71,17 +85,17 @@ export class step4 extends Component {
           placeholder="2 years, 2.5 years etc."
           mode="outlined"
           style={styles.input}
-          value={this.state.experience}
+          value={experience}
           onChangeText={text => saveState({ experience: text })}
         />
         <TextInput
           label="LinkedIn Profile"
           mode="outlined"
           style={styles.input}
-          value={this.state.LinkedInProfile}
+          value={LinkedInProfile}
           onChangeText={text => saveState({ LinkedInProfile: text })}
         />
-        <View style={[styles.btnContainer, styles.marginAround]}>
+        <View style={[styles.btnContainer]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
             <Image
               source={require('../../../../assets/img/right-black-arrow-md.png')}
@@ -92,14 +106,16 @@ export class step4 extends Component {
           <TouchableOpacity
             style={{
               borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.2)',
+              borderColor: 'rgba(0,0,0,0.8)',
               alignItems: 'flex-end',
               justifyContent: 'flex-end',
               backgroundColor: '#444',
               borderRadius: 50,
+              marginLeft: 45,
+              alignSelf: 'flex-end',
             }}
-            onPress={() => console.log('GET STATE', getState())}>
-            <Text style={{ padding: 18, color: 'white' }}>Submit</Text>
+            onPress={this.postMySkill}>
+            <Text style={{ padding: 18, color: 'white' }}>Post My Skill</Text>
           </TouchableOpacity>
         </View>
       </View>

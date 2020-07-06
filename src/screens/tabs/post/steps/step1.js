@@ -26,7 +26,6 @@ class step1 extends Component {
       totalSteps: '',
       currentStep: '',
       showSelectSkillLevelDailog: false,
-      skillLevel: '',
     };
   }
 
@@ -72,7 +71,9 @@ class step1 extends Component {
 
     return (
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.currentStepText}>Skill Details</Text>
+        <View>
+          <Text style={styles.currentStepText}>Skill Details</Text>
+        </View>
         <TextInput
           label="Skill Name"
           placeholder="Title for the skill you are offering"

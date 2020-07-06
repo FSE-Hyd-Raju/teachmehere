@@ -9,7 +9,7 @@ export default StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: '6%',
+    marginTop: '10%',
   },
   step1: {
     flex: 1,
