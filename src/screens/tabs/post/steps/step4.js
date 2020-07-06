@@ -37,9 +37,9 @@ export class step4 extends Component {
     };
   };
 
-  postMySkill = () => {
-    const { getState } = this.props;
-    console.log('---->', getState());
+  postSkill = () => {
+    const { next } = this.props;
+    next();
   };
 
   render() {
@@ -47,9 +47,9 @@ export class step4 extends Component {
     const {
       platform,
       meetingUrl,
-      Tags,
+      tags,
       experience,
-      LinkedInProfile,
+      linkedInProfile,
     } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
@@ -73,12 +73,12 @@ export class step4 extends Component {
           onChangeText={text => saveState({ meetingUrl: text })}
         />
         <TextInput
-          label="Tags"
+          label="tags"
           placeholder="add tags for search. Ex: angular, react etc"
           mode="outlined"
           style={styles.input}
-          value={Tags}
-          onChangeText={text => saveState({ Tags: text })}
+          value={tags}
+          onChangeText={text => saveState({ tags: text })}
         />
         <TextInput
           label="Experience"
@@ -92,8 +92,8 @@ export class step4 extends Component {
           label="LinkedIn Profile"
           mode="outlined"
           style={styles.input}
-          value={LinkedInProfile}
-          onChangeText={text => saveState({ LinkedInProfile: text })}
+          value={linkedInProfile}
+          onChangeText={text => saveState({ linkedInProfile: text })}
         />
         <View style={[styles.btnContainer]}>
           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
@@ -114,7 +114,7 @@ export class step4 extends Component {
               marginLeft: 45,
               alignSelf: 'flex-end',
             }}
-            onPress={this.postMySkill}>
+            onPress={this.postSkill}>
             <Text style={{ padding: 18, color: 'white' }}>Post My Skill</Text>
           </TouchableOpacity>
         </View>

@@ -83,7 +83,7 @@ export default class Post extends Component {
 
     return (
       <Provider>
-        <View style={{ flex: 1, backgroundColor: '#F5FCFF' }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {showMainCategories && (
             <Text style={styles.heading}>What do you want to teach?</Text>
           )}

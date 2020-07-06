@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import AnimatedMultistep from '../lib';
+import AnimatedMultistep from '../stepper';
+import { Dispatch, AnyAction } from 'redux';
+import { connect } from 'react-redux';
+import { postSkill } from '../../../../redux/actions/SkillActions';
 
 import Step1 from './step1';
 import Step2 from './step2';
@@ -15,7 +18,7 @@ const allSteps = [
   { name: 'step 4', component: Step4 },
 ];
 
-export default class Steps extends Component {
+class Steps extends Component {
   constructor(props) {
     super(props);
 
@@ -30,7 +33,38 @@ export default class Steps extends Component {
   };
 
   finish = state => {
-    console.log('TCL: App -> state', state);
+    const { category, subCategory } = this.props || {};
+    const {
+      skillName,
+      skillLevel,
+      content,
+      totalHours,
+      experience,
+      languages,
+      platform,
+      tags,
+      meetingUrl,
+      linkedInProfile,
+      individualPrice,
+    } = state;
+    const postData = {
+      coursename: skillName,
+      courselevel: skillLevel,
+      category: category,
+      subcategory: subCategory,
+      content: content,
+      totalhours: totalHours,
+      price: individualPrice,
+      experience: experience,
+      demo: true,
+      speakinglanguages: languages,
+      platform: platform,
+      meetingUrl: meetingUrl,
+      tags: tags,
+      linkedinprofile: linkedInProfile,
+      availability: {},
+    };
+    this.props.actions.postSkill(postData);
   };
 
   render() {
@@ -43,9 +77,29 @@ export default class Steps extends Component {
             animate={true}
             onBack={this.onBack}
             onNext={this.onNext}
+            // comeInOnNext="bounceInRight"
+            // OutOnNext="bounceOutLeft"
+            // comeInOnBack="bounceInLeft"
+            // OutOnBack="bounceOutRight"
           />
         </ScrollView>
       </View>
     );
   }
 }
+const mapStateToProps = state => ({
+  //isBasketCleared: state.basket.isBasketCleared,
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    postSkill: skill => {
+      dispatch(postSkill(skill));
+    },
+  },
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Steps);

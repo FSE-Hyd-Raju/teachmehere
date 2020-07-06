@@ -119,7 +119,7 @@ class step2 extends Component {
       isGroupSelected,
     } = this.state;
     const { saveState, getState } = this.props;
-    const { country, IndividualPrice, groupPrice, noOfPeople } = getState();
+    const { country, individualPrice, groupPrice, noOfPeople } = getState();
     return (
       <View style={{ alignItems: 'center' }}>
         <View>
@@ -154,10 +154,10 @@ class step2 extends Component {
           keyboardType="numeric"
           mode="outlined"
           style={styles.price}
-          value={IndividualPrice}
+          value={individualPrice}
           onChangeText={price =>
             saveState({
-              IndividualPrice: price,
+              individualPrice: price,
             })
           }
         />

@@ -1,9 +1,5 @@
 import axios from 'axios';
 import {
-  getCurrentUsersSessionId,
-  getCurrentUsersAccountId,
-} from '../utils/store';
-import {
   getAddToFavoriteUrl,
   getAddToWatchlistUrl,
   getSearchSkillsUrl,
@@ -13,9 +9,24 @@ import {
   getDetailsSkillUrl,
   getSkillRecommendationsUrl,
   getPopularSkillsUrl,
+  postSkillUrl,
 } from './urls';
 import { parseSkillsArray } from '../utils/skills';
 import Config from '../Config';
+
+// ------------------------------------------------------
+// Post skill details
+// ------------------------------------------------------
+export const postSkill = skill =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const { data } = await axios.post(postSkillUrl, skill);
+      resolve(data);
+    } catch (error) {
+      Config.logNetworkErrors && console.log(error);
+      reject(error);
+    }
+  });
 
 // ------------------------------------------------------
 // Skill details
@@ -24,7 +35,7 @@ export const fetchSkillAccountState = ({ skill }, reqParams = {}) =>
   new Promise(async (resolve, reject) => {
     const url = getSkillAccountStateUrl({
       skillId: skill.id,
-      sessionId: getCurrentUsersSessionId(),
+     // sessionId: getCurrentUsersSessionId(),
     });
 
     try {
@@ -132,20 +143,6 @@ export const fetchSectionSkills = (url, { page }, reqParams = {}) =>
     }
   });
 
-export const fetchSearchSkills = ({ page, query }, reqParams = {}) =>
-  new Promise(async (resolve, reject) => {
-    const url = getSearchSkillsUrl({ page, query });
-
-    try {
-      const { data } = await axios.get(url, reqParams);
-      addParsedSkillsToData(data);
-      resolve(data);
-    } catch (error) {
-      Config.logNetworkErrors && console.log(error);
-      reject(error);
-    }
-  });
-
 export const fetchFavoriteSkills = ({ page }, reqParams = {}) =>
   new Promise(async (resolve, reject) => {
     const url = getFavoriteSkillUrl({
@@ -158,53 +155,6 @@ export const fetchFavoriteSkills = ({ page }, reqParams = {}) =>
       const { data } = await axios.get(url, reqParams);
       addParsedSkillsToData(data);
       resolve(data);
-    } catch (error) {
-      Config.logNetworkErrors && console.log(error);
-      reject(error);
-    }
-  });
-
-export const fetchWatchlistSkills = ({ page }, reqParams = {}) =>
-  new Promise(async (resolve, reject) => {
-    const url = getWatchlistUrl({
-      page,
-      sessionId: getCurrentUsersSessionId(),
-      accountId: getCurrentUsersAccountId(),
-    });
-
-    try {
-      const { data } = await axios.get(url, reqParams);
-      addParsedSkillsToData(data);
-      resolve(data);
-    } catch (error) {
-      Config.logNetworkErrors && console.log(error);
-      reject(error);
-    }
-  });
-
-// ------------------------------------------------------
-// Explore skills
-// ------------------------------------------------------
-export const fetchSkillToExplore = isSkillSeen =>
-  new Promise(async (resolve, reject) => {
-    const skillsToExplore = [];
-    const minFillAmount = 35;
-    let page = 1;
-
-    try {
-      while (skillsToExplore.length < minFillAmount) {
-        const { skills } = await fetchSectionSkills(getPopularSkillsUrl, {
-          page,
-        });
-        skills.forEach(skill => {
-          if (!isSkillSeen(skill)) {
-            skillsToExplore.push(skill);
-          }
-        });
-
-        page++;
-      }
-      resolve(skillsToExplore);
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
       reject(error);

@@ -5,7 +5,7 @@ import {
   fetchSkillToExplore,
   changeSkillWatchlistStatus,
   changeSkillFavoriteStatus
-} from '../../api/skills';
+} from '../../api/services';
 import { getCurrentUsersAccountId, getCurrentUsersSessionId } from '../../utils/store';
 import {
   stGetExploredSkills,

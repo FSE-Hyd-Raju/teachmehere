@@ -1,4 +1,4 @@
-import { Post } from '../actions/types';
+import { Skill } from '../actions/types';
 
 const INITIAL_STATE = {
   skill: {},
@@ -6,17 +6,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case Post.POST_SKILL:
-      return {
-        ...state,
-        skill: action.skill,
-      };
-    case Post.POST_SKILL_SUCCESS:
-      return {
-        ...state,
-        skill: action.skill,
-      };
-    case Post.POST_SKILL_FAILED:
+    case Skill.GET_SKILLS:
       return {
         ...state,
         skill: action.skill,
