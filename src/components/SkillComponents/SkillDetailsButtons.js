@@ -11,7 +11,7 @@ import {
   fetchSkillAccountState,
   changeSkillFavoriteStatus,
   changeSkillWatchlistStatus
-} from '../../api/skills';
+} from '../../api/services';
 import Theme from '../../Theme';
 
 class SkillDetailsButtons extends React.PureComponent {

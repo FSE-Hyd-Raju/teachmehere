@@ -10,9 +10,9 @@ import withDelayedLoading from '../../components/hoc/withDelayedLoading';
 import {
   getSectionFetchFunctionFromUrlGetter as getFetchFunction,
   getSearchFetchFunctionFromQuery,
-} from '../../api/skills';
+} from '../../api/services';
 import {
-  getTrendingSkillsUrl,
+  trendingSkillsUrl,
   getPopularSkillsUrl,
   getTopRatedSkillsUrl,
 } from '../../api/urls';
@@ -21,7 +21,7 @@ import Theme from '../../Theme';
 const BROWSE_SECTIONS = [
   {
     title: 'Trending Tech',
-    fetchFunction: getFetchFunction(getTrendingSkillsUrl),
+    fetchFunction: getFetchFunction(trendingSkillsUrl),
   },
   // {
   //   title: 'Recomended',

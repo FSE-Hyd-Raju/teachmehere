@@ -15,3 +15,10 @@ export const Auth = {
   USER_LOADED: 'auth/USER_LOADED',
   LOG_OUT: 'auth/LOG_OUT',
 };
+
+export const Skill = {
+  GET_SKILLS: 'skill_GET_SKILLS',
+  POST_SKILL: 'skills_POST_SKILL',
+  POST_SKILL_SUCCESS: 'skills_POST_SKILL_SUCCESS',
+  POST_SKILL_FAILED: 'skills_POST_SKILL_FAILED',
+};

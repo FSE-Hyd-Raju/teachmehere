@@ -7,7 +7,7 @@ import SkillGenres from './SkillGenres';
 import SkillScoreYear from './SkillScoreYear';
 import SkillsHorizontalFlatList from './SkillsHorizontalFlatList';
 import withRefetch from '../hoc/withRefetch';
-import { fetchSkillDetailedInfo, fetchSkillRecommendations } from '../../api/skills';
+import { fetchSkillDetailedInfo, fetchSkillRecommendations } from '../../api/services';
 import Theme from '../../Theme';
 import SkillPreview from './SkillPreview';
 

@@ -4,14 +4,15 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   FlatList,
   Dimensions,
 } from 'react-native';
-import { Card, ListItem, Button, Divider } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Steps from './steps/steps';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Provider } from 'react-native-paper';
 const categories = require('./categories.json');
 
 export default class Post extends Component {
@@ -81,62 +82,69 @@ export default class Post extends Component {
     } = this.state;
 
     return (
-      <View style={{ flex: 1, backgroundColor: '#F5FCFF' }}>
-        {showMainCategories && (
-          <Text style={styles.heading}>What do you want to teach?</Text>
-        )}
-        {showSubCategories && (
-          <View>
-            <TouchableOpacity
-              onPress={this.goToMainCategories}
-              style={styles.backButton}>
-              <Icon name="md-arrow-round-back" size={28} color="#000" />
-            </TouchableOpacity>
-            <Text style={styles.heading}>{activeCategory.categoryName}</Text>
-          </View>
-        )}
-        {showSteps && (
-          <View>
-            <TouchableOpacity
-              onPress={this.goToSubCategories}
-              style={styles.backButton}>
-              <Icon name="md-arrow-round-back" size={28} color="#000" />
-            </TouchableOpacity>
-            <Text style={styles.subCategoryHeading}>
-              {activeCategory.categoryName}
-              {`> ${activeSubCategory.name}`}
-            </Text>
-          </View>
-        )}
-
-        <View style={styles.container}>
-          {showMainCategories &&
-            categories &&
-            categories.map(category => (
-              <TouchableOpacity
-                key={category.id}
-                style={styles.category}
-                onPress={() => this.showSubCategories(category)}>
-                <View key={category.id} style={styles.IconAndName}>
-                  <IconMaterialIcons
-                    name={category.iconName}
-                    color="#000"
-                    size={30}
-                  />
-                  <Text>{category.categoryName}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+      <Provider>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          {showMainCategories && (
+            <Text style={styles.heading}>What do you want to teach?</Text>
+          )}
           {showSubCategories && (
-            <FlatList
-              keyExtractor={this.keyExtractor}
-              data={activeCategory.subCategories}
-              renderItem={this.renderItem}
+            <View>
+              <TouchableOpacity
+                onPress={this.goToMainCategories}
+                style={styles.backButton}>
+                <Icon name="md-arrow-round-back" size={28} color="#000" />
+              </TouchableOpacity>
+              <Text style={styles.heading}>{activeCategory.categoryName}</Text>
+            </View>
+          )}
+          {showSteps && (
+            <View>
+              <TouchableOpacity
+                onPress={this.goToSubCategories}
+                style={styles.backButton}>
+                <Icon name="md-arrow-round-back" size={28} color="#000" />
+              </TouchableOpacity>
+              <Text style={styles.subCategoryHeading}>
+                {activeCategory.categoryName}
+                {`  >  ${activeSubCategory.name}`}
+              </Text>
+            </View>
+          )}
+
+          <ScrollView contentContainerStyle={styles.container}>
+            {showMainCategories &&
+              categories &&
+              categories.map(category => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={styles.category}
+                  onPress={() => this.showSubCategories(category)}>
+                  <View key={category.id} style={styles.IconAndName}>
+                    <IconMaterialIcons
+                      name={category.iconName}
+                      color="#000"
+                      size={30}
+                    />
+                    <Text>{category.categoryName}</Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            {showSubCategories && (
+              <FlatList
+                keyExtractor={this.keyExtractor}
+                data={activeCategory.subCategories}
+                renderItem={this.renderItem}
+              />
+            )}
+          </ScrollView>
+          {showSteps && (
+            <Steps
+              category={activeCategory.categoryName}
+              subCategory={activeSubCategory.name}
             />
           )}
         </View>
-        {showSteps && <Steps />}
-      </View>
+      </Provider>
     );
   }
 }
