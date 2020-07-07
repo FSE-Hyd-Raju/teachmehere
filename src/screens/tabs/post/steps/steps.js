@@ -65,14 +65,14 @@ class Steps extends Component {
       content: content || '',
       category: category,
       subcategory: subCategory,
-      totalhours: totalHours,
+      totalhours: parseInt(totalHours),
       country: country && country.name,
       currency: country && country.currency && country.currency.symbol,
       price: {
-        oneonone: individualPrice,
+        oneonone: parseInt(individualPrice),
         group: {
-          members: noOfPeople || '',
-          price: groupPrice || '',
+          members: parseInt(noOfPeople) || 0,
+          price: parseInt(groupPrice) || 0,
         },
       },
       speakinglanguages: languages,
@@ -89,7 +89,7 @@ class Steps extends Component {
       },
       platform: platform,
       tags: tags.split(','),
-      experience: experience,
+      experience: parseInt(experience),
       linkedinprofile: linkedInProfile,
       demo: availableForDemo,
     };

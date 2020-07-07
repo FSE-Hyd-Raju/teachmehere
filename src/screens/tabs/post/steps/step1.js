@@ -120,6 +120,7 @@ class step1 extends Component {
           style={styles.input}
           value={totalHours}
           selectTextOnFocus={true}
+          keyboardType={'numeric'}
           onChangeText={hours => saveState({ totalHours: hours })}
         />
         <TextInput
