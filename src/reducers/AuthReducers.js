@@ -40,11 +40,13 @@ export default (state = INITIAL_STATE, action) => {
     case Auth.OTP_CHANGED:
       return {
         ...state,
-        loginOTP: action.payload,
         loginOTPError: '',
+        loginOTP: action.payload,
+    
         
       };
     case Auth.OTP_INCORRECT:
+      console.log("acth reducer")
      return { ...state, loginOTPError: action.payload };
     case Auth.LOGIN_USER_ATTEMPT:
       return {
@@ -55,7 +57,9 @@ export default (state = INITIAL_STATE, action) => {
       };
     case Auth.LOGIN_USER_SUCCESS:
       return { ...INITIAL_STATE, user: action.payload };
-    
+    case Auth.LOGIN_USER_FAIL:
+      return { ...state,  loginEmail: '', loginPassword: '', 
+       loginIsLoading: false };
     case Auth.SIGNUP2_USER_ATTEMPT:
       return {
         ...state,
@@ -94,14 +98,23 @@ export default (state = INITIAL_STATE, action) => {
       };
     case Auth.EMAIL_INCORRECT:
       return { ...state, loginEmailError: action.payload };  
+    case Auth.OTP_INCORRECT:
+      return { ...state, loginOtpError: action.payload };  
     case Auth.PHONENUMBER_INCORRECT:
       return { ...state, loginPhoneNumberError: action.payload };
     case Auth.SIGNUP_USER_SUCCESS:
       return { ...INITIAL_STATE,  signupIsLoading: false };
+    case Auth.SIGNUP_USER_FAIL:
+      return { ...state,
+      signupIsLoading: false };
   
     case Auth.SIGNUP2_USER_SUCCESS:
       return { ...INITIAL_STATE, user: action.payload };
-  
+
+    case Auth.SIGNUP2_USER_FAIL:
+      return { ...state,
+      signupIsLoading: false };
+
     case Auth.CREATE_GUEST_SESSION_ATTEMPT:
       return { ...state, isGuestSessionCreating: true };
     case Auth.CREATE_GUEST_SESSION_SUCCESS:

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView, AsyncStorage,  Image, Text, Button  } from 'react-native';
+import { View, StyleSheet, ScrollView, AsyncStorage,  Image, Text, Button,  } from 'react-native';
 import {
   loginUsernameChanged,
   loginDescriptionChanged,
@@ -11,21 +11,19 @@ import {
 import { AppButton, PageSpinner } from '../../components/common';
 import AppToast from '../../components/AppToast';
 import LoginInput from '../../components/LoginInput';
-import { RESET_PASSWORD_URL } from '../../api/urls';
-import { safeOpenURL } from '../../utils/network';
 import RouteNames from '../../RouteNames';
 import Theme from '../../Theme';
-import ImgToBase64 from 'react-native-image-base64';
-import RNFS from 'react-native-fs';
 import ImagePicker from 'react-native-image-picker';
 import { Icon } from 'react-native-elements';
-
+import { TextInput } from 'react-native-paper';
 
 class UpdateProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       filePath: {},
+      isImageAvailable: false,
+      profilePic: null
     };
   }
   static navigationOptions = () => ({
@@ -40,6 +38,29 @@ class UpdateProfile extends React.Component {
     showImage : ''
 } 
 
+state={
+  username:'',
+  description:'',
+  phonenumber:'',
+  isUsernameAvailable:false,
+  isDescriptionAvailable:false,
+  isPhonenumberAvailable:false,
+
+}
+
+componentDidMount = () => {
+  this.getImage();
+}
+
+getImage = async () => {
+  const profilePic = await AsyncStorage.getItem("profilePic");
+  if (profilePic) {
+      this.setState({
+          isImageAvailable: true,
+          profilePic: JSON.parse(profilePic)
+      });
+  }
+}
 chooseFile = () => {
   var options = {
     title: 'Select Image',
@@ -65,10 +86,7 @@ chooseFile = () => {
       // let source = response;
       // You can also display the image using data:
       
-      let source = { uri: 'data:image/jpeg;base64,' + response.data };
-      console.log("sucharitha")
-      console.log((JSON.stringify(response.data)))
-   
+      let source = { uri: 'data:image/jpeg;base64,' + response.data }; 
       const { user } = this.props.auth;
       this.props.updateProfilePic({
         userId:user.accountId,
@@ -80,9 +98,12 @@ chooseFile = () => {
           this.props.navigation.navigate(RouteNames.Settings);
         },
       });
+      AsyncStorage.setItem("profilePic", JSON.stringify(source));
       this.setState({
         ...this.state,
         filePath: source,
+        profilePic: source,
+        isImageAvailable: true
       })
       
     }
@@ -96,17 +117,6 @@ chooseFile = () => {
   onDescriptionTextChange = text => this.props.loginDescriptionChanged(text);
 
   onUpdateProfilePress = () => {
-    // var base64Icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAwBQTFRF7c5J78kt+/Xm78lQ6stH5LI36bQh6rcf7sQp671G89ZZ8c9V8c5U9+u27MhJ/Pjv9txf8uCx57c937Ay5L1n58Nb67si8tVZ5sA68tJX/Pfr7dF58tBG9d5e8+Gc6chN6LM+7spN1pos6rYs6L8+47hE7cNG6bQc9uFj7sMn4rc17cMx3atG8duj+O7B686H7cAl7cEm7sRM26cq/vz5/v767NFY7tJM78Yq8s8y3agt9dte6sVD/vz15bY59Nlb8txY9+y86LpA5LxL67pE7L5H05Ai2Z4m58Vz89RI7dKr+/XY8Ms68dx/6sZE7sRCzIEN0YwZ67wi6rk27L4k9NZB4rAz7L0j5rM66bMb682a5sJG6LEm3asy3q0w3q026sqC8cxJ6bYd685U5a457cIn7MBJ8tZW7c1I7c5K7cQ18Msu/v3678tQ3aMq7tNe6chu6rgg79VN8tNH8c0w57Q83akq7dBb9Nld9d5g6cdC8dyb675F/v327NB6////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/LvB3QAAAMFJREFUeNpiqIcAbz0ogwFKm7GgCjgyZMihCLCkc0nkIAnIMVRw2UhDBGp5fcurGOyLfbhVtJwLdJkY8oscZCsFPBk5spiNaoTC4hnqk801Qi2zLQyD2NlcWWP5GepN5TOtSxg1QwrV01itpECG2kaLy3AYiCWxcRozQWyp9pNMDWePDI4QgVpbx5eo7a+mHFOqAxUQVeRhdrLjdFFQggqo5tqVeSS456UEQgWE4/RBboxyC4AKCEI9Wu9lUl8PEGAAV7NY4hyx8voAAAAASUVORK5CYII=';
-//  <Image style={{width: 100, height: 50, resizeMode: Image.resizeMode.contain, borderWidth: 1, borderColor: 'red'}} source={{uri: base64Icon}}/>
-
-
-    //  ImgToBase64.getBase64String('https://bootdey.com/img/Content/avatar/avatar3.png').then(res => {
-    //   // alert(JSON.stringify(res))  
-      
-    //   this.setState({
-    //     ...this.state,
-    //     showImage : JSON.stringify(res)
-    //   }) 
     const { user, loginUsername, loginPhoneNumber, loginDescription } = this.props.auth;
       this.props.updateProfile({
          
@@ -115,7 +125,7 @@ chooseFile = () => {
         phonenumber:loginPhoneNumber,
         description: loginDescription,
         userId:user.accountId,
-        email:user.username,
+        email:user.email,
   
         showToast: this.showToast,
         onSuccess: () => {
@@ -124,7 +134,7 @@ chooseFile = () => {
         },
       });
      
-      // });
+    
   
   };
 
@@ -149,46 +159,44 @@ chooseFile = () => {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContentContainer}>
-            <View style={styles.containerImage}>
-                <Image style={styles.avatar} source={{uri: 'https://bootdey.com/img/Content/avatar/avatar3.png'}}/>
-                <Icon name={'edit'} containerStyle={styles.editicon} onPress={this.chooseFile.bind(this)}/>
-                {/* <Text style={styles.title}>{user.username}</Text> */}
-                <Image
-            source={{
-              uri: 'data:image/jpeg;base64,' + this.state.filePath.data,
-            }}
-            style={{ width: 100, height: 100 }} 
-          />
-          <Image
-            source={{ uri: this.state.filePath.uri }}
-            style={{ width: 100, height: 20 }}
-          />
-          {/* <Text style={{ alignItems: 'center' }}>
-            {this.state.filePath.uri}
-          </Text> */}
-          {/* <Button title="Choose File" onPress={this.chooseFile.bind(this)} /> */}
+            <View >
+                {
+                    this.state.isImageAvailable && (
+                        <Image source={this.state.profilePic} style={{ width: 200, height: 200 }} />
+                      
+
+                    )
+                }
+            <Icon name={'edit'} containerStyle={styles.editicon} onPress={this.chooseFile.bind(this)}/>
             </View>
            
-          <LoginInput
+          <TextInput
            
             label="Username"
-            style={styles.input}
+            // style={styles.input}
+            mode="outlined"
+             style={{ width: '100%', padding: 10 }}
             subtext={loginUsernameError}
             error={loginUsernameError.length > 0}
             value={loginUsername}
             onChangeText={this.onUsernameTextChange}
           />
-            <LoginInput
+            <TextInput
               label="PhoneNumber"
-              style={styles.input}
+              mode="outlined"
+              keyboardType="numeric"
+              style={{ width: '100%', padding: 10 }}
               subtext={loginPhoneNumberError}
               error={loginPhoneNumberError.length > 0}
               value={loginPhoneNumber}
               onChangeText={this.onPhoneNumberTextChange}
             />
-             <LoginInput
+             <TextInput
               label="Description"
-              style={styles.input}
+              mode="outlined"
+              multiline = {true}
+              numberOfLines = {4}
+              style={{ width: '100%', padding: 10 }}
               value={loginDescription}
               onChangeText={this.onDescriptionTextChange}
             />
@@ -208,7 +216,7 @@ chooseFile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.background,
+    backgroundColor:  '#fff',
   },
   header:{
     backgroundColor: Theme.colors.background
@@ -228,7 +236,7 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 63,
     borderWidth: 4,
-    borderColor: "#FF6347",
+    // borderColor: "#FF6347",
     marginBottom:10,
   },
   editicon: {

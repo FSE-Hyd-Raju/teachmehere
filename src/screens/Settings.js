@@ -66,7 +66,7 @@ class Settings extends React.Component {
           {/* {this.renderSectionTitle('Account')} */}
           <BlockButton
             text="Sign Out"
-            subtext={`You are logged in as ${user.username || 'guest'}`}
+            subtext={`You are logged in as ${user.email || 'guest'}`}
             color={Theme.colors.danger}
             onPress={this.onSignOutPress}
           />

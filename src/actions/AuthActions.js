@@ -81,20 +81,20 @@ export const createGuestSession = ({
 };
 
 export const loginUser = ({
-  username,
+  email,
   password,
   showToast,
   onSuccess,
 }) => async dispatch => {
-  const usernameValidator = validateUsername(username);
+  const emailValidator = validateEmail(email);
   const passwordValidator = validatePassword(password);
   const isValidCredentials =
-    usernameValidator.isValid && passwordValidator.isValid;
+  emailValidator.isValid && passwordValidator.isValid;
 
   if (!isValidCredentials) {
     dispatch({
-      type: Auth.USERNAME_INCORRECT,
-      payload: usernameValidator.message,
+      type: Auth.EMAIL_INCORRECT,
+      payload: emailValidator.message,
     });
     dispatch({
       type: Auth.PASSWORD_INCORRECT,
@@ -107,12 +107,13 @@ export const loginUser = ({
 
   try {
     const { accountId } = await requestToCreateNewAuthenticatedUser({
-      username,
+      email,
       password,
+      dispatch
     });
     dispatch({
       type: Auth.LOGIN_USER_SUCCESS,
-      payload: createUser( accountId, username ),
+      payload: createUser( accountId, email ),
     });
     onSuccess();
   } catch (error) {
@@ -162,7 +163,8 @@ export const signupUser1 = ({
     const { responsestatus } = await requestToCreateNewAuthUser({
       username,
       email,
-      phonenumber
+      phonenumber,
+      dispatch
     });
     dispatch({ type: Auth.SIGNUP_USER_SUCCESS });
     onSuccess();
@@ -208,7 +210,8 @@ export const signupUser2 = ({
     const { accountId } = await requestToCreateNewAut2hUser({
       otp,
       email,
-      password
+      password,
+      dispatch
     });
     dispatch({
       type: Auth.SIGNUP2_USER_SUCCESS,
@@ -259,6 +262,7 @@ export const ResetPassword = ({
   try {
     const { responsestatus } = await requestToCreateNewPassword({
       email,
+      dispatch
     });
     dispatch({ type: Auth.SIGNUP_USER_SUCCESS });
     onSuccess();
@@ -280,14 +284,8 @@ export const updateProfilePic = ({
   onSuccess,
 }) => async dispatch => {
   dispatch({ type: Auth.SIGNUP_USER_ATTEMPT });
-
-  console.log("inside profile pic auth action")
-  console.log(userId)
   try {
-   
-    console.log("inside authaction")
-  
-    const { accountId } = await requestToUpdateUserProfilePic({
+      const { accountId } = await requestToUpdateUserProfilePic({
       userId,
       displaypic
     
@@ -369,11 +367,9 @@ export const updateProfile = ({
 
 
 // Local functions
-const createUser = ( accountId, username) => {
-
-
+const createUser = ( accountId, email) => {
   const isGuest = !accountId;
-  const user = { isGuest, accountId, username };
+  const user = { isGuest, accountId, email };
 
   Config.logGeneral && console.log('Creating user: ', user);
   stSaveUser(user);

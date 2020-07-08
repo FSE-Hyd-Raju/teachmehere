@@ -36,7 +36,6 @@ class AuthSignup extends React.Component {
   state= {
     showEmail :''
   }
-//   showOtpScreen = false
 
   onSignupPress = () => {   
     const { loginUsername, loginEmail, loginPhoneNumber, navigation } = this.props;
@@ -55,7 +54,6 @@ class AuthSignup extends React.Component {
             ...this.state,
             showEmail : loginEmail
         })
-        // navigation.navigate(RouteNames.HomeStack);
       },
     });
   };
@@ -105,7 +103,6 @@ class AuthSignup extends React.Component {
               onChangeText={this.onEmailTextChange}
             />
             <LoginInput
-              secureTextEntry
               label="PhoneNumber"
               style={styles.input}
               subtext={loginPhoneNumberError}
@@ -176,52 +173,6 @@ screen2 = () => {
           {this.state.showOtpScreen ? this.screen2() : null}
         </View>
       );
-    {/* return (
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContentContainer}>
-          <LoginInput
-            label="Username"
-            style={styles.input}
-            subtext={loginUsernameError}
-            error={loginUsernameError.length > 0}
-            value={loginUsername}
-            onChangeText={this.onUsernameTextChange}
-          />
-           <LoginInput
-            label="Email"
-            style={styles.input}
-            subtext={loginEmailError}
-            error={loginEmailError.length > 0}
-            value={loginEmail}
-            onChangeText={this.onEmailTextChange}
-          />
-          <LoginInput
-            secureTextEntry
-            label="PhoneNumber"
-            style={styles.input}
-            subtext={loginPhoneNumberError}
-            error={loginPhoneNumberError.length > 0}
-            value={loginPhoneNumber}
-            onChangeText={this.onPhoneNumberTextChange}
-          />
-          <AppButton style={styles.loginButton} onPress={this.onSignupPress}>
-           Signup
-          </AppButton>
-          <AppButton
-            solid
-            toScale={false}
-            style={styles.button}
-            textStyle={styles.buttonText}
-            color={Theme.colors.success}
-            onPress={this.onLoginPress}>
-            Log In
-          </AppButton>
-        </ScrollView>
-
-        <AppToast refProp={this.onToastRef} />
-        <PageSpinner visible={signupIsLoading} />
-      </View>
-    ); */}
   }
 }
 

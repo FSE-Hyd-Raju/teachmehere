@@ -11,7 +11,9 @@ import {
   UPDATE_PROFILE_WITH_ID_URL
 } from '../api/urls';
 import Config from '../Config';
+import { Auth } from './../actions/types';
 import { Alert } from 'react-native';
+import { validateUsername, validatePassword, validateEmail, validatePhoneNumber } from '../utils/validators';
 
 export const requestToCreateNewGuestUser = () =>
   new Promise(async (resolve, reject) => {
@@ -27,38 +29,45 @@ export const requestToCreateNewGuestUser = () =>
     }
   });
 
-export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
+export const requestToCreateNewAuthenticatedUser = ({ email, password, dispatch }) =>
   new Promise(async (resolve, reject) => {
+    const emailValidator = '';
+    const passwordValidator = '';
     try {
-      // const {
-      //   data: { request_token },
-      // } = await axios.get(NEW_REQUEST_TOKEN);
-
-      // alert(request_token)
-
-      // alert(username, password)
       const response = await axios.post(VALIDATE_TOKEN_WITH_LOGIN, {
         devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
-        email: username,
+        email: email,
         password: password,
       });
-      //alert(JSON.stringify(response.data[0]._id))
-      // console.log(response.json())
-      // const {
-      //   data: { session_id },
-      // } = await axios.post(NEW_SESSION, { request_token });
+      if(response.data["status"] ==="404"){
+          if(response.data["field"] == 'email'){
+            dispatch({
+              type: Auth.EMAIL_INCORRECT,
+              payload: response.data["error"],
+            });  
+          }
+          if(response.data["field"] == 'password'){
+            dispatch({
+              type: Auth.PASSWORD_INCORRECT,
+              payload: response.data["error"],
+            });
+          }
+          dispatch({ type: Auth.LOGIN_USER_FAIL });
+      }
+      else{
+        // reject(error);
+        const accountId = response.data[0]._id
 
-      const accountId = response.data[0]._id
-
-      // alert(accountId)
-      resolve({ accountId });
+        // alert(accountId)
+        resolve({ accountId });
+      }
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
       reject(error);
     }
   });
 
-  export const requestToCreateNewAuthUser = ({ username, email, phonenumber }) =>
+  export const requestToCreateNewAuthUser = ({ username, email, phonenumber, dispatch }) =>
   new Promise(async (resolve, reject) => {
     try {
       // const {
@@ -74,26 +83,42 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
         username: username,
         phonenumber: phonenumber,
       });
-      //alert(JSON.stringify(response.data[0]._id))
-      // console.log(response.json())
-      // const {
-      //   data: { session_id },
-      // } = await axios.post(NEW_SESSION, { request_token });
-      //alert(JSON.stringify(response.data.status))
+      if(response.data["status"] ==="404"){
+        if(response.data["field"] == 'email'){
+          dispatch({
+            type: Auth.EMAIL_INCORRECT,
+            payload: response.data["error"],
+          });  
+        }
+        if(response.data["field"] == 'username'){
+          dispatch({
+            type: Auth.USERNAME_INCORRECT,
+            payload: response.data["error"],
+          });    
+        }
+        if(response.data["field"] == 'phonenumber'){
+          dispatch({
+            type: Auth.PHONENUMBER_INCORRECT,
+            payload: response.data["error"],
+          });    
+        }
+        dispatch({ type: Auth.SIGNUP_USER_FAIL });
+    }
+    else{
 
       const responsestatus = JSON.stringify(response.data.status)
-
-
-      // alert(accountId)
       resolve({ responsestatus });
+    }
+
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
+      // showToast('Suchiiiiiiii');
       reject(error);
     }
   });
 
 
-  export const requestToCreateNewAut2hUser = ({  email,otp, password }) =>
+  export const requestToCreateNewAut2hUser = ({  email,otp, password, dispatch}) =>
   new Promise(async (resolve, reject) => {
     try {
       // const {
@@ -110,24 +135,24 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
         otp: otp,
         password: password,
       });
-
-      //alert(JSON.stringify(response.data[0]._id))
-      // console.log(response.json())
-      // const {
-      //   data: { session_id },
-      // } = await axios.post(NEW_SESSION, { request_token });
-      //alert(JSON.stringify(response.data.status))
+      if(response.data["status"] ==="404"){
+          dispatch({
+            type: Auth.OTP_INCORRECT,
+            payload: response.data["error"],
+          });
+        dispatch({ type: Auth.SIGNUP2_USER_FAIL });
+    }
+    else{
       const accountId = JSON.stringify(response.data[0]._id)
-
-      // alert(accountId)
       resolve({ accountId });
+    }
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
       reject(error);
     }
   });
 
-  export const requestToCreateNewPassword = ({  email }) =>
+  export const requestToCreateNewPassword = ({  email, dispatch }) =>
   new Promise(async (resolve, reject) => {
     try {
       // const {
@@ -141,17 +166,17 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
         devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
         email: email,
       });
-      //alert(JSON.stringify(response.data[0]._id))
-      // console.log(response.json())
-      // const {
-      //   data: { session_id },
-      // } = await axios.post(NEW_SESSION, { request_token });
-      //alert(JSON.stringify(response.data.status))
-
-      const responsestatus = JSON.stringify(response.data.status)
-
-      // alert(accountId)
-      resolve({ responsestatus });
+      if(response.data["status"] ==="404"){
+        dispatch({
+          type: Auth.EMAIL_INCORRECT,
+          payload: response.data["error"]
+        });
+        dispatch({ type: Auth.SIGNUP2_USER_FAIL  });
+      }
+      else{
+        const responsestatus = JSON.stringify(response.data.status)
+        resolve({ responsestatus });
+      }
     } catch (error) {
       Config.logNetworkErrors && console.log(error);
       reject(error);
@@ -163,8 +188,6 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
   new Promise(async (resolve, reject) => {
   
     try {
-      console.log("inside auth.js")
-       console.log(displaypic)
       const response = await axios.post(UPDATE_PROFILE_WITH_ID_URL, {
         devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
         description: description,
@@ -205,34 +228,14 @@ export const requestToCreateNewAuthenticatedUser = ({ username, password }) =>
   new Promise(async (resolve, reject) => {
   
     try {
-      console.log("inside auth.js")
-       console.log(userId)
       const response = await axios.post(UPDATE_PROFILE_WITH_ID_URL, {
         devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
         displaypic:displaypic,
         _id:userId
       });
-  
-      //alert(JSON.stringify(response.data[0]._id))
-      // console.log(response.json())
-      // const {
-      //   data: { session_id },
-      // } = await axios.post(NEW_SESSION, { request_token });
-      //alert(JSON.stringify(response.data.status))
 
-    //   const responsestatus = JSON.stringify(response.data.status)
-
-
-    //   // alert(accountId)
-    //   resolve({ responsestatus });
-    // } catch (error) {
-    //   Config.logNetworkErrors && console.log(error);
-    //   reject(error);
-    // }
 
     const accountId = response.data[0]._id
-    console.log("success")
-    //alert(accountId)
     resolve({ accountId });
   } catch (error) {
     Config.logNetworkErrors && console.log(error);

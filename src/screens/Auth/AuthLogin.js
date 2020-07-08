@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import {
-  loginUsernameChanged,
   loginPasswordChanged,
+  loginEmailChanged,
   loginUser,
 } from '../../actions';
 import { AppButton, PageSpinner } from '../../components/common';
@@ -21,14 +21,15 @@ class AuthLogin extends React.Component {
 
   onToastRef = ref => (this.toast = ref);
   onForgotPress = () => this.props.navigation.navigate(RouteNames.ForgotPassword);
-  onUsernameTextChange = text => this.props.loginUsernameChanged(text);
+  onEmailTextChange = text => this.props.loginEmailChanged(text);
   onPasswordTextChange = text => this.props.loginPasswordChanged(text);
+  
 
   onLoginPress = () => {
-    const { loginUsername, loginPassword, navigation } = this.props;
+    const { loginEmail, loginPassword, navigation } = this.props;
 
     this.props.loginUser({
-      username: loginUsername,
+      email: loginEmail,
       password: loginPassword,
       showToast: this.showToast,
       onSuccess: () => {
@@ -41,8 +42,8 @@ class AuthLogin extends React.Component {
 
   render() {
     const {
-      loginUsername,
-      loginUsernameError,
+      loginEmail,
+      loginEmailError,
       loginPassword,
       loginPasswordError,
       loginIsLoading,
@@ -52,12 +53,12 @@ class AuthLogin extends React.Component {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContentContainer}>
           <LoginInput
-            label="Username"
+            label="Email"
             style={styles.input}
-            subtext={loginUsernameError}
-            error={loginUsernameError.length > 0}
-            value={loginUsername}
-            onChangeText={this.onUsernameTextChange}
+            subtext={loginEmailError}
+            error={loginEmailError.length > 0}
+            value={loginEmail}
+            onChangeText={this.onEmailTextChange}
           />
           <LoginInput
             secureTextEntry
@@ -116,7 +117,7 @@ const mapStateToProps = ({ auth }) => auth;
 export default connect(
   mapStateToProps,
   {
-    loginUsernameChanged,
+    loginEmailChanged,
     loginPasswordChanged,
     loginUser,
   },
