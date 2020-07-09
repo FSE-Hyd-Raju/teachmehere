@@ -17,6 +17,8 @@ import {
   Appbar,
   Chip,
   Switch,
+  RadioButton,
+  Checkbox,
 } from 'react-native-paper';
 import { postStep2ValidationSchema } from '../../../../utils/validations';
 import {
@@ -30,6 +32,15 @@ import TextInputWithIcon from '../../../../components/common/TextInputWithIcon';
 const Step3 = props => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const [daysOfTheWeek] = useState([
+    { name: 'Sun', checked: false },
+    { name: 'Mon', checked: false },
+    { name: 'Tue', checked: false },
+    { name: 'Wed', checked: false },
+    { name: 'Thu', checked: false },
+    { name: 'Fri', checked: false },
+    { name: 'Sat', checked: false },
+  ]);
   const { colors } = props.theme;
 
   return (
@@ -49,8 +60,9 @@ const Step3 = props => {
             endDate: '',
             startTime: '',
             endTime: '',
+            onDays: 'Daily',
           }}
-          validationSchema={postStep2ValidationSchema}
+         // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
@@ -133,15 +145,57 @@ const Step3 = props => {
                   </Text>
                 </View>
               </View>
+              <Text style={styles.label}>Teach on specific days</Text>
+              <RadioButton.Group
+                theme={DefaultTheme}
+                onValueChange={value =>
+                  formProps.setFieldValue('onDays', value)
+                }
+                value={formProps.values.onDays}>
+                <View style={{ flexDirection: 'row' }}>
+                  <RadioButton value="Daily" />
+                  <Text style={{ marginTop: 8 }}>Daily</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <RadioButton value="Weekends" />
+                  <Text style={{ marginTop: 8 }}>Weekends</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <RadioButton value="specificDays" />
+                  <Text style={{ marginTop: 8 }}>Specific Days</Text>
+                </View>
+              </RadioButton.Group>
 
+              {formProps.values.onDays === 'specificDays' && (
+                <View style={{ marginLeft: 40, height: 150, flexWrap: 'wrap' }}>
+                  {daysOfTheWeek &&
+                    daysOfTheWeek.map(day => {
+                      return (
+                        <View style={{ flexDirection: 'row' }}>
+                          <Checkbox
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            title="checkbox 1"
+                            checkedColor="red"
+                           // onPress={() => this.updateState(day)}
+                           // status={day.checked ? 'checked' : 'unchecked'}
+                          />
+                          <Text style={{ marginTop: 9, fontSize: 14 }}>
+                            {day.name}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                </View>
+              )}
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  marginBottom: 8,
+                  marginTop: 20,
                 }}>
                 <Text style={{ fontSize: 13, margin: 5 }}>
-                  My Schedule is Tentetive
+                  My schedule is Tentetive
                 </Text>
                 <Switch
                   value={isSwitchOn}

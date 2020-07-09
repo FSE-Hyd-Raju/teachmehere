@@ -1,137 +1,128 @@
-import React, { Component } from 'react';
-import { Image, View, TouchableOpacity, Text } from 'react-native';
-
+import React, { useState } from 'react';
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  Text,
+  Keyboard,
+} from 'react-native';
 import styles from './styles';
-import { TextInput, Checkbox } from 'react-native-paper';
+import { Formik } from 'formik';
+import { Dialog, Portal, List, Button, Appbar } from 'react-native-paper';
+import { postStep1ValidationSchema } from '../../../../utils/validations';
+import {
+  DefaultTheme,
+  DarkTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper';
+import { withTheme } from 'react-native-paper';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import Header from '../../../../components/common/Header';
+import { Header } from 'react-native-elements';
 
-export class step4 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      totalSteps: '',
-      currentStep: '',
-      selectedStartDate: new Date(),
-      selectedEndDate: '',
-    };
-    this.onDateChange = this.onDateChange.bind(this);
-  }
-
-  onDateChange(date, type) {
-    if (type === 'END_DATE') {
-      this.setState({
-        selectedEndDate: date,
-      });
-    } else {
-      this.setState({
-        selectedStartDate: date,
-        selectedEndDate: null,
-      });
-    }
-  }
-
-  static getDerivedStateFromProps = props => {
-    const { getTotalSteps, getCurrentStep } = props;
-    return {
-      totalSteps: getTotalSteps(),
-      currentStep: getCurrentStep(),
-    };
-  };
-
-  postSkill = () => {
-    const { next } = this.props;
-    next();
-  };
-
-  render() {
-    const { getState, saveState } = this.props;
-    const {
-      platform,
-      tags,
-      experience,
-      linkedInProfile,
-      availableForDemo,
-    } = getState();
-    return (
-      <View style={{ alignItems: 'center' }}>
-        <View>
-          <Text style={styles.currentStepText}>Where can we connect ?</Text>
-        </View>
-        <TextInput
-          label="Platform"
-          mode="outlined"
-          placeholder="Place to connect. Ex: Skype, Zoom, etc."
-          style={styles.input}
-          value={platform}
-          onChangeText={text => saveState({ platform: text })}
-        />
-        <TextInput
-          label="tags"
-          placeholder="add tags for search. Ex: angular, react etc"
-          mode="outlined"
-          style={styles.input}
-          value={tags}
-          onChangeText={text => saveState({ tags: text })}
-        />
-        <TextInput
-          label="Experience"
-          placeholder="2 years, 2.5 years etc."
-          mode="outlined"
-          style={styles.input}
-          value={experience}
-          onChangeText={text => saveState({ experience: text })}
-        />
-        <TextInput
-          label="LinkedIn Profile"
-          mode="outlined"
-          style={styles.input}
-          value={linkedInProfile}
-          onChangeText={text => saveState({ linkedInProfile: text })}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 25,
-            flexWrap: 'wrap',
-            alignItems: 'flex-start',
+const Step1 = props => {
+  return (
+    <View>
+      <Appbar.Header theme={DarkTheme}>
+        <Appbar.BackAction onPress={props.back} />
+        <Appbar.Content title="Platform to Interact" />
+      </Appbar.Header>
+      <View style={styles.container}>
+        <Formik
+          initialValues={{
+            platform: '',
+            tags: [],
+            experience: '',
+            linkedInProfile: '',
+          }}
+          //  validationSchema={postStep1ValidationSchema}
+          onSubmit={values => {
+            props.next();
+            props.saveState(values);
           }}>
-          <Checkbox
-            checkedIcon="dot-circle-o"
-            uncheckedIcon="circle-o"
-            title="checkbox 1"
-            onPress={() => saveState({ availableForDemo: !availableForDemo })}
-            status={availableForDemo ? 'checked' : 'unchecked'}
-          />
-          <Text style={{ marginTop: 10, marginRight: 5 }}>
-            Available for Demo
-          </Text>
-        </View>
-        <View style={[styles.btnContainer]}>
-          <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
-            <Image
-              source={require('../../../../assets/img/right-black-arrow-md.png')}
-              style={[styles.btnImage, styles.backBtn]}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.8)',
-              alignItems: 'flex-end',
-              justifyContent: 'flex-end',
-              backgroundColor: '#444',
-              borderRadius: 50,
-              marginLeft: 45,
-              alignSelf: 'flex-end',
-            }}
-            onPress={this.postSkill}>
-            <Text style={{ padding: 18, color: 'white' }}>Post My Skill</Text>
-          </TouchableOpacity>
-        </View>
+          {formProps => (
+            <View style={styles.container}>
+              <Text style={styles.label}>Platform*</Text>
+              <TextInput
+                placeholder="Platform. ex: Skype, Teams, etc."
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onChangeText={formProps.handleChange('platform')}
+                onBlur={formProps.handleBlur('platform')}
+                value={formProps.values.platform}
+              />
+              <Text style={styles.errorText}>
+                {formProps.touched.platform && formProps.errors.platform}
+              </Text>
+              <Text style={styles.label}>Tags</Text>
+              <TextInput
+                placeholder="Add some tags. ex: angular, react, etc"
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onBlur={formProps.handleBlur('tags')}
+                value={formProps.values.tags}
+              />
+              <Text style={styles.tags}>
+                {formProps.touched.tags && formProps.errors.tags}
+              </Text>
+              <Text style={styles.label}>Experience</Text>
+              <TextInput
+                placeholder="Expirience in years ex: 2, 2.5 etc"
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                keyboardType={'numeric'}
+                onChangeText={formProps.handleChange('experience')}
+                onBlur={formProps.handleBlur('experience')}
+                value={formProps.values.experience}
+              />
+              <Text style={styles.errorText}>
+                {formProps.touched.totalHours && formProps.errors.experience}
+              </Text>
+              <Text style={styles.label}>Profile Summary</Text>
+              <TextInput
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onChangeText={formProps.handleChange('profileSummary')}
+                value={formProps.values.profileSummary}
+                multiline={true}
+                numberOfLines={5}
+                scrollEnabled={true}
+                placeholder={'Describe your experience. '}
+              />
+              <Text style={styles.profileSummary}>
+                {formProps.touched.totalHours &&
+                  formProps.errors.profileSummary}
+              </Text>
+              <Text style={styles.label}>linkedIn Profile</Text>
+              <TextInput
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onChangeText={formProps.handleChange('linkedInProfile')}
+                value={formProps.values.linkedInProfile}
+                scrollEnabled={true}
+                keyboardType={'url'}
+                placeholder={'linked in profile URL '}
+              />
+              <Text style={styles.linkedInProfile}>
+                {formProps.touched.totalHours &&
+                  formProps.errors.linkedInProfile}
+              </Text>
+              <View style={styles.btnContainer}>
+                <TouchableOpacity style={{ width: '100%' }}>
+                  <Button
+                    mode="contained"
+                    color={'black'}
+                    onPress={formProps.handleSubmit}>
+                    Post My Skill
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
-export default step4;
+export default withTheme(Step1);
