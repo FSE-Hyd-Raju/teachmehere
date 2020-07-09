@@ -1,153 +1,147 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
-  Image,
   View,
   TouchableOpacity,
+  TextInput,
   Text,
-  CheckBox,
   Keyboard,
 } from 'react-native';
-
 import styles from './styles';
+import { Formik } from 'formik';
+import { Dialog, Portal, List, Button, Appbar } from 'react-native-paper';
+import { postStep1ValidationSchema } from '../../../../utils/validations';
 import {
-  TextInput,
-  Dialog,
-  Portal,
-  Button,
-  List,
-  Provider,
-  TextInputMask,
+  DefaultTheme,
+  DarkTheme,
+  Provider as PaperProvider,
 } from 'react-native-paper';
+import { withTheme } from 'react-native-paper';
+import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+//import Header from '../../../../components/common/Header';
+import { Header } from 'react-native-elements';
 
-class step1 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      totalSteps: '',
-      currentStep: '',
-      showSelectSkillLevelDailog: false,
-    };
-  }
+const Step1 = props => {
+  const [showDailog, setshowDailog] = useState(false);
+  const { colors } = props.theme;
+  console.log('POS', props);
+  const options = [
+    { value: 'basic', label: 'Basic' },
+    { value: 'intermediate', label: 'Inermediate' },
+    { value: 'advanced', label: 'Advanced' },
+  ];
 
-  static getDerivedStateFromProps = props => {
-    const { getTotalSteps, getCurrentStep } = props;
-    return {
-      totalSteps: getTotalSteps(),
-      currentStep: getCurrentStep(),
-    };
-  };
-
-  nextStep = () => {
-    const { next } = this.props;
-    // Go to next step
-    next();
-  };
-
-  goBack() {
-    const { back } = this.props;
-    // Go to previous step
-    back();
-  }
-
-  skillLevelDialogHide = () => {
-    this.setState({ showSelectSkillLevelDailog: false });
-  };
-
-  selectSkillLevel(value) {
-    const { saveState } = this.props;
-    this.skillLevelDialogHide();
-    saveState({ skillLevel: value });
-  }
-
-  render() {
-    const { saveState, getState } = this.props;
-    const options = [
-      { value: 'basic', label: 'Basic' },
-      { value: 'intermediate', label: 'Inermediate' },
-      { value: 'advanced', label: 'Advanced' },
-    ];
-
-    const { skillName, skillLevel, contents, totalHours } = getState();
-
-    return (
-      <View style={{ alignItems: 'center' }}>
-        <View>
-          <Text style={styles.currentStepText}>Skill Details</Text>
-        </View>
-        <TextInput
-          label="Skill Name"
-          placeholder="Title for the skill you are offering"
-          inlineImageLeft={'../../../../assets/img/right-black-arrow-md.png'}
-          mode="outlined"
-          style={styles.input}
-          value={skillName}
-          selectTextOnFocus={true}
-          onChangeText={text => saveState({ skillName: text })}
-        />
-        <TextInput
-          label="Skill Level"
-          placeholder="Level of skill"
-          mode="outlined"
-          style={styles.input}
-          value={skillLevel}
-          onFocus={() => {
-            Keyboard.dismiss();
-            this.setState({ showSelectSkillLevelDailog: true });
+  return (
+    <View>
+      <Appbar.Header theme={DarkTheme}>
+        <Appbar.BackAction onPress={props.backFromSteps} />
+        <Appbar.Content title="Skill Details" />
+      </Appbar.Header>
+      <View style={styles.container}>
+        <Formik
+          initialValues={{
+            skillName: '',
+            skillLevel: '',
+            totalHours: '',
+            contents: '',
           }}
-        />
-        <Portal>
-          <Dialog
-            visible={this.state.showSelectSkillLevelDailog}
-            onDismiss={this.skillLevelDialogHide}>
-            <Dialog.Title>Select Skill Level</Dialog.Title>
-            <Dialog.Content>
-              {options.map(data => {
-                return (
-                  <List.Item
-                    key={data.key}
-                    title={data.label}
-                    onPress={this.selectSkillLevel.bind(this, data.label)}
-                  />
-                );
-              })}
-            </Dialog.Content>
-          </Dialog>
-        </Portal>
-        <TextInput
-          label="Total Hours"
-          placeholder="# of hours to cover this course"
-          mode="outlined"
-          style={styles.input}
-          value={totalHours}
-          selectTextOnFocus={true}
-          keyboardType={'numeric'}
-          onChangeText={hours => saveState({ totalHours: hours })}
-        />
-        <TextInput
-          label="Contents"
-          style={styles.description}
-          mode="outlined"
-          onChangeText={text => saveState({ contents: text })}
-          value={contents}
-          multiline={true}
-          numberOfLines={10}
-          scrollEnabled={true}
-          placeholder={
-            'contents to cover \n  example: \n 1. Agenda \n 2. Introduction\n 3. etc. '
-          }
-        />
-        <View style={styles.btnContainer}>
-          <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
-            <Image
-              source={require('../../../../assets/img/right-black-arrow-md.png')}
-              style={styles.btnImage}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
-        </View>
+        //  validationSchema={postStep1ValidationSchema}
+          onSubmit={values => {
+            props.next();
+            props.saveState(values);
+          }}>
+          {formProps => (
+            <View style={styles.container}>
+              <Text style={styles.label}>Skill Name*</Text>
+              <TextInput
+                placeholder="Name of the skill you are offering"
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onChangeText={formProps.handleChange('skillName')}
+                onBlur={formProps.handleBlur('skillName')}
+                value={formProps.values.skillName}
+              />
+              <Text style={styles.errorText}>
+                {formProps.touched.skillName && formProps.errors.skillName}
+              </Text>
+              <Text style={styles.label}>Skill Level*</Text>
+              <TextInput
+                placeholder="Skill level"
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onFocus={() => {
+                  Keyboard.dismiss();
+                  setshowDailog(true);
+                }}
+                onBlur={formProps.handleBlur('skillLevel')}
+                value={formProps.values.skillLevel}
+              />
+              <Portal>
+                <Dialog
+                  visible={showDailog}
+                  onDismiss={() => setshowDailog(false)}>
+                  <Dialog.Title>Select Skill Level</Dialog.Title>
+                  <Dialog.Content>
+                    {options.map(data => {
+                      return (
+                        <List.Item
+                          key={data.key}
+                          title={data.label}
+                          onPress={() => {
+                            setshowDailog(false);
+                            formProps.setFieldValue('skillLevel', data.label);
+                          }}
+                        />
+                      );
+                    })}
+                  </Dialog.Content>
+                </Dialog>
+              </Portal>
+              <Text style={styles.errorText}>
+                {formProps.touched.skillLevel && formProps.errors.skillLevel}
+              </Text>
+              <Text style={styles.label}>Total Hours*</Text>
+              <TextInput
+                placeholder="# of hrs to complete the course"
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                keyboardType={'numeric'}
+                onChangeText={formProps.handleChange('totalHours')}
+                onBlur={formProps.handleBlur('totalHours')}
+                value={formProps.values.totalHours}
+              />
+              <Text style={styles.errorText}>
+                {formProps.touched.totalHours && formProps.errors.totalHours}
+              </Text>
+              <Text style={styles.label}>Contents</Text>
+              <TextInput
+                placeholderTextColor={'#7777'}
+                style={styles.input}
+                onChangeText={formProps.handleChange('contents')}
+                value={formProps.values.contents}
+                multiline={true}
+                numberOfLines={7}
+                scrollEnabled={true}
+                placeholder={
+                  'contents to cover \n  example: \n 1. Agenda \n 2. Introduction\n 3. etc. '
+                }
+              />
+              <View style={styles.btnContainer}>
+                <Text />
+                <TouchableOpacity style={styles.btnStyle}>
+                  <Button
+                    mode="contained"
+                    color={'black'}
+                    onPress={formProps.handleSubmit}>
+                    Next
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
-export default step1;
+export default withTheme(Step1);
