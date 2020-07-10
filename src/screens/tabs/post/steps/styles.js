@@ -2,15 +2,39 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
+    padding: 15,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    fontSize: 14,
+    borderRadius: 6,
     flex: 1,
-    alignItems: 'center',
-    marginTop: '6%',
+  },
+  label: {
+    fontSize: 12,
+    padding: 5,
+    color: '#777',
   },
   btnContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     marginTop: '10%',
   },
+  errorText: {
+    fontSize: 12,
+    marginTop: 6,
+    color: 'crimson',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  skipButton: {
+    fontSize: 15,
+    color: 'white',
+  },
+
+
   step1: {
     flex: 1,
   },
@@ -22,11 +46,6 @@ export default StyleSheet.create({
   },
   step4: {
     flex: 1,
-  },
-  input: {
-    width: '80%',
-    marginTop: '6%',
-    height: 48,
   },
   description: {
     width: '80%',
@@ -56,13 +75,7 @@ export default StyleSheet.create({
     fontSize: 25,
   },
   btnStyle: {
-    borderColor: '#fff',
-    borderWidth: 2,
-    borderRadius: 100,
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '30%',
   },
   btnImage: {
     width: '100%',

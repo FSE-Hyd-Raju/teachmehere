@@ -150,6 +150,7 @@ export class index extends Component {
           getState={this.getState}
           getCurrentStep={this.getCurrentStep}
           getTotalSteps={this.getTotalSteps}
+          backFromSteps={this.props.backFromSteps}
         />
       </Animatable.View>
     );

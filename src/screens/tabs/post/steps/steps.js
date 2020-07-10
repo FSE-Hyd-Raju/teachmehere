@@ -22,7 +22,7 @@ class Steps extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+	this.state = {};
   }
 
   onNext = () => {
@@ -33,88 +33,80 @@ class Steps extends Component {
   };
 
   finish = state => {
-    const { category, subCategory } = this.props || {};
-    const {
-      skillName,
-      skillLevel,
-      content,
-      totalHours,
-      country,
-      individualPrice,
-      groupPrice,
-      noOfPeople,
-      languages,
-      startDate,
-      endDate,
-      startTime,
-      endTime,
-      onDays,
-      daysOfTheWeek,
-      tentativeScedule,
-      platform,
-      tags,
-      experience,
-      linkedInProfile,
-      availableForDemo,
-    } = state;
-
-    const postData = {
-      uid: '12122',
-      coursename: skillName,
-      courselevel: skillLevel,
-      content: content || '',
-      category: category,
-      subcategory: subCategory,
-      totalhours: totalHours,
-      country: country && country.name,
-      currency: country && country.currency && country.currency.symbol,
-      price: {
-        oneonone: individualPrice,
-        group: {
-          members: noOfPeople || '',
-          price: groupPrice || '',
-        },
-      },
-      speakinglanguages: languages,
-      availability: {
-        coursestartdate: startDate || '',
-        courseenddate: endDate || '',
-        ondays: {
-          availableon: onDays || '',
-          daysofweek: daysOfTheWeek || [],
-        },
-        coursestarttime: startTime || '',
-        coursesendtime: endTime || '',
-        tentativeschedule: tentativeScedule,
-      },
-      platform: platform,
-      tags: tags.split(','),
-      experience: experience,
-      linkedinprofile: linkedInProfile,
-      demo: availableForDemo,
-    };
-
-    console.log('POST FORMED', postData);
-    this.props.actions.postSkill(postData);
+    // const { category, subCategory } = this.props || {};
+    // const {
+    //   skillName,
+    //   skillLevel,
+    //   content,
+    //   totalHours,
+    //   country,
+    //   individualPrice,
+    //   groupPrice,
+    //   noOfPeople,
+    //   languages,
+    //   startDate,
+    //   endDate,
+    //   startTime,
+    //   endTime,
+    //   onDays,
+    //   daysOfTheWeek,
+    //   tentativeScedule,
+    //   platform,
+    //   tags,
+    //   experience,
+    //   linkedInProfile,
+    //   availableForDemo,
+    // } = state;
+    // const postData = {
+    //   uid: '12122',
+    //   coursename: skillName,
+    //   courselevel: skillLevel,
+    //   content: content || '',
+    //   category: category,
+    //   subcategory: subCategory,
+    //   totalhours: parseInt(totalHours),
+    //   country: country && country.name,
+    //   currency: country && country.currency && country.currency.symbol,
+    //   price: {
+    //     oneonone: parseInt(individualPrice),
+    //     group: {
+    //       members: parseInt(noOfPeople) || 0,
+    //       price: parseInt(groupPrice) || 0,
+    //     },
+    //   },
+    //   speakinglanguages: languages,
+    //   availability: {
+    //     coursestartdate: startDate || '',
+    //     courseenddate: endDate || '',
+    //     ondays: {
+    //       availableon: onDays || '',
+    //       daysofweek: daysOfTheWeek || [],
+    //     },
+    //     coursestarttime: startTime || '',
+    //     coursesendtime: endTime || '',
+    //     tentativeschedule: tentativeScedule,
+    //   },
+    //   platform: platform,
+    //   tags: tags.split(','),
+    //   experience: parseInt(experience),
+    //   linkedinprofile: linkedInProfile,
+    //   demo: availableForDemo,
+    // };
+    // this.props.actions.postSkill(postData);
   };
 
   render() {
     return (
-      <View style={{ flex: 30 }}>
-        <ScrollView>
-          <AnimatedMultistep
-            steps={allSteps}
-            onFinish={this.finish}
-            animate={true}
-            onBack={this.onBack}
-            onNext={this.onNext}
-            // comeInOnNext="bounceInRight"
-            // OutOnNext="bounceOutLeft"
-            // comeInOnBack="bounceInLeft"
-            // OutOnBack="bounceOutRight"
-          />
-        </ScrollView>
-      </View>
+      <ScrollView>
+        <AnimatedMultistep
+          steps={allSteps}
+          onFinish={this.finish}
+          animate={true}
+          onBack={this.onBack}
+          onNext={this.onNext}
+          backFromSteps={this.props.backFromSteps}
+        />
+      </ScrollView>
     );
   }
 }
