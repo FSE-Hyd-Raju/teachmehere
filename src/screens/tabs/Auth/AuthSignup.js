@@ -9,14 +9,14 @@ import {
   loginPasswordChanged,
   signupUser1,
   signupUser2,
-} from '../../actions';
-import { AppButton, PageSpinner } from '../../components/common';
-import AppToast from '../../components/AppToast';
-import LoginInput from '../../components/LoginInput';
-import { RESET_PASSWORD_URL } from '../../api/urls';
-import { safeOpenURL } from '../../utils/network';
-import RouteNames from '../../RouteNames';
-import Theme from '../../Theme';
+} from '../../../redux/actions';
+import  AppButton from '../../../components/common/AppButton';
+import  PageSpinner from '../../../components/common/PageSpinner';
+import AppToast from '../../../components/AppToast';
+import LoginInput from '../../../components/LoginInput';
+import RouteNames from '../../../RouteNames';
+import Theme from '../../../Theme';
+
 
 class AuthSignup extends React.Component {
   static navigationOptions = () => ({
@@ -66,7 +66,7 @@ class AuthSignup extends React.Component {
       otp:loginOTP,
       showToast: this.showToast,
       onSuccess: () => {
-        navigation.navigate(RouteNames.HomeStack);
+        navigation.navigate("Profile");
       }
     });
   };

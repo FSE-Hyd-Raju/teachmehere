@@ -5,14 +5,15 @@ import {
   loginPasswordChanged,
   loginEmailChanged,
   loginUser,
-} from '../../actions';
-import { AppButton, PageSpinner } from '../../components/common';
-import AppToast from '../../components/AppToast';
-import LoginInput from '../../components/LoginInput';
-import { RESET_PASSWORD_URL } from '../../api/urls';
-import { safeOpenURL } from '../../utils/network';
-import RouteNames from '../../RouteNames';
-import Theme from '../../Theme';
+} from '../../../redux/actions/AuthActions';
+// import { AppButton, PageSpinner } from '../../../components/common';
+import  AppButton from '../../../components/common/AppButton';
+import  PageSpinner from '../../../components/common/PageSpinner';
+import AppToast from '../../../components/AppToast';
+import LoginInput from '../../../components/LoginInput';
+import RouteNames from '../../../RouteNames';
+import Theme from '../../../Theme';
+
 
 class AuthLogin extends React.Component {
   static navigationOptions = () => ({
@@ -20,20 +21,21 @@ class AuthLogin extends React.Component {
   });
 
   onToastRef = ref => (this.toast = ref);
-  onForgotPress = () => this.props.navigation.navigate(RouteNames.ForgotPassword);
+  onForgotPress = () => this.props.navigation.navigate("ForgotPassword");
   onEmailTextChange = text => this.props.loginEmailChanged(text);
   onPasswordTextChange = text => this.props.loginPasswordChanged(text);
   
 
   onLoginPress = () => {
     const { loginEmail, loginPassword, navigation } = this.props;
+    console.log("inside login")
 
     this.props.loginUser({
       email: loginEmail,
       password: loginPassword,
       showToast: this.showToast,
       onSuccess: () => {
-        navigation.navigate(RouteNames.HomeStack);
+        navigation.navigate('Profile');
       },
     });
   };

@@ -13,6 +13,9 @@ import RequestedCoursesPage from './screens/tabs/profile/requestedCourses'
 import WishlistCoursesPage from './screens/tabs/profile/wishlistCourses'
 import PostedCoursesPage from './screens/tabs/profile/postedCourses'
 import GuestPage from './screens/tabs/profile/guestPage';
+import AuthLogin from './screens/tabs/Auth/AuthLogin';
+import ForgotPassword from './screens/tabs/Auth/ForgotPassword';
+import AuthSignup from './screens/tabs/Auth/AuthSignup';
 
 const TabNavigation = props => {
   const { colors } = props.theme;
@@ -28,6 +31,9 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
         <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
         <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
+        <ProfileStack.Screen name="Login" component={AuthLogin} />
+        <ProfileStack.Screen name="Signup" component={AuthSignup} />
+        <ProfileStack.Screen name="ForgotPassword" component={ForgotPassword} />
       </ProfileStack.Navigator>
     );
   }

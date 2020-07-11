@@ -5,7 +5,15 @@ const INITIAL_STATE = {
   loginPassword: '',
   loginUsernameError: '',
   loginPasswordError: '',
+  loginEmail: '',
+  loginEmailError: '',
+  loginPhoneNumber: '',
+  loginPhoneNumberError: '',
+  loginDescription:'',
+  loginOTP:'',
+  loginOTPError:'',
   loginIsLoading: false,
+  signupIsLoading: false,
   isGuestSessionCreating: false,
   user: null,
 };
@@ -62,7 +70,64 @@ export default (state = INITIAL_STATE, action) => {
       return { ...INITIAL_STATE, user: action.payload };
     case Auth.LOG_OUT:
       return { ...INITIAL_STATE };
-    default:
-      return { ...state };
-  }
+    
+    case Auth.OTP_CHANGED:
+      return {
+        ...state,
+        loginOTPError: '',
+        loginOTP: action.payload, 
+      
+     };
+  case Auth.OTP_INCORRECT:
+    return { ...state, loginOTPError: action.payload };
+  
+  case Auth.SIGNUP_USER_ATTEMPT:
+    return {
+      ...state,
+      loginUsernameError: '',
+      loginEmailError: '',
+      loginPhoneNumberError: '',
+      signupIsLoading: true,
+  };
+  case Auth.PHONENUMBER_CHANGED:
+    return {
+      ...state,
+      loginPhoneNumber: action.payload,
+      loginPhoneNumberError: '',
+    
+    };
+  case Auth.EMAIL_CHANGED:
+    return {
+      ...state,
+      loginEmail: action.payload,
+      loginEmailError: '',
+      
+    };
+  case Auth.DESCRIPTION_CHANGED:
+    return {
+      ...state,
+      loginDescription: action.payload,
+      // loginEmailError: '',
+      
+    };
+  case Auth.EMAIL_INCORRECT:
+    return { ...state, loginEmailError: action.payload };  
+  case Auth.PHONENUMBER_INCORRECT:
+    return { ...state, loginPhoneNumberError: action.payload };
+  case Auth.SIGNUP_USER_SUCCESS:
+    return { ...INITIAL_STATE,  signupIsLoading: false };
+  case Auth.SIGNUP_USER_FAIL:
+    return { ...state,
+    signupIsLoading: false };
+
+  case Auth.SIGNUP2_USER_SUCCESS:
+    return { ...INITIAL_STATE, user: action.payload };
+
+  case Auth.SIGNUP2_USER_FAIL:
+    return { ...state,
+    signupIsLoading: false };
+
+  default:
+    return { ...state };
+}
 };

@@ -72,17 +72,21 @@ export default function GuestPage({navigation}) {
                     title={title}
                     leftIcon={<Icons
                         name={icon}
-                        color="rgb(102, 94, 94)"
+                        // color="#28a745"
+                        // color={styles.loginButton}
+                        titleStyle={{ letterSpacing: 1 }}
+                    containerStyle={{ backgroundColor: '7f7f7f' }}
                         size={25}
+                        
                     />}
-                    pad={30}
-                    titleStyle={{ letterSpacing: 1 }}
-                    containerStyle={{ backgroundColor: 'unset' }}
-                    chevron={<Icons
-                        name={"chevron-right"}
-                        color="rgb(102, 94, 94)"
-                        size={25}
-                    />}
+                    // pad={30}
+                    // titleStyle={{ letterSpacing: 1 }}
+                    // containerStyle={{ backgroundColor: 'unset' }}
+                    // chevron={<Icons
+                    //     name={"chevron-right"}
+                    //     color="rgb(102, 94, 94)"
+                    //     size={25}
+                    // />}
                 // onPress={() => navigation.navigate(route)}
                 />
             </TouchableOpacity>
@@ -102,7 +106,8 @@ export default function GuestPage({navigation}) {
                         {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
                         {userPagesContainer("Posted Courses", "plus-circle-outline", 'PostedCourses')}
                         {userPagesContainer("Wishlist Courses", "heart-outline", 'WishlistCourses')} */}
-                        {userPagesContainer("Login", "send-circle-outline", 'RequestedCourses')}
+                        {userPagesContainer("Login",'', 'Login')}
+                        {userPagesContainer("Signup",'', 'Signup')}
 
                     </View>
                 </View>
@@ -120,8 +125,14 @@ export default function GuestPage({navigation}) {
 
 const styles = StyleSheet.create({
     lowerContainer: {
-        margin: 30,
-        justifyContent: "center",
+        margin: 130,
+        // width: "75%",
+        // paddingLeft: "1%",
+        // textAlign:"left",
+        // justifyContent: "left",
+        // color:'#7f7f7f',
+        // width: "100%",
+        // paddingRight: 100
     },
     statText: {
         textAlign: "center",
@@ -131,6 +142,9 @@ const styles = StyleSheet.create({
     statValue: {
         fontSize: 25,
         fontWeight: "bold",
+    },
+    loginButton:{
+        color:'#28a745'
     },
     stat: {
         alignItems: "center",
