@@ -27,6 +27,28 @@ export const loginPasswordChanged = text => ({
   payload: text,
 });
 
+export const loginDescriptionChanged = text => ({
+  type: Auth.DESCRIPTION_CHANGED,
+  payload: text,
+});
+
+export const signupUsernameChanged = text => ({
+  type: Auth.USERNAME_CHANGED,
+  payload: text,
+});
+export const loginEmailChanged = text => ({
+  type: Auth.EMAIL_CHANGED,
+  payload: text,
+});
+export const loginOTPChanged = text => ({
+  type: Auth.OTP_CHANGED,
+  payload: text,
+});
+export const loginPhoneNumberChanged = text => ({
+  type: Auth.PHONENUMBER_CHANGED,
+  payload: text,
+});
+
 export const logOutUser = navigation => dispatch => {
   stRemoveUser();
   stRemoveCurrentSkills();

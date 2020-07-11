@@ -8,6 +8,8 @@ export default {
   Settings: 'Settings',
   SkillListScreen: 'SkillsListScreen',
   SkillDetailsScreen: 'SkillDetailsScreen',
+  
+  
 
   BottomTabs: 'BottomTabs',
 };

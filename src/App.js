@@ -18,6 +18,9 @@ const theme = {
 
 class App extends Component {
   render() {
+    console.disableYellowBox = true
+    window.console = console;
+
     return (
       <Provider store={store}>
         <PaperProvider theme={theme}>
