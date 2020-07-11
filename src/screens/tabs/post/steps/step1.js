@@ -23,7 +23,7 @@ import { Header } from 'react-native-elements';
 const Step1 = props => {
   const [showDailog, setshowDailog] = useState(false);
   const { colors } = props.theme;
-  console.log('POS', props);
+  const { getState } = props;
   const options = [
     { value: 'basic', label: 'Basic' },
     { value: 'intermediate', label: 'Inermediate' },
@@ -39,15 +39,16 @@ const Step1 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            skillName: '',
-            skillLevel: '',
-            totalHours: '',
-            contents: '',
+            skillName: getState().skillName || '',
+            skillLevel: getState().skillLevel || '',
+            totalHours: getState().totalHours || '',
+            contents: getState().contents || '',
           }}
-        //  validationSchema={postStep1ValidationSchema}
+          //  validationSchema={postStep1ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
+            console.log(values);
           }}>
           {formProps => (
             <View style={styles.container}>
@@ -115,7 +116,7 @@ const Step1 = props => {
               <Text style={styles.label}>Contents</Text>
               <TextInput
                 placeholderTextColor={'#7777'}
-                style={styles.input}
+                style={styles.inputTextArea}
                 onChangeText={formProps.handleChange('contents')}
                 value={formProps.values.contents}
                 multiline={true}

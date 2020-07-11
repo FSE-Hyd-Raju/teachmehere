@@ -28,7 +28,7 @@ const TextInputWithIcon = props => {
         style={{ padding: 10 }}
         name={iconName}
         color={iconColor}
-        size={25}
+        size={23}
       />
     </View>
   );
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     fontSize: 14,
     borderRadius: 6,
+    height: 47,
   },
   inputStyle: {
     flex: 1,

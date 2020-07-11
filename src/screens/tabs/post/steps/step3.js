@@ -42,6 +42,7 @@ const Step3 = props => {
     { name: 'Sat', checked: false },
   ]);
   const { colors } = props.theme;
+  const { getState, saveState } = props;
 
   return (
     <View>
@@ -56,16 +57,16 @@ const Step3 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            startDate: '',
-            endDate: '',
-            startTime: '',
-            endTime: '',
+            startDate: getState().startDate || '',
+            endDate: getState().endDate || '',
+            startTime: getState().startTime || '',
+            endTime: getState().endTime || '',
             onDays: 'Daily',
           }}
-         // validationSchema={postStep2ValidationSchema}
+          // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
-            props.saveState(values);
+            saveState(values);
           }}>
           {formProps => (
             <View style={styles.container}>
@@ -177,8 +178,8 @@ const Step3 = props => {
                             uncheckedIcon="circle-o"
                             title="checkbox 1"
                             checkedColor="red"
-                           // onPress={() => this.updateState(day)}
-                           // status={day.checked ? 'checked' : 'unchecked'}
+                            // onPress={() => this.updateState(day)}
+                            // status={day.checked ? 'checked' : 'unchecked'}
                           />
                           <Text style={{ marginTop: 9, fontSize: 14 }}>
                             {day.name}

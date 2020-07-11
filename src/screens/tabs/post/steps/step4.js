@@ -9,7 +9,7 @@ import {
 import styles from './styles';
 import { Formik } from 'formik';
 import { Dialog, Portal, List, Button, Appbar } from 'react-native-paper';
-import { postStep1ValidationSchema } from '../../../../utils/validations';
+import { postStep4ValidationSchema } from '../../../../utils/validations';
 import {
   DefaultTheme,
   DarkTheme,
@@ -21,6 +21,7 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Header } from 'react-native-elements';
 
 const Step1 = props => {
+  const { getState, saveState } = props;
   return (
     <View>
       <Appbar.Header theme={DarkTheme}>
@@ -30,12 +31,13 @@ const Step1 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            platform: '',
-            tags: [],
-            experience: '',
-            linkedInProfile: '',
+            platform: getState().platform || '',
+            tags: getState().tags || [],
+            experience: getState().experience || '',
+            profileSummary: getState().profileSummary || '',
+            linkedInProfile: getState().linkedInProfile || '',
           }}
-          //  validationSchema={postStep1ValidationSchema}
+          validationSchema={postStep4ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
@@ -93,8 +95,8 @@ const Step1 = props => {
                 {formProps.touched.totalHours &&
                   formProps.errors.profileSummary}
               </Text>
-              <Text style={styles.label}>linkedIn Profile</Text>
-              <TextInput
+              <Text style={styles.label}>LinkedIn Profile</Text>
+              {/* <TextInput
                 placeholderTextColor={'#7777'}
                 style={styles.input}
                 onChangeText={formProps.handleChange('linkedInProfile')}
@@ -102,9 +104,33 @@ const Step1 = props => {
                 scrollEnabled={true}
                 keyboardType={'url'}
                 placeholder={'linked in profile URL '}
-              />
-              <Text style={styles.linkedInProfile}>
-                {formProps.touched.totalHours &&
+              /> */}
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  borderWidth: 1,
+                  borderColor: '#ddd',
+                  fontSize: 14,
+                  borderRadius: 6,
+                  height: 47,
+                }}>
+                <View style={{ backgroundColor: '#ddd' }}>
+                  <Text style={{ padding: 13 }}>
+                    https://www.linkedin.com/in/
+                  </Text>
+                </View>
+                <TextInput
+                  placeholder={'user ID'}
+                  placeholderTextColor={'#777'}
+                  style={{marginLeft: 15}}
+                  onChangeText={formProps.handleChange('linkedInProfile')}
+                  value={formProps.values.linkedInProfile}
+                />
+              </View>
+
+              <Text style={styles.errorText}>
+                {formProps.touched.linkedInProfile &&
                   formProps.errors.linkedInProfile}
               </Text>
               <View style={styles.btnContainer}>

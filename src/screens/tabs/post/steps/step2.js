@@ -26,39 +26,32 @@ import {
 import { withTheme } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Header } from 'react-native-elements';
+import AutoCompleteTextInput from '../../../../components/common/autoComplete/AutoCompleteTextInput';
 
 const Step2 = props => {
   //   props.saveState({ languages: ['English'] });
   //   const languages1 = props.getState().languages || [];
-  const [languages, setLanguages] = useState(['English']);
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [languages, setLanguages] = useState([]);
+  //const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [countries] = useState(
     require('../../../../assets/countries.json') || [],
   );
   const [allLaunguages] = useState(
     require('../../../../assets/languages.json') || [],
   );
-  const [filteredCountries, setFilteredCountries] = useState([]);
-  const [filteredLanguages, setFilteredLanguages] = useState([]);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const { getState, saveState } = props;
+  const onToggleSwitch = () => {
+    saveState({ isGroupSelected: !getState().isGroupSelected });
+  };
   const { colors } = props.theme;
 
-  const filterCountries = value => {
-    const filteredCountries = countries.filter(country => {
-      return (
-        country && country.name.toLowerCase().includes(value.toLowerCase())
-      );
-    });
-    setFilteredCountries(filteredCountries);
-  };
-
-  const selectLanguage = value => {
-    const index = languages.indexOf(value);
+  const selectLanguage = lang => {
+    const index = languages && languages.indexOf(lang);
     if (index === -1) {
-      languages.push(value);
+      languages.push(lang);
     }
     setLanguages([...languages]);
-    setFilteredLanguages([]);
+    saveState({ languages: languages });
   };
 
   const removeLanguage = Language => {
@@ -67,15 +60,7 @@ const Step2 = props => {
       languages.splice(index, 1);
     }
     setLanguages([...languages]);
-  };
-
-  const filterLanguages = value => {
-    const filteredLanguages = allLaunguages.filter(language => {
-      return (
-        language && language.name.toLowerCase().includes(value.toLowerCase())
-      );
-    });
-    setFilteredLanguages(filteredLanguages);
+    saveState({ languages: languages });
   };
 
   return (
@@ -87,48 +72,39 @@ const Step2 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            country: '',
-            individualPrice: '',
-            noOfPeople: '',
-            groupPrice: '',
-            languages: languages,
+            country: getState().country || '',
+            individualPrice: getState().individualPrice || '',
+            noOfPeople: getState().noOfPeople || '',
+            groupPrice: getState().groupPrice || '',
+            languages: getState().languages || [],
           }}
-         // validationSchema={postStep2ValidationSchema}
+          // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
           }}>
           {formProps => (
             <View style={styles.container}>
-              <Text style={styles.label}>Country*</Text>
-              <TextInput
-                placeholder="Country"
-                placeholderTextColor={'#7777'}
-                style={styles.input}
-                onChangeText={text => filterCountries(text)}
-                onBlur={formProps.handleBlur('country')}
-                value={formProps.values.country.name}
-              />
-              {filteredCountries &&
-                filteredCountries.map(country => {
-                  return (
-                    <List.Item
-                      style={{
-                        backgroundColor: 'white',
-                        elevation: 5,
-                      }}
-                      key={country.code}
-                      title={country.name}
-                      onPress={() => {
-                        formProps.setFieldValue('country', country);
-                        setFilteredCountries([]);
-                      }}
-                    />
-                  );
-                })}
-              <Text style={styles.errorText}>
-                {formProps.touched.country && formProps.errors.country}
-              </Text>
+              <View>
+                <AutoCompleteTextInput
+                  data={countries}
+                  displayKey="name"
+                  label={'Country*'}
+                  placeholder="Select a country"
+                  value={formProps.values.country}
+                  onSelect={value => {
+                    formProps.setFieldValue('country', value);
+                    setLanguages([
+                      ...(getState().languages || []),
+                      value.language.name,
+                    ]);
+                  }}
+                  maxHeight={200}
+                />
+                <Text style={styles.errorText}>
+                  {formProps.touched.country && formProps.errors.country}
+                </Text>
+              </View>
               <Text style={styles.label}>Individual Price*</Text>
               <TextInput
                 placeholder="Individual Price"
@@ -153,12 +129,12 @@ const Step2 = props => {
                   Interested to teach group as well?
                 </Text>
                 <Switch
-                  value={isSwitchOn}
+                  value={getState().isGroupSelected}
                   onValueChange={onToggleSwitch}
                   color={'black'}
                 />
               </View>
-              {isSwitchOn && (
+              {getState().isGroupSelected && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -203,47 +179,34 @@ const Step2 = props => {
                 style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
-                  margin: 10,
+                  padding: 5,
                 }}>
                 {languages &&
                   languages.map(lan => {
                     return (
                       <Chip
                         mode="outlined"
-                        style={{ padding: 2, margin: 5 }}
+                        style={{ padding: 2, margin: 3 }}
                         onClose={() => removeLanguage(lan)}>
                         {lan}
                       </Chip>
                     );
                   })}
               </View>
-              <Text style={styles.errorText}>
-                {formProps.touched.languages && formProps.errors.languages}
-              </Text>
-              <TextInput
-                placeholderTextColor={'#7777'}
-                style={styles.input}
-                onChangeText={text => filterLanguages(text)}
-                onBlur={() => {
-                  formProps.handleBlur('languages');
-                  formProps.setFieldValue('languages', languages);
-                }}
-                placeholder={'Search languages'}
-              />
-              {filteredLanguages &&
-                filteredLanguages.map(language => {
-                  return (
-                    <List.Item
-                      style={{
-                        backgroundColor: 'white',
-                        elevation: 5,
-                      }}
-                      key={language.code}
-                      title={language.name}
-                      onPress={() => selectLanguage(language.name)}
-                    />
-                  );
-                })}
+              {formProps.errors.languages && (
+                <Text style={styles.errorText}>
+                  {formProps.touched.languages && formProps.errors.languages}
+                </Text>
+              )}
+              <View style={{ marginTop: 7 }}>
+                <AutoCompleteTextInput
+                  data={allLaunguages}
+                  displayKey="name"
+                  placeholder="Select Language"
+                  onSelect={lang => selectLanguage(lang.name)}
+                  maxHeight={200}
+                />
+              </View>
               <View style={styles.btnContainer}>
                 <Text />
                 <TouchableOpacity style={styles.btnStyle}>
@@ -264,282 +227,3 @@ const Step2 = props => {
 };
 
 export default withTheme(Step2);
-
-// import React, { Component } from 'react';
-// import {
-//   Image,
-//   View,
-//   TouchableOpacity,
-//   ScrollView,
-//   Keyboard,
-// } from 'react-native';
-
-// import styles from './styles';
-// import { Portal, Text, Checkbox, Chip, List } from 'react-native-paper';
-// import { TextInput } from 'react-native-paper';
-
-// class step2 extends Component {
-//   constructor(props) {
-//     props.saveState({
-//       languages: ['English', 'Hindi', 'Telugu'],
-//       isGroupSelected: false,
-//     });
-//     super(props);
-//     this.state = {
-//       totalSteps: '',
-//       currentStep: '',
-//       countries: require('../../../../assets/countries.json') || [],
-//       allLaunguages: require('../../../../assets/languages.json') || [],
-//       filteredCountries: [],
-//       filteredLanguages: [],
-//       languages: props.getState().languages || [],
-//       isGroupSelected: props.getState().isGroupSelected || false,
-//     };
-//   }
-
-//   static getDerivedStateFromProps = props => {
-//     const { getTotalSteps, getCurrentStep } = props;
-//     return {
-//       totalSteps: getTotalSteps(),
-//       currentStep: getCurrentStep(),
-//     };
-//   };
-
-//   nextStep = () => {
-//     const { next, saveState } = this.props;
-//     saveState({
-//       languages: this.state.languages,
-//       isGroupSelected: this.state.isGroupSelected,
-//     });
-//     // Go to next step
-//     next();
-//   };
-
-//   goBack() {
-//     const { back, saveState } = this.props;
-//     // Go to previous step
-//     // saveState({
-//     //   languages: this.state.languages,
-//     //   isGroupSelected: this.state.isGroupSelected,
-//     // });
-//     back();
-//   }
-
-//   selectCountry = value => {
-//     const languages = this.state.languages;
-//     const { saveState } = this.props;
-//     saveState({ country: value });
-//     const index = languages.indexOf(value.language.name);
-//     if (index === -1) {
-//       languages.push(value.language.name);
-//     }
-//     this.setState({
-//       filteredCountries: [],
-//       languages: languages,
-//     });
-//   };
-
-//   selectLanguage = value => {
-//     const languages = this.state.languages;
-//     const index = languages.indexOf(value);
-//     if (index === -1) {
-//       languages.push(value);
-//     }
-//     this.setState({
-//       languages: languages,
-//       filteredLanguages: [],
-//     });
-//   };
-
-//   removeLanguage = Language => {
-//     const languages = this.state.languages;
-//     const index = languages.indexOf(Language);
-//     if (index !== -1) {
-//       languages.splice(index, 1);
-//     }
-//     this.setState({ languages: languages });
-//   };
-
-//   filterCountries = value => {
-//     const filteredCountries = this.state.countries.filter(country => {
-//       return (
-//         country && country.name.toLowerCase().includes(value.toLowerCase())
-//       );
-//     });
-//     this.setState({ filteredCountries: filteredCountries });
-//   };
-
-//   filterLanguages = value => {
-//     const filteredLanguages = this.state.allLaunguages.filter(language => {
-//       return (
-//         language && language.name.toLowerCase().includes(value.toLowerCase())
-//       );
-//     });
-//     this.setState({ filteredLanguages: filteredLanguages });
-//   };
-
-//   render() {
-//     const {
-//       filteredCountries,
-//       languages,
-//       filteredLanguages,
-//       isGroupSelected,
-//     } = this.state;
-//     const { saveState, getState } = this.props;
-//     const { country, individualPrice, groupPrice, noOfPeople } = getState();
-//     return (
-//       <View style={{ alignItems: 'center' }}>
-//         <View>
-//           <Text style={styles.currentStepText}>Pricing</Text>
-//         </View>
-//         <TextInput
-//           label="Country"
-//           mode="outlined"
-//           selectionColor={'red'}
-//           style={styles.price}
-//           value={country && country.name}
-//           onChangeText={text => this.filterCountries(text)}
-//         />
-//         {filteredCountries &&
-//           filteredCountries.map(country => {
-//             return (
-//               <List.Item
-//                 style={{
-//                   backgroundColor: 'white',
-//                   width: '80%',
-//                   elevation: 5,
-//                 }}
-//                 key={country.code}
-//                 title={country.name}
-//                 onPress={this.selectCountry.bind(this, country)}
-//               />
-//             );
-//           })}
-//         <TextInput
-//           label="One to one price"
-//           placeholder="Price per head"
-//           keyboardType="numeric"
-//           mode="outlined"
-//           style={styles.price}
-//           value={individualPrice}
-//           onChangeText={price =>
-//             saveState({
-//               individualPrice: price,
-//             })
-//           }
-//         />
-//         <View
-//           style={{
-//             flexDirection: 'row',
-//             marginTop: 20,
-//           }}>
-//           <Checkbox
-//             checkedIcon="dot-circle-o"
-//             uncheckedIcon="circle-o"
-//             title="checkbox 1"
-//             onPress={() => this.setState({ isGroupSelected: !isGroupSelected })}
-//             status={isGroupSelected ? 'checked' : 'unchecked'}
-//           />
-//           <Text style={{ marginTop: 10 }}>
-//             Interested in teaching group of people?
-//           </Text>
-//         </View>
-//         {isGroupSelected && (
-//           <View style={{ flexDirection: 'row', width: '80%' }}>
-//             <TextInput
-//               label="# of people"
-//               placeholder="No of people"
-//               keyboardType="numeric"
-//               mode="outlined"
-//               style={{ width: 120, marginTop: '3%', height: 48 }}
-//               value={noOfPeople}
-//               onChangeText={people => saveState({ noOfPeople: people })}
-//             />
-//             <TextInput
-//               label="Group price"
-//               placeholder="Price per head"
-//               keyboardType="numeric"
-//               mode="outlined"
-//               style={{
-//                 width: 220,
-//                 marginLeft: 15,
-//                 height: 48,
-//                 marginTop: '3%',
-//               }}
-//               value={groupPrice}
-//               onChangeText={price => saveState({ groupPrice: price })}
-//             />
-//           </View>
-//         )}
-//         <View
-//           style={{
-//             flexDirection: 'row',
-//             marginTop: 20,
-//             marginLeft: -220,
-//           }}>
-//           <Text style={{ marginTop: 5, marginRight: 5 }}>
-//             Speaking Languages
-//           </Text>
-//         </View>
-//         <View
-//           style={{
-//             flexDirection: 'row',
-//             flexWrap: 'wrap',
-//             width: '80%',
-//             marginTop: 10,
-//           }}>
-//           {languages &&
-//             languages.map(lan => {
-//               return (
-//                 <Chip
-//                   mode="outlined"
-//                   style={{ padding: 2, margin: 5 }}
-//                   onClose={() => this.removeLanguage(lan)}>
-//                   {lan}
-//                 </Chip>
-//               );
-//             })}
-//         </View>
-//         <TextInput
-//           label="Search languages"
-//           mode="outlined"
-//           style={{ width: '80%', marginTop: '2%', height: 48 }}
-//           onChangeText={text => this.filterLanguages(text)}
-//         />
-//         {filteredLanguages &&
-//           filteredLanguages.map(language => {
-//             return (
-//               <List.Item
-//                 style={{
-//                   backgroundColor: 'white',
-//                   width: '80%',
-//                   elevation: 5,
-//                 }}
-//                 key={language.code}
-//                 title={language.name}
-//                 onPress={this.selectLanguage.bind(this, language.name)}
-//               />
-//             );
-//           })}
-//         <View style={[styles.btnContainer, styles.marginAround]}>
-//           <TouchableOpacity onPress={this.props.back} style={styles.btnStyle}>
-//             <Image
-//               source={require('../../../../assets/img/right-black-arrow-md.png')}
-//               style={[styles.btnImage, styles.backBtn]}
-//               resizeMode="cover"
-//             />
-//           </TouchableOpacity>
-//           <TouchableOpacity onPress={this.nextStep} style={styles.btnStyle}>
-//             <Image
-//               source={require('../../../../assets/img/right-black-arrow-md.png')}
-//               style={styles.btnImage}
-//               resizeMode="cover"
-//             />
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     );
-//   }
-// }
-
-// export default step2;
