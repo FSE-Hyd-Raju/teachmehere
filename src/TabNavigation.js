@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import Home from './screens/tabs/Home';
-import Search from './screens/tabs/Search';
+import Search from './screens/tabs/search/Search';
 import Post from './screens/tabs/post/Post';
 import Chat from './screens/tabs/Chat';
 import Profile from './screens/tabs/profile/Profile';
