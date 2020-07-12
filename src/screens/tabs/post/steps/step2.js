@@ -82,6 +82,21 @@ const Step2 = props => {
           onSubmit={values => {
             props.next();
             props.saveState(values);
+            if (!getState().daysOfTheWeek) {
+              props.saveState({
+                onDays: 'Daily',
+                daysOfTheWeek: [
+                  { name: 'Sun', checked: false },
+                  { name: 'Mon', checked: false },
+                  { name: 'Tue', checked: false },
+                  { name: 'Wed', checked: false },
+                  { name: 'Thu', checked: false },
+                  { name: 'Fri', checked: false },
+                  { name: 'Sat', checked: false },
+                ],
+                isTentativeSchedule: false,
+              });
+            }
           }}>
           {formProps => (
             <View style={styles.container}>

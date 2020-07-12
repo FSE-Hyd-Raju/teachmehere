@@ -37,7 +37,7 @@ const Step1 = props => {
             profileSummary: getState().profileSummary || '',
             linkedInProfile: getState().linkedInProfile || '',
           }}
-          validationSchema={postStep4ValidationSchema}
+          //validationSchema={postStep4ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
@@ -83,11 +83,11 @@ const Step1 = props => {
               <Text style={styles.label}>Profile Summary</Text>
               <TextInput
                 placeholderTextColor={'#7777'}
-                style={styles.input}
+                style={styles.inputTextArea}
                 onChangeText={formProps.handleChange('profileSummary')}
                 value={formProps.values.profileSummary}
                 multiline={true}
-                numberOfLines={5}
+                numberOfLines={4}
                 scrollEnabled={true}
                 placeholder={'Describe your experience. '}
               />
@@ -96,16 +96,6 @@ const Step1 = props => {
                   formProps.errors.profileSummary}
               </Text>
               <Text style={styles.label}>LinkedIn Profile</Text>
-              {/* <TextInput
-                placeholderTextColor={'#7777'}
-                style={styles.input}
-                onChangeText={formProps.handleChange('linkedInProfile')}
-                value={formProps.values.linkedInProfile}
-                scrollEnabled={true}
-                keyboardType={'url'}
-                placeholder={'linked in profile URL '}
-              /> */}
-
               <View
                 style={{
                   flexDirection: 'row',

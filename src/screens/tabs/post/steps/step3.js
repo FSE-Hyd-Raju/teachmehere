@@ -32,23 +32,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 
 const Step3 = props => {
-//   useEffect(() => {
-// 	props.saveState() &&
-//     props.saveState({
-//       onDays: 'Daily',
-//       daysOfTheWeek: [
-//         { name: 'Sun', checked: false },
-//         { name: 'Mon', checked: false },
-//         { name: 'Tue', checked: false },
-//         { name: 'Wed', checked: false },
-//         { name: 'Thu', checked: false },
-//         { name: 'Fri', checked: false },
-//         { name: 'Sat', checked: false },
-//       ],
-//     });
-//   });
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
   const { colors } = props.theme;
   const { getState, saveState } = props;
   const [show, setShow] = useState(false);
@@ -102,7 +85,7 @@ const Step3 = props => {
   };
 
   const updateState = day => {
-    const { saveState, getState } = this.props;
+    const { saveState, getState } = props;
     const { daysOfTheWeek } = getState();
     const i = daysOfTheWeek.findIndex(weekDay => weekDay.name === day.name);
     daysOfTheWeek[i].checked = true;
@@ -126,7 +109,8 @@ const Step3 = props => {
             endDate: getState().endDate || '',
             startTime: getState().startTime || '',
             endTime: getState().endTime || '',
-            onDays: 'Daily',
+            onDays: getState().onDays || 'Daily',
+            isTentativeSchedule: getState().isTentativeSchedule || false,
           }}
           // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
@@ -188,7 +172,7 @@ const Step3 = props => {
                     keyboardType={'numeric'}
                     //	onBlur={formProps.handleBlur('startTime')}
                     handleFocus={() => showTimepicker('startTime')}
-                    handleIconClick={() => showDatepicker('startTime')}
+                    handleIconClick={() => showTimepicker('startTime')}
                     value={getState().startTime}
                     iconName={'timer'}
                     iconColor={'#777'}
@@ -205,7 +189,7 @@ const Step3 = props => {
                     keyboardType={'numeric'}
                     //onBlur={formProps.handleBlur('endTime')}
                     handleFocus={() => showTimepicker('endTime')}
-                    handleIconClick={() => showDatepicker('endTime')}
+                    handleIconClick={() => showTimepicker('endTime')}
                     value={getState().endTime}
                     iconName={'timer'}
                     iconColor={'#777'}
@@ -245,25 +229,26 @@ const Step3 = props => {
                   <Text style={{ marginTop: 8 }}>Specific Days</Text>
                 </View>
               </RadioButton.Group>
-
-              {formProps.values.onDays === 'specificDays' && (
+              {getState().onDays === 'specificDays' && (
                 <View style={{ marginLeft: 40, height: 150, flexWrap: 'wrap' }}>
                   {getState().daysOfTheWeek &&
                     getState().daysOfTheWeek.map(day => {
                       return (
-                        <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity
+                          style={{ flexDirection: 'row' }}
+                          onPress={() => updateState(day)}>
                           <Checkbox
                             checkedIcon="dot-circle-o"
                             uncheckedIcon="circle-o"
                             title="checkbox 1"
                             checkedColor="red"
-                            onPress={() => updateState(day)}
+                            //onPress={() => updateState(day)}
                             status={day.checked ? 'checked' : 'unchecked'}
                           />
                           <Text style={{ marginTop: 9, fontSize: 14 }}>
                             {day.name}
                           </Text>
-                        </View>
+                        </TouchableOpacity>
                       );
                     })}
                 </View>
@@ -278,8 +263,12 @@ const Step3 = props => {
                   My schedule is Tentetive
                 </Text>
                 <Switch
-                  value={isSwitchOn}
-                  onValueChange={onToggleSwitch}
+                  value={getState().isTentativeSchedule}
+                  onValueChange={() =>
+                    saveState({
+                      isTentativeSchedule: !getState().isTentativeSchedule,
+                    })
+                  }
                   color={'black'}
                 />
               </View>
