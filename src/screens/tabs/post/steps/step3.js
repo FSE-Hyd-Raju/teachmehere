@@ -105,12 +105,12 @@ const Step3 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            startDate: getState().startDate || '',
-            endDate: getState().endDate || '',
-            startTime: getState().startTime || '',
-            endTime: getState().endTime || '',
-            onDays: getState().onDays || 'Daily',
-            isTentativeSchedule: getState().isTentativeSchedule || false,
+            // startDate: getState().startDate || '',
+            // endDate: getState().endDate || '',
+            // startTime: getState().startTime || '',
+            // endTime: getState().endTime || '',
+            // onDays: getState().onDays || 'Daily',
+            // isTentativeSchedule: getState().isTentativeSchedule || false,
           }}
           // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {

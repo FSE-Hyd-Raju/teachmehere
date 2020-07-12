@@ -29,10 +29,7 @@ import { Header } from 'react-native-elements';
 import AutoCompleteTextInput from '../../../../components/common/autoComplete/AutoCompleteTextInput';
 
 const Step2 = props => {
-  //   props.saveState({ languages: ['English'] });
-  //   const languages1 = props.getState().languages || [];
-  const [languages, setLanguages] = useState([]);
-  //const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [langError, setLangError] = useState(false);
   const [countries] = useState(
     require('../../../../assets/countries.json') || [],
   );
@@ -46,21 +43,29 @@ const Step2 = props => {
   const { colors } = props.theme;
 
   const selectLanguage = lang => {
-    const index = languages && languages.indexOf(lang);
+    const languagesToUpdate = getState().languages;
+    const index = languagesToUpdate && languagesToUpdate.indexOf(lang);
     if (index === -1) {
-      languages.push(lang);
+      languagesToUpdate.push(lang);
+      setLangError(false);
     }
-    setLanguages([...languages]);
-    saveState({ languages: languages });
+    //setLanguages([...languages]);
+    saveState({ languages: languagesToUpdate });
   };
 
-  const removeLanguage = Language => {
-    const index = languages.indexOf(Language);
-    if (index !== -1) {
-      languages.splice(index, 1);
+  const removeLanguage = lang => {
+    const languagesToUpdate = getState().languages;
+    const index = languagesToUpdate && languagesToUpdate.indexOf(lang);
+    if (index !== -1 && languagesToUpdate.length > 1) {
+      languagesToUpdate.splice(index, 1);
+    } else {
+      setLangError(true);
+      setTimeout(function() {
+        setLangError(false);
+      }, 3000);
     }
-    setLanguages([...languages]);
-    saveState({ languages: languages });
+    //setLanguages([...languages]);
+    saveState({ languages: languagesToUpdate });
   };
 
   return (
@@ -76,7 +81,7 @@ const Step2 = props => {
             individualPrice: getState().individualPrice || '',
             noOfPeople: getState().noOfPeople || '',
             groupPrice: getState().groupPrice || '',
-            languages: getState().languages || [],
+           // languages: getState().languages || [],
           }}
           // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
@@ -109,10 +114,12 @@ const Step2 = props => {
                   value={formProps.values.country}
                   onSelect={value => {
                     formProps.setFieldValue('country', value);
-                    setLanguages([
-                      ...(getState().languages || []),
-                      value.language.name,
-                    ]);
+                    saveState({
+                      languages: [
+                        ...(getState().languages || []),
+                        value.language.name,
+                      ],
+                    });
                   }}
                   maxHeight={200}
                 />
@@ -196,8 +203,8 @@ const Step2 = props => {
                   flexWrap: 'wrap',
                   padding: 5,
                 }}>
-                {languages &&
-                  languages.map(lan => {
+                {getState().languages &&
+                  getState().languages.map(lan => {
                     return (
                       <Chip
                         mode="outlined"
@@ -208,9 +215,9 @@ const Step2 = props => {
                     );
                   })}
               </View>
-              {formProps.errors.languages && (
+              {langError && (
                 <Text style={styles.errorText}>
-                  {formProps.touched.languages && formProps.errors.languages}
+                  {'Atleast one language should be there, Add others to remove this language'}
                 </Text>
               )}
               <View style={{ marginTop: 7 }}>

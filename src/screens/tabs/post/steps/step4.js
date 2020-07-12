@@ -39,8 +39,8 @@ const Step1 = props => {
           }}
           //validationSchema={postStep4ValidationSchema}
           onSubmit={values => {
+            saveState(values);
             props.next();
-            props.saveState(values);
           }}>
           {formProps => (
             <View style={styles.container}>
@@ -61,6 +61,7 @@ const Step1 = props => {
                 placeholder="Add some tags. ex: angular, react, etc"
                 placeholderTextColor={'#7777'}
                 style={styles.input}
+                onChangeText={formProps.handleChange('tags')}
                 onBlur={formProps.handleBlur('tags')}
                 value={formProps.values.tags}
               />
@@ -113,7 +114,7 @@ const Step1 = props => {
                 <TextInput
                   placeholder={'user ID'}
                   placeholderTextColor={'#777'}
-                  style={{marginLeft: 15}}
+                  style={{ marginLeft: 15 }}
                   onChangeText={formProps.handleChange('linkedInProfile')}
                   value={formProps.values.linkedInProfile}
                 />

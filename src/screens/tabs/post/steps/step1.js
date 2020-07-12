@@ -48,7 +48,9 @@ const Step1 = props => {
           onSubmit={values => {
             props.next();
             props.saveState(values);
-            console.log(values);
+            if(!props.getState().languages) {
+				props.saveState({languages: ['English']});
+			}
           }}>
           {formProps => (
             <View style={styles.container}>

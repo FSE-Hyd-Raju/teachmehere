@@ -22,17 +22,7 @@ class Steps extends Component {
   constructor(props) {
     super(props);
 
-	this.state = {
-    daysOfTheWeek: [
-      { name: 'Sun', checked: false },
-      { name: 'Mon', checked: false },
-      { name: 'Tue', checked: false },
-      { name: 'Wed', checked: false },
-      { name: 'Thu', checked: false },
-      { name: 'Fri', checked: false },
-      { name: 'Sat', checked: false },
-    ],
-  };
+    this.state = {};
   }
 
   onNext = () => {
@@ -43,66 +33,69 @@ class Steps extends Component {
   };
 
   finish = state => {
-    // const { category, subCategory } = this.props || {};
-    // const {
-    //   skillName,
-    //   skillLevel,
-    //   content,
-    //   totalHours,
-    //   country,
-    //   individualPrice,
-    //   groupPrice,
-    //   noOfPeople,
-    //   languages,
-    //   startDate,
-    //   endDate,
-    //   startTime,
-    //   endTime,
-    //   onDays,
-    //   daysOfTheWeek,
-    //   tentativeScedule,
-    //   platform,
-    //   tags,
-    //   experience,
-    //   linkedInProfile,
-    //   availableForDemo,
-    // } = state;
-    // const postData = {
-    //   uid: '12122',
-    //   coursename: skillName,
-    //   courselevel: skillLevel,
-    //   content: content || '',
-    //   category: category,
-    //   subcategory: subCategory,
-    //   totalhours: parseInt(totalHours),
-    //   country: country && country.name,
-    //   currency: country && country.currency && country.currency.symbol,
-    //   price: {
-    //     oneonone: parseInt(individualPrice),
-    //     group: {
-    //       members: parseInt(noOfPeople) || 0,
-    //       price: parseInt(groupPrice) || 0,
-    //     },
-    //   },
-    //   speakinglanguages: languages,
-    //   availability: {
-    //     coursestartdate: startDate || '',
-    //     courseenddate: endDate || '',
-    //     ondays: {
-    //       availableon: onDays || '',
-    //       daysofweek: daysOfTheWeek || [],
-    //     },
-    //     coursestarttime: startTime || '',
-    //     coursesendtime: endTime || '',
-    //     tentativeschedule: tentativeScedule,
-    //   },
-    //   platform: platform,
-    //   tags: tags.split(','),
-    //   experience: parseInt(experience),
-    //   linkedinprofile: linkedInProfile,
-    //   demo: availableForDemo,
-    // };
-    // this.props.actions.postSkill(postData);
+    const { category, subCategory } = this.props || {};
+    const {
+      skillName,
+      skillLevel,
+      content,
+      totalHours,
+      country,
+      individualPrice,
+      groupPrice,
+      noOfPeople,
+      languages,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+      onDays,
+      daysOfTheWeek,
+      tentativeScedule,
+      platform,
+      tags,
+      experience,
+      profilesummary,
+      linkedInProfile,
+      availableForDemo,
+    } = state;
+    const postData = {
+      uid: '12122',
+      coursename: skillName,
+      courselevel: skillLevel,
+      content: content || '',
+      category: category,
+      subcategory: subCategory,
+      totalhours: parseInt(totalHours),
+      country: country && country.name,
+      currency: country && country.currency && country.currency.symbol,
+      price: {
+        oneonone: parseInt(individualPrice),
+        group: {
+          members: parseInt(noOfPeople) || 0,
+          price: parseInt(groupPrice) || 0,
+        },
+      },
+      speakinglanguages: languages,
+      availability: {
+        coursestartdate: startDate || '',
+        courseenddate: endDate || '',
+        ondays: {
+          availableon: onDays || '',
+          daysofweek: daysOfTheWeek || [],
+        },
+        coursestarttime: startTime || '',
+        coursesendtime: endTime || '',
+        tentativeschedule: tentativeScedule,
+      },
+      platform: platform,
+      tags: tags.split(','),
+      experience: parseInt(experience),
+      profilesummary: profilesummary,
+      linkedinprofile: linkedInProfile,
+      demo: availableForDemo,
+    };
+    console.log('STATE', postData);
+    this.props.actions.postSkill(postData);
   };
 
   render() {
