@@ -17,7 +17,6 @@ import {
 } from 'react-native-paper';
 import { withTheme } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-//import Header from '../../../../components/common/Header';
 import { Header } from 'react-native-elements';
 
 const Step1 = props => {
@@ -44,13 +43,13 @@ const Step1 = props => {
             totalHours: getState().totalHours || '',
             contents: getState().contents || '',
           }}
-          //  validationSchema={postStep1ValidationSchema}
+          validationSchema={postStep1ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
-            if(!props.getState().languages) {
-				props.saveState({languages: ['English']});
-			}
+            if (!props.getState().languages) {
+              props.saveState({ languages: ['English'] });
+            }
           }}>
           {formProps => (
             <View style={styles.container}>
@@ -129,11 +128,11 @@ const Step1 = props => {
                 }
               />
               <View style={styles.btnContainer}>
-                <Text />
                 <TouchableOpacity style={styles.btnStyle}>
                   <Button
                     mode="contained"
                     color={'black'}
+                    labelStyle={styles.btnLabelStyle}
                     onPress={formProps.handleSubmit}>
                     Next
                   </Button>

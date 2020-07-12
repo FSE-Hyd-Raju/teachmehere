@@ -8,7 +8,14 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Formik } from 'formik';
-import { Dialog, Portal, List, Button, Appbar } from 'react-native-paper';
+import {
+  Dialog,
+  Portal,
+  List,
+  Button,
+  Appbar,
+  Switch,
+} from 'react-native-paper';
 import { postStep4ValidationSchema } from '../../../../utils/validations';
 import {
   DefaultTheme,
@@ -36,8 +43,9 @@ const Step1 = props => {
             experience: getState().experience || '',
             profileSummary: getState().profileSummary || '',
             linkedInProfile: getState().linkedInProfile || '',
+            availableForDemo: getState().availableForDemo || false,
           }}
-          //validationSchema={postStep4ValidationSchema}
+          validationSchema={postStep4ValidationSchema}
           onSubmit={values => {
             saveState(values);
             props.next();
@@ -104,10 +112,10 @@ const Step1 = props => {
                   borderColor: '#ddd',
                   fontSize: 14,
                   borderRadius: 6,
-                  height: 47,
+                  height: 44,
                 }}>
                 <View style={{ backgroundColor: '#ddd' }}>
-                  <Text style={{ padding: 13 }}>
+                  <Text style={{ padding: 12 }}>
                     https://www.linkedin.com/in/
                   </Text>
                 </View>
@@ -119,16 +127,45 @@ const Step1 = props => {
                   value={formProps.values.linkedInProfile}
                 />
               </View>
-
               <Text style={styles.errorText}>
                 {formProps.touched.linkedInProfile &&
                   formProps.errors.linkedInProfile}
               </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 20,
+                }}>
+                <Text style={{ fontSize: 13, margin: 5 }}>
+                  Available for a short demo*
+                </Text>
+                <Switch
+                  value={formProps.values.availableForDemo}
+                  onValueChange={() => {
+                    saveState({
+                      availableForDemo: !formProps.values.availableForDemo,
+                    });
+                    formProps.setFieldValue(
+                      'availableForDemo',
+                      !formProps.values.availableForDemo,
+                    );
+                  }}
+                  color={'black'}
+                />
+              </View>
+              {formProps.errors.availableForDemo && (
+                <Text style={styles.errorText}>
+                  {formProps.touched.availableForDemo &&
+                    formProps.errors.availableForDemo}
+                </Text>
+              )}
               <View style={styles.btnContainer}>
-                <TouchableOpacity style={{ width: '100%' }}>
+                <TouchableOpacity style={styles.btnStyle}>
                   <Button
                     mode="contained"
                     color={'black'}
+                    labelStyle={styles.btnLabelStyle}
                     onPress={formProps.handleSubmit}>
                     Post My Skill
                   </Button>

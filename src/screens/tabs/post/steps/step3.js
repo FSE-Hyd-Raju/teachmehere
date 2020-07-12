@@ -104,14 +104,16 @@ const Step3 = props => {
       </Appbar.Header>
       <View style={styles.container}>
         <Formik
-          initialValues={{
-            // startDate: getState().startDate || '',
-            // endDate: getState().endDate || '',
-            // startTime: getState().startTime || '',
-            // endTime: getState().endTime || '',
-            // onDays: getState().onDays || 'Daily',
-            // isTentativeSchedule: getState().isTentativeSchedule || false,
-          }}
+          initialValues={
+            {
+              // startDate: getState().startDate || '',
+              // endDate: getState().endDate || '',
+              // startTime: getState().startTime || '',
+              // endTime: getState().endTime || '',
+              // onDays: getState().onDays || 'Daily',
+              // isTentativeSchedule: getState().isTentativeSchedule || false,
+            }
+          }
           // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
@@ -273,11 +275,11 @@ const Step3 = props => {
                 />
               </View>
               <View style={styles.btnContainer}>
-                <Text />
                 <TouchableOpacity style={styles.btnStyle}>
                   <Button
                     mode="contained"
                     color={'black'}
+                    labelStyle={styles.btnLabelStyle}
                     onPress={formProps.handleSubmit}>
                     Next
                   </Button>

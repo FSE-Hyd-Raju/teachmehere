@@ -49,7 +49,6 @@ const Step2 = props => {
       languagesToUpdate.push(lang);
       setLangError(false);
     }
-    //setLanguages([...languages]);
     saveState({ languages: languagesToUpdate });
   };
 
@@ -64,7 +63,6 @@ const Step2 = props => {
         setLangError(false);
       }, 3000);
     }
-    //setLanguages([...languages]);
     saveState({ languages: languagesToUpdate });
   };
 
@@ -81,9 +79,9 @@ const Step2 = props => {
             individualPrice: getState().individualPrice || '',
             noOfPeople: getState().noOfPeople || '',
             groupPrice: getState().groupPrice || '',
-           // languages: getState().languages || [],
+            // languages: getState().languages || [],
           }}
-          // validationSchema={postStep2ValidationSchema}
+          validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);
@@ -217,7 +215,9 @@ const Step2 = props => {
               </View>
               {langError && (
                 <Text style={styles.errorText}>
-                  {'Atleast one language should be there, Add others to remove this language'}
+                  {
+                    'Atleast one language should be there, Add others to remove this language'
+                  }
                 </Text>
               )}
               <View style={{ marginTop: 7 }}>
@@ -230,11 +230,11 @@ const Step2 = props => {
                 />
               </View>
               <View style={styles.btnContainer}>
-                <Text />
                 <TouchableOpacity style={styles.btnStyle}>
                   <Button
                     mode="contained"
                     color={'black'}
+                    labelStyle={styles.btnLabelStyle}
                     onPress={formProps.handleSubmit}>
                     Next
                   </Button>

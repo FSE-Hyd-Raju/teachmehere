@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
+  btnLabelStyle: {
+    textTransform: 'capitalize',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
   container: {
     padding: 15,
   },
@@ -43,7 +48,7 @@ export default StyleSheet.create({
     color: 'white',
   },
   btnStyle: {
-    width: '30%',
+    width: '100%',
   },
   btnImage: {
     width: '100%',
