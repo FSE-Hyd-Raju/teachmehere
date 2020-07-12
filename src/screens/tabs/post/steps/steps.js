@@ -22,7 +22,17 @@ class Steps extends Component {
   constructor(props) {
     super(props);
 
-	this.state = {};
+	this.state = {
+    daysOfTheWeek: [
+      { name: 'Sun', checked: false },
+      { name: 'Mon', checked: false },
+      { name: 'Tue', checked: false },
+      { name: 'Wed', checked: false },
+      { name: 'Thu', checked: false },
+      { name: 'Fri', checked: false },
+      { name: 'Sat', checked: false },
+    ],
+  };
   }
 
   onNext = () => {

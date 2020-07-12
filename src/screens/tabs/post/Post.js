@@ -135,24 +135,6 @@ export default class Post extends Component {
         {showSteps && (
           <Modal animationType="slide" visible={showSteps}>
             <Provider>
-              {/* <View style={{ flexDirection: 'row' }}>
-                <IconMaterialIcons
-                  name="arrow-back"
-                  style={{ marginTop: 15, marginLeft: 15 }}
-                  size={28}
-                  onPress={() =>
-                    this.setState({
-                      showSteps: false,
-                      showMainCategories: false,
-                      showSubCategories: true,
-                    })
-                  }
-                />
-                <Text style={styles.subCategoryHeading}>
-                  {activeCategory.categoryName}
-                  {`  >  ${activeSubCategory.name}`}
-                </Text>
-              </View> */}
               <Steps
                 backFromSteps={this.backFromSteps}
                 category={activeCategory.categoryName}

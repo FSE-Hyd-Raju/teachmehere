@@ -11,6 +11,8 @@ const TextInputWithIcon = props => {
     iconColor,
     handleChange,
     handleBlur,
+    handleFocus,
+    handleIconClick,
     value,
   } = props;
   return (
@@ -22,12 +24,14 @@ const TextInputWithIcon = props => {
         keyboardType={keyboardType}
         onChangeText={handleChange}
         onBlur={handleBlur}
+        onFocus={handleFocus}
         value={value}
       />
       <IconMaterialIcons
         style={{ padding: 10 }}
         name={iconName}
         color={iconColor}
+        onPress={handleIconClick}
         size={23}
       />
     </View>
