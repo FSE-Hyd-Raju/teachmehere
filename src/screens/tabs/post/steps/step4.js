@@ -8,14 +8,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Formik } from 'formik';
-import {
-  Dialog,
-  Portal,
-  List,
-  Button,
-  Appbar,
-  Switch,
-} from 'react-native-paper';
+import { Appbar, Switch, Button } from 'react-native-paper';
 import { postStep4ValidationSchema } from '../../../../utils/validations';
 import {
   DefaultTheme,
@@ -23,12 +16,19 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import { withTheme } from 'react-native-paper';
-import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
-//import Header from '../../../../components/common/Header';
-import { Header } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchPost,
+  postSelector,
+  postNewSkill,
+} from '../../../../redux/slices/post';
+import Loader from '../../../../components/common/Loader';
 
-const Step1 = props => {
+const Step4 = props => {
   const { getState, saveState } = props;
+  const { postResponse, isPostQueryActive, hasErrors } = useSelector(
+    postSelector,
+  );
   return (
     <View>
       <Appbar.Header theme={DarkTheme}>
@@ -171,6 +171,7 @@ const Step1 = props => {
                   </Button>
                 </TouchableOpacity>
               </View>
+              <Loader loading={isPostQueryActive} />
             </View>
           )}
         </Formik>
@@ -179,4 +180,4 @@ const Step1 = props => {
   );
 };
 
-export default withTheme(Step1);
+export default withTheme(Step4);

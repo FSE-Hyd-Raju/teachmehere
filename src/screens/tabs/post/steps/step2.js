@@ -81,7 +81,7 @@ const Step2 = props => {
             groupPrice: getState().groupPrice || '',
             // languages: getState().languages || [],
           }}
-          validationSchema={postStep2ValidationSchema}
+         // validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
             props.saveState(values);

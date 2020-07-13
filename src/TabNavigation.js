@@ -8,10 +8,10 @@ import Profile from './screens/tabs/profile/Profile';
 import { withTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import ProfileSettingsPage from './screens/tabs/profile/profileSettingsPage'
-import RequestedCoursesPage from './screens/tabs/profile/requestedCourses'
-import WishlistCoursesPage from './screens/tabs/profile/wishlistCourses'
-import PostedCoursesPage from './screens/tabs/profile/postedCourses'
+import ProfileSettingsPage from './screens/tabs/profile/profileSettingsPage';
+import RequestedCoursesPage from './screens/tabs/profile/requestedCourses';
+import WishlistCoursesPage from './screens/tabs/profile/wishlistCourses';
+import PostedCoursesPage from './screens/tabs/profile/postedCourses';
 import GuestPage from './screens/tabs/profile/guestPage';
 
 const TabNavigation = props => {
@@ -19,15 +19,30 @@ const TabNavigation = props => {
   const [index, setIndex] = React.useState(4);
 
   const ProfileStack = createStackNavigator();
+
   function ProfileStackScreen() {
     return (
-      <ProfileStack.Navigator headerMode={"none"} initialRouteName={"GuestPage"}>
+      <ProfileStack.Navigator
+        headerMode={'none'}
+        initialRouteName={'GuestPage'}>
         <ProfileStack.Screen name="Profile" component={Profile} />
         <ProfileStack.Screen name="GuestPage" component={GuestPage} />
-        <ProfileStack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
-        <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
-        <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
-        <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
+        <ProfileStack.Screen
+          name="ProfileSettings"
+          component={ProfileSettingsPage}
+        />
+        <ProfileStack.Screen
+          name="RequestedCourses"
+          component={RequestedCoursesPage}
+        />
+        <ProfileStack.Screen
+          name="WishlistCourses"
+          component={WishlistCoursesPage}
+        />
+        <ProfileStack.Screen
+          name="PostedCourses"
+          component={PostedCoursesPage}
+        />
       </ProfileStack.Navigator>
     );
   }
