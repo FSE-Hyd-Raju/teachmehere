@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { Provider } from 'react-redux';
 import { NetworkProvider } from 'react-native-offline';
-import store from './redux/store';
 import TabNavigation from './TabNavigation';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import rootReducer from './redux/slices';
+
+const store = configureStore({ reducer: rootReducer });
 
 const theme = {
   ...DefaultTheme,
@@ -18,9 +22,6 @@ const theme = {
 
 class App extends Component {
   render() {
-    console.disableYellowBox = true
-    window.console = console;
-
     return (
       <Provider store={store}>
         <PaperProvider theme={theme}>

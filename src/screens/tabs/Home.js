@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: Theme.colors.background,
+    //backgroundColor: Theme.colors.background,
   },
   search: {
     marginVertical: Theme.spacing.tiny,

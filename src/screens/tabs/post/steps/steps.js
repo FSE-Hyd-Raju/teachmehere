@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AnimatedMultistep from '../stepper';
-import { Dispatch, AnyAction } from 'redux';
-import { connect } from 'react-redux';
-import { postSkill } from '../../../../redux/actions/SkillActions';
 
 import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
 import Step4 from './step4';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {
+  fetchPost,
+  postSelector,
+  postNewSkill,
+} from '../../../../redux/slices/post';
 
 const allSteps = [
   { name: 'step 1', component: Step1 },
@@ -18,22 +22,20 @@ const allSteps = [
   { name: 'step 4', component: Step4 },
 ];
 
-class Steps extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
-  onNext = () => {
+const Steps = props => {
+  const dispatch = useDispatch();
+  const { postResponse, isPostQueryActive, hasErrors } = useSelector(
+    postSelector,
+  );
+  const onNext = () => {
     console.log('Next');
   };
-  onBack = () => {
+  const onBack = () => {
     console.log('Back');
   };
 
-  finish = state => {
-    const { category, subCategory } = this.props || {};
+  const finish = state => {
+    const { category, subCategory } = props || {};
     const {
       skillName,
       skillLevel,
@@ -88,44 +90,30 @@ class Steps extends Component {
         tentativeschedule: isTentativeSchedule,
       },
       platform: platform,
-      tags: tags.split(','),
+      tags: tags && tags.split(','),
       experience: parseInt(experience),
       profilesummary: profilesummary,
       linkedinprofile: linkedInProfile,
       demo: availableForDemo,
     };
-    console.log('STATE', postData);
-    this.props.actions.postSkill(postData);
+    dispatch(postNewSkill(postData));
+    if (postResponse === 'successfull') {
+      alert("Post Succussfull")
+    }
   };
 
-  render() {
-    return (
-      <ScrollView>
-        <AnimatedMultistep
-          steps={allSteps}
-          onFinish={this.finish}
-          animate={true}
-          onBack={this.onBack}
-          onNext={this.onNext}
-          backFromSteps={this.props.backFromSteps}
-        />
-      </ScrollView>
-    );
-  }
-}
-const mapStateToProps = state => ({
-  //isBasketCleared: state.basket.isBasketCleared,
-});
+  return (
+    <ScrollView>
+      <AnimatedMultistep
+        steps={allSteps}
+        onFinish={finish}
+        animate={true}
+        onBack={onBack}
+        onNext={onNext}
+        backFromSteps={props.backFromSteps}
+      />
+    </ScrollView>
+  );
+};
 
-const mapDispatchToProps = dispatch => ({
-  actions: {
-    postSkill: skill => {
-      dispatch(postSkill(skill));
-    },
-  },
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Steps);
+export default Steps;
