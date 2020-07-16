@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 import { View, StyleSheet, ScrollView, Text, Image, Dimensions } from 'react-native';
-import { Input } from 'react-native-elements';
+import { Input, Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import AppButton from '../../../components/common/AppButton';
 import { useDispatch, useSelector } from 'react-redux'
-import { loginSelector, loginEmailChanged, loginPasswordChanged, onLoginPressed } from '../../../redux/slices/loginSlice'
+import { loginSelector, clearErrors, loginPasswordChanged, onLoginPressed } from '../../../redux/slices/loginSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
+
+import * as yup from 'yup'
+import { Formik } from 'formik'
 
 
 export default function LoginPage({ navigation }) {
@@ -23,6 +26,9 @@ export default function LoginPage({ navigation }) {
     const [eyeicon, seteyeicon] = React.useState("eye");
 
     const toggleEyeIcon = () => {
+        // eyeicon !== "eye"
+        //     ? (this.setState({ eyeicon: "eye-off" }), sethidePassword(true)))
+        //     : (this.setState({ eyeicon: "eye" }), this.setState({ hidePassword: false }))
         if (eyeicon === "eye") {
             seteyeicon("eye-off")
             sethidePassword(false)
@@ -32,11 +38,16 @@ export default function LoginPage({ navigation }) {
             sethidePassword(true)
         }
     };
+    const onInputChange = (handle) => {
+        console.log(handle)
+        handle("email")
+
+    }
 
     const headerComponent = () => {
         return (
             <View style={styles.headerComponent}>
-                <Text style={styles.headerComponentText}>Welcome Back!</Text>
+                {/* <Text style={styles.headerComponentText}>Welcome Back!</Text> */}
                 <Image
                     style={styles.backgroundImage}
                     source={require('../../../assets/img/login.png')}
@@ -46,52 +57,92 @@ export default function LoginPage({ navigation }) {
     }
     const inputComponent = () => {
         return (
-            <View>
-                <View style={styles.inputComponentStyle}>
-                    <Input
-                        //  inputContainerStyle={{ width: 330 }}
-                        // style={{ paddingLeft: 440 }}
-                        placeholder="Email"
-                        leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
-                        errorStyle={{ color: 'red' }}
-                        errorMessage={loginEmailError}
-                        value={loginEmail}
-                        onChangeText={(text) => dispatch(loginEmailChanged(text))}
-                    />
-                </View>
-                <View style={styles.inputComponentStyle}>
-                    <Input
-                        placeholder="Password"
-                        secureTextEntry={hidePassword}
-                        leftIcon={
-                            <IconMaterialIcons
-                                name='lock'
-                                size={20}
-                            />}
-                        rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
-                        errorStyle={{ color: 'red' }}
-                        errorMessage={loginPasswordError}
-                        value={loginPassword}
-                        onChangeText={(text) => dispatch(loginPasswordChanged(text))}
-                    />
-                </View>
-            </View>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                onSubmit={values => dispatch(onLoginPressed(
+                    {
+                        email: values.email,
+                        password: values.password,
+                        onSuccess: () => {
+                            navigation.navigate('Profile');
+                        }
+                    }
+                ))}
+                // new line
+                validationSchema={yup.object().shape({
+                    email: yup
+                        .string()
+                        .email()
+                        .required(),
+                    password: yup
+                        .string()
+                        .min(5)
+                        .required(),
+                })}>
+                {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
+                    <Fragment>
+                        <View style={styles.inputComponentStyle}>
+                            <Input
+                                //  inputContainerStyle={{ width: 330 }}
+                                // style={{ paddingLeft: 440 }}
+                                placeholder="Email"
+                                leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
+                                // errorStyle={{ color: 'red' }}
+                                errorMessage={loginEmailError}
+                                value={values.email}
+                                // onChangeText={(text) => dispatch(loginEmailChanged(text))}
+                                // onChangeText={() => onInputChange(handleChange)}
+                                onChangeText={(e) => {
+                                    handleChange("email")(e);
+                                    dispatch(clearErrors())
+                                }}
+                                // onChangeText={handleChange('email')}
+                                onBlur={() => setFieldTouched('email')}
+                            />
+                            {touched.email && errors.email &&
+                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                            }
+                            <Input
+                                placeholder="Password"
+                                secureTextEntry={hidePassword}
+                                leftIcon={
+                                    <IconMaterialIcons
+                                        name='lock'
+                                        size={20}
+                                    />}
+                                rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
+                                // errorStyle={{ color: 'red' }}
+                                errorMessage={loginPasswordError}
+                                value={values.password}
+                                // onChangeText={(text) => dispatch(loginPasswordChanged(text))}
+                                onChangeText={(e) => {
+                                    handleChange("password")(e);
+                                    dispatch(clearErrors())
+                                }}
+                                onBlur={() => setFieldTouched('password')}
+                            />
+                            {touched.password && errors.password &&
+                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                            }
+
+                        </View>
+                        {/* <Button style={styles.loginButton}color="#00008B" marginTop='100' disabled={!isValid} onPress={handleSubmit} >
+                            Sign In
+                            
+                        </Button> */}
+                        <Button title="Signin" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
+
+
+
+
+                    </Fragment>
+                )}
+            </Formik>
         )
     }
     const buttonComponent = () => {
         return (
             <View>
-                <AppButton style={styles.loginButton} color="#00008B" marginTop='100' onPress={() => dispatch(onLoginPressed(
-                    {
-                        email: loginEmail,
-                        password: loginPassword,
-                        onSuccess: () => {
-                            navigation.navigate('Profile');
-                        }
-                    }
-                ))} >
-                    Sign In
-                </AppButton>
                 <AppButton
                     onlyText
                     style={styles.forgotButton}
@@ -120,9 +171,11 @@ export default function LoginPage({ navigation }) {
     return (
         <View style={styles.MainContainer}>
             <ScrollView showsVerticalScrollIndicator={false}>
+
                 {headerComponent()}
                 {inputComponent()}
                 {buttonComponent()}
+
                 <PageSpinner visible={loading} />
 
 
@@ -148,7 +201,8 @@ const styles = StyleSheet.create({
     headerComponentText: {
         fontWeight: 'bold',
         fontSize: 25,
-        marginTop: 5
+        letterSpacing: 1,
+        marginBottom: 20
     },
     container: {
         flex: 1,
@@ -194,7 +248,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         width: win.width,
         height: 2700 * ratio, //362 is actual height of image
-        marginBottom: 10
+        marginBottom: 30
     },
 
     ImageStyle: {
@@ -211,6 +265,7 @@ const styles = StyleSheet.create({
     MainContainer: {
         flex: 1,
         backgroundColor: "rgb(255, 255, 255)",
+        padding: 30
     },
     inputs: {
         height: 45,
@@ -239,6 +294,8 @@ const styles = StyleSheet.create({
         marginVertical: Theme.spacing.small,
         width: "50%",
         borderRadius: 20,
+        // color: "#00008B",
+        // marginTop: 
         // color:"rgb(20, 169, 201)" 
     },
     forgotButton: {

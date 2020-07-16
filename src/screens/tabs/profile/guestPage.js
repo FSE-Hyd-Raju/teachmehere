@@ -50,7 +50,7 @@ export default function GuestPage({ navigation }) {
                     title="Sign in"
                     type="outline"
                 />
-                <Button containerStyle={{ width: 200, marginTop: 20 }}
+                <Button containerStyle={{ width: 200, marginTop: 20 }} onPress={() => navigation.navigate('Signup')}
                     titleStyle={{ color: "rgb(63, 204, 222)", fontSize: 16 }}
                     buttonStyle={{ borderColor: "rgb(63, 204, 222)" }}
                     title="Sign up"

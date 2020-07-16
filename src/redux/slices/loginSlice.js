@@ -26,10 +26,10 @@ const loginSlice = createSlice({
             state.loginEmailError = '';
             state.loginPasswordError = '';
         },
-        loginEmailChanged: (state, { payload }) => {
+        clearErrors: state => {
             state.loginEmailError = '';
             state.loginPasswordError = '';
-            state.loginEmail = payload
+            state.loginError = ''
         },
         loginPasswordChanged: (state, { payload }) => {
             state.loginEmailError = '';
@@ -54,7 +54,7 @@ const loginSlice = createSlice({
 export const {
     loginStarted,
     loginSuccess,
-    loginEmailChanged,
+    clearErrors,
     loginPasswordChanged,
     loginFailure,
     passwordIncorrect,
