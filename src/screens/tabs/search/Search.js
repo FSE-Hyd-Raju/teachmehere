@@ -4,16 +4,25 @@ import { Searchbar, ActivityIndicator, Colors, Button } from 'react-native-paper
 import { Icon, Header } from 'react-native-elements';
 import { storeAsyncData, getAsyncData, clearAsyncData } from '../../../components/common/asyncStorage';
 import SideMenu from 'react-native-side-menu';
+import { useDispatch, useSelector } from 'react-redux'
 import FilterPage from '../../../components/common/filterPage';
 import CourseCard from '../../../components/common/coursecard';
 import SearchDefaultPage from './searchDefaultPage';
-
+import { fetchSearchResults, searchSelector } from '../../../redux/slices/search'
 
 export default function SearchPage() {
 
+  const dispatch = useDispatch()
+  const { searchResults, loading, hasErrors } = useSelector(searchSelector)
+
+  // const searchResults = useSelector(state => state.searchResults)
+  // const loading = useSelector(state => state.loading)
+  // const hasErrors = useSelector(state => state.hasErrors)
+
+
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  const [courseData, setCourseData] = React.useState([]);
+  // const [loading, setLoading] = React.useState(false);
+  // const [searchResults, setCourseData] = React.useState([]);
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [recentSearchesData, setRecentSearchesData] = React.useState([]);
   const [recentViewedCoursesData, setRecentViewedCoursesData] = React.useState([]);
@@ -47,37 +56,41 @@ export default function SearchPage() {
   }, [openFilterPage, isSearchFocused]);
 
   const fetchData = (query, filterObj) => {
-    setLoading(true);
-    fetch('https://teachmeproject.herokuapp.com/searchall', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "textentered": query,
-        "filterQuery": filterObj
-      })
-    }).then((response) => response.json())
-      .then((responseJson) => {
-        console.log(JSON.stringify(responseJson))
-        if (responseJson && responseJson.length) {
-          setTimeout(() => {
-            setCourseData(responseJson)
-          }, 100)
-        } else {
-          setCourseData([])
-        }
-        setLoading(false);
-      }).catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
+    // alert(searchResults)
+    dispatch(fetchSearchResults({
+      "textentered": query,
+      "filterQuery": filterObj
+    }))
+    // fetch('https://teachmeproject.herokuapp.com/searchall', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     "textentered": query,
+    //     "filterQuery": filterObj
+    //   })
+    // }).then((response) => response.json())
+    //   .then((responseJson) => {
+    //     console.log(JSON.stringify(responseJson))
+    //     if (responseJson && responseJson.length) {
+    //       setTimeout(() => {
+    //         setCourseData(responseJson)
+    //       }, 100)
+    //     } else {
+    //       setCourseData([])
+    //     }
+    //     setLoading(false);
+    //   }).catch((error) => {
+    //     console.error(error);
+    //     setLoading(false);
+    //   });
   }
 
   const searchFun = (query) => {
     setSearchQuery(query)
-    setCourseData([])
+    // setCourseData([])
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
@@ -95,7 +108,7 @@ export default function SearchPage() {
     searchBarRef.current.blur()
     // searchBarRef.current.clear()
     setSearchQuery("")
-    setCourseData([])
+    // setCourseData([])
     setIsSearchFocused(false)
   }
 
@@ -174,7 +187,7 @@ export default function SearchPage() {
 
   const couseCountFound = () => {
     return (
-      !!searchQuery ? (courseData.length + " course" + (courseData.length > 1 ? "s" : "") + " found") : ""
+      !!searchQuery ? (searchResults.length + " course" + (searchResults.length > 1 ? "s" : "") + " found") : ""
     )
   }
 
@@ -195,7 +208,7 @@ export default function SearchPage() {
               onScrollBeginDrag={Keyboard.dismiss}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps={'handled'}
-              data={courseData}
+              data={searchResults}
               keyExtractor={item => item._id}
               renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
             />
@@ -273,7 +286,7 @@ export default function SearchPage() {
       filter = filterObj;
     setFilterObj(filterObj)
 
-    setCourseData([])
+    // setCourseData([])
     if (searchQuery) fetchData(searchQuery, filter)
   }
 
@@ -282,7 +295,7 @@ export default function SearchPage() {
     // alert("cleared")
     setFilterObj({})
     setOpenFilterPage(false)
-    setCourseData([])
+    // setCourseData([])
     if (searchQuery) fetchData(searchQuery, {})
   }
 

@@ -1,16 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions, ScrollView } from 'react-native';
-import { Searchbar, ActivityIndicator, Colors, Button, Title, Caption, Paragraph, List, Surface } from 'react-native-paper';
-import { Icon, Header, Avatar, ListItem } from 'react-native-elements';
+import { StyleSheet, Image, ImageBackground, Text, View, TouchableOpacity, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions, ScrollView } from 'react-native';
+import { Searchbar, ActivityIndicator, Colors, Title, Caption, Paragraph, List, Surface } from 'react-native-paper';
+import { Icon, Header, Avatar, ListItem, Button } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProfileSettingsPage from './profileSettingsPage';
-import RequestedCoursesPage from './requestedCourses';
-import WishlistCoursesPage from './wishlistCourses';
-import PostedCoursesPage from './postedCourses';
 
-
-export default function GuestPage({navigation}) {
+export default function GuestPage({ navigation }) {
     const [showSettingsPage, setShowSettingsPage] = React.useState(false);
 
     useEffect(() => {
@@ -21,7 +15,7 @@ export default function GuestPage({navigation}) {
     const settingsIconContainer = () => {
         return (
             <View style={styles.settingsIconContainer}>
-                  <TouchableOpacity onPress={() => navigation.navigate('ProfileSettings')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ProfileSettings')}>
                     <IconMaterialIcons
                         name={"settings"}
                         color="rgb(102, 94, 94)"
@@ -33,167 +27,105 @@ export default function GuestPage({navigation}) {
         )
     }
 
-    const userImageContainer = () => {
+    const textContainer = () => {
         return (
-            <View style={styles.userImageContainer}>
-                <Avatar
-                    size="xlarge"
-                    chevron
-                    activeOpacity={0.7}
-                    onPress={() => console.log("Works!")}
-                   containerStyle={{width:'100%' , height: 280}}
-                    // rounded
-                    showEditButton={true}
-                    // overlayContainerStyle={{ borderRadius: 20 }}
-                    // containerStyle={{ borderRadius: 15 }}
-                    // rounded
-                    source={
-                        
-                          require("../../../assets/img/guestpage.png")
-                    }
-                />
-       
+            <View style={styles.textContainer}>
+                <Text style={styles.textHeader}>
+                    Share Your Skills Online
+                </Text>
+                <Text style={styles.text}>
+                    Share skills while earning money or learn from the professionals within your budget
+                    {/* Online teaching and learning made easily, share your */}
+                </Text>
             </View>
         )
     }
 
-    const userDescContainer = () => {
+    const buttonContainer = () => {
         return (
-            <View style={styles.userDescContainer}>
-                {/* <Text numberOfLines={2} style={styles.userDesc}>Software developer and co-founder of TAGIdeas  </Text> */}
-            </View>
-        )
-    }
-
-    const userPagesContainer = (title, icon, route) => {
-        return (
-            <TouchableOpacity onPress={() => navigation.navigate(route)}>
-                <ListItem
-                    title={title}
-                    leftIcon={<Icons
-                        name={icon}
-                        color="rgb(102, 94, 94)"
-                        size={25}
-                    />}
-                    pad={30}
-                    titleStyle={{ letterSpacing: 1 }}
-                    containerStyle={{ backgroundColor: 'unset' }}
-                    chevron={<Icons
-                        name={"chevron-right"}
-                        color="rgb(102, 94, 94)"
-                        size={25}
-                    />}
-                // onPress={() => navigation.navigate(route)}
+            <View style={{ justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+                <Button containerStyle={{ width: 200 }} onPress={() => navigation.navigate('Login')}
+                    titleStyle={{ color: "rgb(20, 169, 201)" }}
+                    buttonStyle={{ borderColor: "rgb(63, 204, 222)" }}
+                    title="Sign in"
+                    type="outline"
                 />
-            </TouchableOpacity>
-        )
-    }
-
-    const profilepagecomponent = () => {
-        return (
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.container}>
-                    {settingsIconContainer()}
-                    <View style={styles.upperContainer}>
-                        {userImageContainer()}
-                        {userDescContainer()}
-                    </View>
-                    <View style={styles.lowerContainer}>
-                        {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
-                        {userPagesContainer("Posted Courses", "plus-circle-outline", 'PostedCourses')}
-                        {userPagesContainer("Wishlist Courses", "heart-outline", 'WishlistCourses')} */}
-                        {userPagesContainer("Login", "send-circle-outline", 'RequestedCourses')}
-
-                    </View>
-                </View>
-            </ScrollView>
+                <Button containerStyle={{ width: 200, marginTop: 20 }}
+                    titleStyle={{ color: "rgb(63, 204, 222)", fontSize: 16 }}
+                    buttonStyle={{ borderColor: "rgb(63, 204, 222)" }}
+                    title="Sign up"
+                    type="clear"
+                />
+            </View>
         )
     }
 
     return (
-        <View>
-            {profilepagecomponent()}
-        </View>
+        <View style={styles.container}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={{
+                    marginTop: 20
+                }}>
+                    {settingsIconContainer()}
+                    <View style={{
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <Image
+                            // width={Dimensions.get('window').width}
+                            //     resizeMode={"center"}
+                            style={styles.backgroundImage}
+                            source={require('../../../assets/img/guest.png')}
+                        />
+                    </View>
+                    {textContainer()}
+                    {buttonContainer()}
+                </View>
+            </ScrollView>
 
+        </View>
     );
 }
 
+const win = Dimensions.get('window');
+const ratio = win.width / 4000;
+
 const styles = StyleSheet.create({
-    lowerContainer: {
-        margin: 30,
-        justifyContent: "center",
-    },
-    statText: {
-        textAlign: "center",
-        color: "#7f7f7f",
-        letterSpacing: 1,
-    },
-    statValue: {
-        fontSize: 25,
-        fontWeight: "bold",
-    },
-    stat: {
-        alignItems: "center",
-        flexWrap: "wrap",
-        // flex: 0.3,
-        width: "25%",
-        paddingLeft: "1%",
-    },
-    userStatsContainer: {
-        alignItems: "center",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        marginHorizontal: 0,
-        marginLeft: "5%",
-        marginTop: 40,
-    },
-    userDesc: {
-        borderRadius: 20,
-        // borderWidth: 1,
-        backgroundColor: "rgba(255, 213, 87, 0.63)",
-        // backgroundColor: "#ffd557",
-        // marginHorizontal: 40,
-        height: 75,
-        width: 280,
-        textAlign: "center",
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        letterSpacing: 1,
-        lineHeight: 20
-    },
-    userDescContainer: {
-        marginTop: 20,
-        alignItems: "center",
-    },
-    userEmail: {
-        color: "#7f7f7f",
-        fontSize: 14
-    },
-    userImageContainer: {
-        // justifyContent: "center",
-        // alignItems: "center",
-        // width:'80%',
-    },
-    upperContainer:{  
-        marginTop: 30,
-    },
-    userName: {
-        marginTop: 20,
-        fontSize: 25,
-        fontWeight: "bold",
-        fontFamily: "sans-serif",
-        letterSpacing: 1
-    },
     settingsIconContainer: {
         justifyContent: "flex-end",
         alignItems: "flex-end",
         marginVertical: 0,
         marginRight: 30,
-        // marginBottom: 10
+    },
+    text: {
+        color: "gray",
+        fontSize: 14,
+        margin: 5,
+        textAlign: "center"
+    },
+    textHeader: {
+        fontSize: 20,
+        fontWeight: "bold",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center"
+    },
+    textContainer: {
+        alignItems: "center",
+        justifyContent: "center",
+        margin: 50,
+        textAlign: "center"
+    },
+    backgroundImage: {
+        // width: 360,
+        // height: 275,
+        // flex: 1,
+        width: win.width,
+        height: 3000 * ratio, //362 is actual height of image
     },
     container: {
-        paddingTop: 30,
+        flex: 1,
+        backgroundColor: "rgb(255, 255, 255)",
     }
 
 });
