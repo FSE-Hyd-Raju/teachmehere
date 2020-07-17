@@ -42,6 +42,12 @@ const forgotPasswordSlice = createSlice({
             state.loginPasswordError = '';
             state.loginPassword = payload
         },
+        clearErrors: state => {
+            state.loginOtpError = '';
+            state.loginEmailError = '';
+            state.loginPasswordError = '';
+            state.loginError = ''
+        },
         loginOtpChanged: (state, { payload }) => {
             state.loginEmailError = '';
             state.loginOtpError = '';
@@ -50,7 +56,7 @@ const forgotPasswordSlice = createSlice({
         },
         resetPasswordFailure: state => {
             state.loading = false;
-            state.signupError = "Something went wrong, please try again later!"
+            state.Error = "Something went wrong, please try again later!"
         },
         passwordIncorrect: (state, { payload }) => {
             state.loginPasswordError = payload
@@ -72,6 +78,7 @@ export const {
     resetPasswordSuccess,
     loginEmailChanged,
     loginPasswordChanged,
+    clearErrors,
     loginOtpChanged,
     resetPasswordFailure,
     passwordIncorrect,
@@ -98,9 +105,7 @@ export function onforgotPasswordPressed(param) {
             console.log(response.data)
             if (response) {
                 if (response.data["status"] === "404") {
-                    if (response.data["field"] == 'email') {
-                        dispatch(EmailIncorrect(response.data["error"]));
-                    }
+                    dispatch(EmailIncorrect(response.data["error"]));
                 }
                 else {
                     const responsestatus = JSON.stringify(response.data.status)

@@ -25,10 +25,10 @@ export default function LoginPage({ navigation }) {
     const [hidePassword, sethidePassword] = React.useState(true);
     const [eyeicon, seteyeicon] = React.useState("eye");
 
+    const onForgotPress = () => navigation.navigate("ForgotPassword");
+    const onSignupPress = () => navigation.navigate("Signup");
+
     const toggleEyeIcon = () => {
-        // eyeicon !== "eye"
-        //     ? (this.setState({ eyeicon: "eye-off" }), sethidePassword(true)))
-        //     : (this.setState({ eyeicon: "eye" }), this.setState({ hidePassword: false }))
         if (eyeicon === "eye") {
             seteyeicon("eye-off")
             sethidePassword(false)
@@ -38,12 +38,6 @@ export default function LoginPage({ navigation }) {
             sethidePassword(true)
         }
     };
-    const onInputChange = (handle) => {
-        console.log(handle)
-        handle("email")
-
-    }
-
     const headerComponent = () => {
         return (
             <View style={styles.headerComponent}>
@@ -83,20 +77,14 @@ export default function LoginPage({ navigation }) {
                     <Fragment>
                         <View style={styles.inputComponentStyle}>
                             <Input
-                                //  inputContainerStyle={{ width: 330 }}
-                                // style={{ paddingLeft: 440 }}
                                 placeholder="Email"
                                 leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
-                                // errorStyle={{ color: 'red' }}
                                 errorMessage={loginEmailError}
                                 value={values.email}
-                                // onChangeText={(text) => dispatch(loginEmailChanged(text))}
-                                // onChangeText={() => onInputChange(handleChange)}
                                 onChangeText={(e) => {
                                     handleChange("email")(e);
                                     dispatch(clearErrors())
                                 }}
-                                // onChangeText={handleChange('email')}
                                 onBlur={() => setFieldTouched('email')}
                             />
                             {touched.email && errors.email &&
@@ -111,10 +99,8 @@ export default function LoginPage({ navigation }) {
                                         size={20}
                                     />}
                                 rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
-                                // errorStyle={{ color: 'red' }}
                                 errorMessage={loginPasswordError}
                                 value={values.password}
-                                // onChangeText={(text) => dispatch(loginPasswordChanged(text))}
                                 onChangeText={(e) => {
                                     handleChange("password")(e);
                                     dispatch(clearErrors())
@@ -126,15 +112,7 @@ export default function LoginPage({ navigation }) {
                             }
 
                         </View>
-                        {/* <Button style={styles.loginButton}color="#00008B" marginTop='100' disabled={!isValid} onPress={handleSubmit} >
-                            Sign In
-                            
-                        </Button> */}
                         <Button title="Signin" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
-
-
-
-
                     </Fragment>
                 )}
             </Formik>
@@ -149,7 +127,7 @@ export default function LoginPage({ navigation }) {
                     marginTop='50'
                     marginVertical
                     color="#00008B"
-                // onPress={this.onForgotPress}
+                    onPress={onForgotPress}
                 >
                     Forgot password?
                 </AppButton>
@@ -159,7 +137,7 @@ export default function LoginPage({ navigation }) {
                         onlyText
                         style={styles.register}
                         color="#00008B"
-                    // onPress={this.onSignupPress}
+                        onPress={onSignupPress}
                     >
                         Register
                     </AppButton>
@@ -171,20 +149,12 @@ export default function LoginPage({ navigation }) {
     return (
         <View style={styles.MainContainer}>
             <ScrollView showsVerticalScrollIndicator={false}>
-
                 {headerComponent()}
                 {inputComponent()}
                 {buttonComponent()}
-
                 <PageSpinner visible={loading} />
-
-
-
             </ScrollView >
         </View>
-        // {/* 
-        //     <AppToast refProp={this.onToastRef} />
-        // <PageSpinner visible={loading} />
 
     );
 }
@@ -204,45 +174,10 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         marginBottom: 20
     },
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 50
-
-        // backgroundColor: '#00FFFF',
-    },
-    settingsContainer: {
-        margin: 20
-    },
-
-    emailIcon: {
-        padding: 10,
-    },
-    inputext: {
-        width: 200,
-        height: 44,
-        padding: 10,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        borderWidth: 1,
-        borderColor: 'black',
-        marginBottom: 10,
-    },
     inputComponentStyle: {
-        // flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center'
-        // width: 30
-
-    },
-    SectionStyle1: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: 30,
-
     },
     backgroundImage: {
         marginTop: 5,
@@ -250,53 +185,16 @@ const styles = StyleSheet.create({
         height: 2700 * ratio, //362 is actual height of image
         marginBottom: 30
     },
-
-    ImageStyle: {
-        // padding: 10,
-        margin: 5,
-        height: 25,
-        width: 25,
-        resizeMode: 'stretch',
-        alignItems: 'center',
-    },
-    TextInputStyleClass: {
-
-    },
     MainContainer: {
         flex: 1,
         backgroundColor: "rgb(255, 255, 255)",
         padding: 30
     },
-    inputs: {
-        height: 45,
-        marginLeft: 16,
-        borderBottomColor: '#FFFFFF',
-        flex: 1,
-        borderRadius: 20,
-
-    },
-    scrollContentContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: Theme.spacing.small,
-    },
-    input: {
-        width: 200,
-        height: 44,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: 'black',
-        marginBottom: 10,
-    },
     loginButton: {
         alignSelf: 'center',
-        // paddingVertical: Theme.spacing.large,
         marginVertical: Theme.spacing.small,
         width: "50%",
         borderRadius: 20,
-        // color: "#00008B",
-        // marginTop: 
-        // color:"rgb(20, 169, 201)" 
     },
     forgotButton: {
         paddingVertical: Theme.spacing.tiny,
@@ -307,10 +205,5 @@ const styles = StyleSheet.create({
         paddingVertical: Theme.spacing.tiny,
         // paddingRight: Theme.spacing.small,
         marginLeft: 7
-    },
-    headerTitle: {
-        fontSize: 20,
-        // letterSpacing: 1,
-        fontFamily: "sans-serif",
     },
 });
