@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
 import Home from './screens/tabs/Home';
 import Search from './screens/tabs/search/Search';
@@ -15,14 +15,26 @@ import PostedCoursesPage from './screens/tabs/profile/postedCourses';
 import GuestPage from './screens/tabs/profile/guestPage';
 import LoginPage from './screens/tabs/userauth/login';
 import signupPage from './screens/tabs/userauth/signup';
-import forgotPassword from './screens/tabs/userauth/forgotPassword'
-
+import forgotPassword from './screens/tabs/userauth/forgotPassword';
+import { getAsyncData, stGetUser } from './components/common/asyncStorage';
+import { useDispatch, useSelector } from 'react-redux';
+import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
 
 const TabNavigation = props => {
+  const dispatch = useDispatch();
   const { colors } = props.theme;
   const [index, setIndex] = React.useState(4);
 
   const ProfileStack = createStackNavigator();
+
+  useEffect(() => {
+    userInfo();
+  });
+
+  const userInfo = async () => {
+    const userData = await getAsyncData('userInfo');
+    dispatch(loadUserInfo(userData));
+  };
 
   function ProfileStackScreen() {
     return (
