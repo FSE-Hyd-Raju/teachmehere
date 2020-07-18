@@ -88,7 +88,7 @@ export default function LoginPage({ navigation }) {
                                 onBlur={() => setFieldTouched('email')}
                             />
                             {touched.email && errors.email &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.email}</Text>
+                                <Text style={{ fontSize: 13, color: 'red' }}>{errors.email}</Text>
                             }
                             <Input
                                 placeholder="Password"
@@ -108,7 +108,7 @@ export default function LoginPage({ navigation }) {
                                 onBlur={() => setFieldTouched('password')}
                             />
                             {touched.password && errors.password &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                                <Text style={{ fontSize: 13, color: 'red' }}>{errors.password}</Text>
                             }
 
                         </View>

@@ -8,9 +8,17 @@ import ProfileSettingsPage from './profileSettingsPage';
 import RequestedCoursesPage from './requestedCourses';
 import WishlistCoursesPage from './wishlistCourses';
 import PostedCoursesPage from './postedCourses';
+import { useDispatch, useSelector } from 'react-redux'
+import { loadUserInfo, loginSelector } from '../../../redux/slices/loginSlice'
 
 
-export default function Profile({navigation}) {
+
+export default function Profile({ navigation }) {
+    const dispatch = useDispatch()
+    const {
+        loading,
+        userInfo
+    } = useSelector(loginSelector)
     const [showSettingsPage, setShowSettingsPage] = React.useState(false);
 
     useEffect(() => {
@@ -21,7 +29,7 @@ export default function Profile({navigation}) {
     const settingsIconContainer = () => {
         return (
             <View style={styles.settingsIconContainer}>
-                  <TouchableOpacity onPress={() => navigation.navigate('ProfileSettings')}>
+                <TouchableOpacity onPress={() => navigation.navigate('ProfileSettings')}>
                     <IconMaterialIcons
                         name={"settings"}
                         color="rgb(102, 94, 94)"
@@ -36,6 +44,7 @@ export default function Profile({navigation}) {
     const userImageContainer = () => {
         return (
             <View style={styles.userImageContainer}>
+
                 <Avatar
                     size="xlarge"
                     chevron
@@ -52,11 +61,11 @@ export default function Profile({navigation}) {
                     }}
                 />
                 <Text style={styles.userName}>
-                    Akhil Goud
-                        </Text>
+                    {userInfo.email}
+                </Text>
                 <Text style={styles.userEmail}>
-                    akhilgoud616@gmail.com
-                        </Text>
+                    {userInfo.email}
+                </Text>
             </View>
         )
     }

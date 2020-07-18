@@ -2,15 +2,16 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { authLoginUrl } from '../urls';
 import { replace } from 'formik';
+import { storeAsyncData } from '../../components/common/asyncStorage'
 
 export const initialState = {
     loading: false,
-    loginResponse: '',
+    userInfo: '',
     loginPassword: '',
     loginPasswordError: '',
     loginEmail: '',
     loginEmailError: '',
-    loginError: ''
+    loginError: '',
 };
 
 const loginSlice = createSlice({
@@ -21,7 +22,7 @@ const loginSlice = createSlice({
             state.loading = true;
         },
         loginSuccess: (state, { payload }) => {
-            state.loginResponse = payload;
+            state.userInfo = payload;
             state.loading = false;
             state.loginEmailError = '';
             state.loginPasswordError = '';
@@ -30,6 +31,12 @@ const loginSlice = createSlice({
             state.loginEmailError = '';
             state.loginPasswordError = '';
             state.loginError = ''
+        },
+        loadUserInfo: (state, { payload }) => {
+            console.log("inside reducer")
+            console.log(payload)
+            state.userInfo = payload;
+
         },
         loginPasswordChanged: (state, { payload }) => {
             state.loginEmailError = '';
@@ -58,7 +65,8 @@ export const {
     loginPasswordChanged,
     loginFailure,
     passwordIncorrect,
-    EmailIncorrect
+    EmailIncorrect,
+    loadUserInfo
 } = loginSlice.actions;
 
 export const loginSelector = state => state.login;
@@ -90,6 +98,8 @@ export function onLoginPressed(param) {
                 }
                 else {
                     dispatch(loginSuccess(response.data[0]));
+                    storeAsyncData('userInfo', response.data[0].email)
+
                     param.onSuccess();
                 }
 

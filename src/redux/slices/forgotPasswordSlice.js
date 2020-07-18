@@ -125,7 +125,6 @@ export function onforgotPasswordPressed(param) {
 
 
 export function onOtpPressed(param) {
-    console.log("insideonlogin")
 
     return async (dispatch, state) => {
         console.log(param.email)

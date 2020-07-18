@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { View, StyleSheet, ScrollView, Text, Image, Dimensions } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, Icon } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,14 +42,38 @@ export default function signupPage({ navigation }) {
             sethidePassword(true)
         }
     };
+
+    const hideOtpScreen = () => {
+        setshowOtpScreen(false)
+        navigation.navigate("Signup")
+    }
+
+    const backButtonComponent = () => {
+        return (
+            <View style={{ alignItems: "flex-start" }}>
+                <Icon
+                    // raised
+                    size={27}
+                    style={{ paddingLeft: 2 }}
+                    name='arrow-left'
+                    type='feather'
+                    color='#1E90FF'
+                    onPress={hideOtpScreen} />
+            </View>
+        )
+    }
+
     const headerComponent = () => {
         return (
-            <View style={{
-                justifyContent: "center",
-                alignItems: "center"
-            }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 100 }}>Sign up</Text>
-                <Text style={{ color: 'gray', fontSize: 15 }} >Fill the details & create your account</Text>
+            <View>
+                {showOtpScreen ? backButtonComponent() : null}
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 100 }}>Sign up</Text>
+                    <Text style={{ color: 'gray', fontSize: 15 }} >Fill the details & create your account</Text>
+                </View>
             </View>
         )
     }

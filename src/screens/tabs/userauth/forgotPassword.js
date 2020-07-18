@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { View, StyleSheet, ScrollView, Text, Image, Dimensions } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, Icon } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,15 +40,37 @@ export default function forgotPasswordPage({ navigation }) {
             sethidePassword(true)
         }
     };
+    const hideOtpScreen = () => {
+        setshowOtpScreen(false)
+        navigation.navigate("ForgotPassword")
+    }
+
+    const backButtonComponent = () => {
+        return (
+            <View style={{ alignItems: "flex-start" }}>
+                <Icon
+                    // raised
+                    size={27}
+                    style={{ paddingLeft: 2 }}
+                    name='arrow-left'
+                    type='feather'
+                    color='#1E90FF'
+                    onPress={hideOtpScreen} />
+            </View>
+        )
+    }
     const headerComponent = () => {
         return (
-            <View style={styles.backgroundText}>
-                <Text style={styles.forgotPasswordText}>Forgot Password</Text>
-                {/* <Text style={{ fontStyle: '#dddddd', fontSize: 15 }} >Enter the email address associated with this account</Text> */}
-                <Image
-                    style={styles.backgroundImage}
-                    source={require('../../../assets/img/forgotpassword.png')}
-                />
+            <View>
+                {showOtpScreen ? backButtonComponent() : null}
+                <View style={styles.backgroundText}>
+                    <Text style={styles.forgotPasswordText}>Forgot Password</Text>
+                    {/* <Text style={{ fontStyle: '#dddddd', fontSize: 15 }} >Enter the email address associated with this account</Text> */}
+                    <Image
+                        style={styles.backgroundImage}
+                        source={require('../../../assets/img/forgotpassword.png')}
+                    />
+                </View>
             </View>
         )
     }
@@ -217,7 +239,7 @@ const styles = StyleSheet.create({
     forgotPasswordText: {
         fontWeight: 'bold',
         fontSize: 25,
-        marginTop: 5
+        marginTop: 30
     },
     backgroundText: {
         justifyContent: "center",
@@ -237,7 +259,7 @@ const styles = StyleSheet.create({
     },
     MainContainer: {
         // Setting up View inside content in Vertically center.
-        flex: 1,
+        // flex: 1,
         padding: 30,
         backgroundColor: "rgb(255, 255, 255)",
 

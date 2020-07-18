@@ -5,8 +5,14 @@ import TabNavigation from './TabNavigation';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 
 import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import rootReducer from './redux/slices';
+import { getAsyncData, stGetUser } from './components/common/asyncStorage'
+import dispatch from 'redux'
+// import { useDispatch, useSelector } from 'react-redux'
+// import loginSelector from './redux/slices/loginSlice';
+import loadUserInfo from './redux/slices/loginSlice';
+
 
 const store = configureStore({ reducer: rootReducer });
 
@@ -19,8 +25,33 @@ const theme = {
     accent: 'white',
   },
 };
+// const dispatch = useDispatch()
+// const { loadUserInfo } = useSelector(loginSelector)
+
 
 class App extends Component {
+
+
+
+  componentDidMount() {
+    this.userInfo();
+  }
+
+  userInfo = async () => {
+    console.log("inside userInfo")
+    const { navigation, loadUserInfo } = this.props;
+    const userData = await getAsyncData('userInfo');
+    // if (userData) {
+
+    // dispatch(loadUserInfo(userData))
+
+    loadUserInfo(userData)
+    navigation.navigate("Profile");
+    // } else {
+    //   navigation.navigate("Signin");
+    // }
+  };
+
   render() {
     console.disableYellowBox = true
     window.console = console;
@@ -37,4 +68,20 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  counter: state.counter
+});
+
+const mapDispatchToProps = () => {
+  return {
+    loadUserInfo: dispatch(loadUserInfo)
+
+  };
+};
+
+
+// export default App;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps()
+)(App);

@@ -15,7 +15,7 @@ import PostedCoursesPage from './screens/tabs/profile/postedCourses';
 import GuestPage from './screens/tabs/profile/guestPage';
 import LoginPage from './screens/tabs/userauth/login';
 import signupPage from './screens/tabs/userauth/signup';
-import forgotPasswordPage from './screens/tabs/userauth/forgotPassword'
+import forgotPassword from './screens/tabs/userauth/forgotPassword'
 
 
 const TabNavigation = props => {
@@ -33,7 +33,7 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="GuestPage" component={GuestPage} />
         <ProfileStack.Screen name="Login" component={LoginPage} />
         <ProfileStack.Screen name="Signup" component={signupPage} />
-        <ProfileStack.Screen name="ForgotPassword" component={forgotPasswordPage} />
+        <ProfileStack.Screen name="ForgotPassword" component={forgotPassword} />
         <ProfileStack.Screen
           name="ProfileSettings"
           component={ProfileSettingsPage}
