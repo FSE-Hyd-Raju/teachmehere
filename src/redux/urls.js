@@ -3,6 +3,7 @@ export const trendingSkillsUrl = `${SERVER_URL}/getTrendingTechnologies`;
 export const postSkillUrl = `${SERVER_URL}/addCourseDetails`;
 //search
 export const searchUrl = `${SERVER_URL}/searchall`;
+export const topCategoriesUrl = `${SERVER_URL}/getTopCategories`;
 //Auth
 export const authLoginUrl = `${SERVER_URL}/authorizeUserDetails`;
 export const validateNewUserUrl = `${SERVER_URL}/validateNewUser`;

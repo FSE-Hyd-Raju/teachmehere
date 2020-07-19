@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { searchUrl } from '../urls';
+import { searchUrl, topCategoriesUrl } from '../urls';
 import { storeAsyncData, getAsyncData, clearAsyncData } from '../../components/common/asyncStorage';
 
 
@@ -10,7 +10,8 @@ export const initialState = {
     hasErrors: false,
     searchQuery: "",
     recentlySearchedText: [],
-    recentlyViewedCourses: []
+    recentlyViewedCourses: [],
+    topCategories: []
 };
 
 const searchSlice = createSlice({
@@ -19,6 +20,12 @@ const searchSlice = createSlice({
     reducers: {
         setSearchQuery: (state, { payload }) => {
             state.searchQuery = payload
+        },
+        getTopCategories: state => {
+            state.topCategories = []
+        },
+        getTopCategoriesSuccess: (state, { payload }) => {
+            state.topCategories = payload
         },
         getSearchResults: state => {
             state.loading = true;
@@ -48,6 +55,8 @@ const searchSlice = createSlice({
 
 export const {
     setSearchQuery,
+    getTopCategories,
+    getTopCategoriesSuccess,
     getSearchResults,
     getSearchResultsSuccess,
     getSearchResultsFailure,
@@ -58,6 +67,25 @@ export const {
 
 export const searchSelector = state => state.search;
 export default searchSlice.reducer;
+
+export function fetchTopCategories() {
+    return async dispatch => {
+        dispatch(getTopCategories());
+        try {
+            console.log("in response")
+
+            const response = await axios.get("https://teachmeproject.herokuapp.com/getTopCategories");
+            console.log("response")
+            console.log(response)
+
+            if (response) {
+                dispatch(getTopCategoriesSuccess(response.data));
+            }
+        } catch (error) {
+            dispatch(getTopCategories());
+        }
+    };
+}
 
 export function fetchSearchResults(data) {
     return async dispatch => {

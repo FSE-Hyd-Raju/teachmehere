@@ -1,19 +1,18 @@
 import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, Dimensions, ScrollView, FlatList } from 'react-native';
-import { Button, Chip } from 'react-native-paper';
-import { Icon } from 'react-native-elements';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import { Chip } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux'
 import CourseCard from '../../../components/common/coursecard';
-import { searchSelector, fetchSearchResults, getRecentSearches, updateRecentSearches, removeRecentlyViewedCourses, removeRecentlySearchedText } from '../../../redux/slices/searchSlice'
+import { searchSelector, removeRecentlyViewedCourses, removeRecentlySearchedText } from '../../../redux/slices/searchSlice'
 
 
 export default function SearchLandingPage({ searchChipSelected }) {
 
     const dispatch = useDispatch()
-    const { searchResults, loading, hasErrors, recentlySearchedText, recentlyViewedCourses } = useSelector(searchSelector)
+    const { recentlySearchedText, recentlyViewedCourses, topCategories } = useSelector(searchSelector)
 
-    const topCategoriesData = [
+    const topCategoriesData1 = [
         {
             "categoryName": "IT & Software",
             "iconName": "computer",
@@ -32,12 +31,12 @@ export default function SearchLandingPage({ searchChipSelected }) {
         }
     ]
 
-    const topCategories = () => {
+    const showTopCategories = () => {
         return (
             <View style={styles.topCategories}>
                 <Text h2 style={styles.topCategoriesHeading}>Top Categories</Text>
                 <View style={styles.topCategoriesContainer}>
-                    {topCategoriesData.map(category => (
+                    {topCategories.map(category => (
                         <TouchableOpacity
                             style={styles.category}
                             onPress={() => alert("Imagine it navigated to category based courses page")}
@@ -109,7 +108,7 @@ export default function SearchLandingPage({ searchChipSelected }) {
         <ScrollView showsVerticalScrollIndicator={false} >
             <View style={styles.SearchDefaultPageContainer}>
                 {recentSearches()}
-                {topCategories()}
+                {showTopCategories()}
                 {recentlyViewedCoursesComponent()}
             </View >
 
