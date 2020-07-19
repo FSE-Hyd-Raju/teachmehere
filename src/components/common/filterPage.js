@@ -418,38 +418,42 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
 
         let selectedLevelsArr = getSelectedCourseLevels()
         if (selectedLevelsArr.length) {
-            obj['$and'].push({ 'courselevel': { "$in": selectedLevelsArr } })
+            obj['$and'].push({ 'coursedetails.courselevel': { "$in": selectedLevelsArr } })
         }
 
         if (courseDurationObj.Min) {
-            var hoursObj = { 'totalhours': { "$gte": courseDurationObj.Min } }
+            var hoursObj = { 'coursedetails.totalhours': { "$gte": courseDurationObj.Min } }
         }
         if (courseDurationObj.Max && (courseDurationObj.Max >= courseDurationObj.Min)) {
             if (!hoursObj) var hoursObj = {}
-            hoursObj['totalhours']["$lte"] = courseDurationObj.Max
+            hoursObj['coursedetails.totalhours']["$lte"] = courseDurationObj.Max
         }
         if (hoursObj) obj['$and'].push(hoursObj)
-
+        console.log(priceRangeObj)
         if (priceRangeObj.Min) {
+            console.log("in min")
+
             var priceObj = {
                 "$or": [
-                    { 'price.oneonone': { "$gte": priceRangeObj.Min } },
-                    { 'price.group.price': { "$gte": priceRangeObj.Min } }
+                    { 'coursedetails.price.oneonone': { "$gte": priceRangeObj.Min } },
+                    { 'coursedetails.price.group.price': { "$gte": priceRangeObj.Min } }
                 ]
             }
         }
-        if (priceRangeObj.Max && (priceRangeObj.Max >= priceRangeObj.Min)) {
-            if (!priceObj) var priceObj = { "$or": [{ 'price.oneonone': {} }, { 'price.group.price': {} }] }
-            priceObj["$or"][0]['price.oneonone']["$lte"] = priceRangeObj.Max
-            priceObj["$or"][1]['price.group.price']["$lte"] = priceRangeObj.Max
+        if (priceRangeObj.Max || (priceRangeObj.Max && priceRangeObj.Min && priceRangeObj.Max >= priceRangeObj.Min)) {
+            console.log("in max")
+
+            if (!priceObj) var priceObj = { "$or": [{ 'coursedetails.price.oneonone': {} }, { 'coursedetails.price.group.price': {} }] }
+            priceObj["$or"][0]['coursedetails.price.oneonone']["$lte"] = priceRangeObj.Max
+            priceObj["$or"][1]['coursedetails.price.group.price']["$lte"] = priceRangeObj.Max
         }
         if (priceObj) obj['$and'].push(priceObj)
 
-        if (demoObj) obj['$and'].push({ 'demo': { "$eq": demoObj } })
+        if (demoObj) obj['$and'].push({ 'coursedetails.demo': { "$eq": demoObj } })
 
-        if (currentlyAvailableObj) obj['$and'].push({ 'status': { "$eq": "Available" } })
+        if (currentlyAvailableObj) obj['$and'].push({ 'coursedetails.status': { "$eq": "Available" } })
 
-        if (minRatingObj) obj['$and'].push({ 'avgrating': { "$gte": minRatingObj } })
+        if (minRatingObj) obj['$and'].push({ 'coursedetails.avgrating': { "$gte": minRatingObj } })
 
         setFilterObj(obj)
         applyFilter(obj)

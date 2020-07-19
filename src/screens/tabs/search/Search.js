@@ -1,27 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Image, Text, View, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native';
-import { Searchbar, ActivityIndicator, Colors, Button } from 'react-native-paper';
-import { Icon, Header } from 'react-native-elements';
+import { StyleSheet, View, BackHandler, Dimensions } from 'react-native';
+import { Searchbar, ActivityIndicator, Colors } from 'react-native-paper';
 import SideMenu from 'react-native-side-menu';
 import { useDispatch, useSelector } from 'react-redux'
 import FilterPage from '../../../components/common/filterPage';
-import CourseCard from '../../../components/common/coursecard';
-import SearchDefaultPage from './searchDefaultPage';
-import { searchSelector, fetchSearchResults, getRecentSearches, updateRecentSearches } from '../../../redux/slices/searchSlice'
+import SearchLandingPage from './searchLandingPage';
+import { searchSelector, fetchSearchResults, getRecentSearches, clearSearchResults, setSearchQuery } from '../../../redux/slices/searchSlice'
+import SearchResultsPage from './searchResults'
 
 export default function SearchPage() {
 
   const dispatch = useDispatch()
-  const { searchResults, loading, hasErrors, recentlySearchedText, recentlyViewedCourses } = useSelector(searchSelector)
+  const { searchQuery, loading } = useSelector(searchSelector)
 
-  const [searchQuery, setSearchQuery] = React.useState('');
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [openFilterPage, setOpenFilterPage] = React.useState(false);
   const [filterObj, setFilterObj] = React.useState({});
 
   const timerRef = useRef(null);
   const searchBarRef = useRef(null);
-  const SCREEN_WIDTH = Dimensions.get('window').width;
+  // const SCREEN_WIDTH = Dimensions.get('window').width;
   // clearAsyncData()
 
   dispatch(getRecentSearches())
@@ -59,113 +57,44 @@ export default function SearchPage() {
   }
 
   const searchFun = (query) => {
-    setSearchQuery(query)
+    dispatch(setSearchQuery(query))
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
     timerRef.current = setTimeout(() => {
       fetchData(query, filterObj)
-    }, 200)
+    }, 800)
   }
 
   const searchChipSelected = (searchQuery) => {
     setIsSearchFocused(true)
-    setSearchQuery(searchQuery)
+    dispatch(setSearchQuery(searchQuery))
     searchFun(searchQuery)
   }
 
   const searchBackFun = () => {
     searchBarRef.current.blur()
     // searchBarRef.current.clear()
-    setSearchQuery("")
-    // setCourseData([])
+    dispatch(setSearchQuery(""))
+    dispatch(clearSearchResults())
     setIsSearchFocused(false)
-  }
-
-  const courseClicked = (course) => {
-    Keyboard.dismiss()
-    console.log(course.coursename)
-    alert("Imagine it navigated to course detail page")
-    var item = {
-      search: searchQuery,
-      course: course
-    }
-    dispatch(updateRecentSearches(item, recentlySearchedText, recentlyViewedCourses))
-  }
-
-  const wishlistClicked = (item) => {
-    console.log("wishlistClicked clicked")
-  }
-
-  const filterButtonClicked = () => {
-    console.log("filter")
-    console.log(openFilterPage)
-    Keyboard.dismiss();
-    setOpenFilterPage(!openFilterPage);
-  }
-
-  const couseCountFound = () => {
-    return (
-      !!searchQuery ? (searchResults.length + " course" + (searchResults.length > 1 ? "s" : "") + " found") : ""
-    )
   }
 
   const applyFilter = (filterObj) => {
     console.log(filterObj)
-    // alert(JSON.stringify(filterObj))
     setOpenFilterPage(false)
     var filter = {}
     if (filterObj && filterObj["$and"] && filterObj["$and"].length)
       filter = filterObj;
     setFilterObj(filterObj)
-
-    // setCourseData([])
     if (searchQuery) fetchData(searchQuery, filter)
   }
 
   const clearFilter = () => {
     console.log("clear")
-    // alert("cleared")
     setFilterObj({})
     setOpenFilterPage(false)
-    // setCourseData([])
     if (searchQuery) fetchData(searchQuery, {})
-  }
-
-  const cardListComponent = () => {
-    return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, marginBottom: 80 }}>
-          <View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              <Text style={{ paddingTop: 12 }}> {couseCountFound()}</Text>
-              <View style={{ alignItems: "flex-end" }}>
-                <Button compact={true} color="black" uppercase={false} style={{ width: 90, marginTop: 15, marginHorizontal: 15, marginBottom: 5 }} icon="tune" mode="outlined" onPress={() => filterButtonClicked()}>
-                  Filters
-                            </Button>
-              </View>
-            </View>
-            <FlatList
-              onScrollBeginDrag={Keyboard.dismiss}
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps={'handled'}
-              data={searchResults}
-              keyExtractor={item => item._id}
-              renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
-            />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
-
-  const defaultPageComponent = () => {
-    return (
-      <View style={styles.defaultPage}>
-        <SearchDefaultPage searchChipSelected={(searchQuery) => searchChipSelected(searchQuery)}
-        ></SearchDefaultPage>
-      </View>
-    )
   }
 
   const loadingComponent = () => {
@@ -192,6 +121,18 @@ export default function SearchPage() {
     )
   }
 
+  const filterComponent = () => {
+    return (
+      <View style={{ backgroundColor: '#fafafa', }}>
+        <FilterPage
+          onFilterClose={() => setOpenFilterPage(false)}
+          applyFilter={(filterObj) => applyFilter(filterObj)}
+          clearFilter={() => clearFilter()}
+        />
+      </View>
+    )
+  }
+
   return (
     <SideMenu
       // openMenuOffset={SCREEN_WIDTH}
@@ -199,27 +140,22 @@ export default function SearchPage() {
       menuPosition="right"
       isOpen={openFilterPage}
       disableGestures={true}
-      menu={
-        <View style={{ backgroundColor: '#fafafa', }}>
-          <FilterPage
-            onFilterClose={() => setOpenFilterPage(false)}
-            applyFilter={(filterObj) => applyFilter(filterObj)}
-            clearFilter={() => clearFilter()}
-          />
-        </View>} >
+      menu={filterComponent()} >
+
       <View style={styles.container} >
         {searchComponent()}
-        {!isSearchFocused ? defaultPageComponent() :
-          loading ? loadingComponent() : cardListComponent()
-        }
+        {!isSearchFocused && <SearchLandingPage searchChipSelected={(searchQuery) => searchChipSelected(searchQuery)} />}
+        {isSearchFocused && !loading && <SearchResultsPage filterclicked={() => setOpenFilterPage(!openFilterPage)} />}
+        {isSearchFocused && loading && loadingComponent()}
+
       </View >
     </SideMenu>
   );
 
-
 }
 
 const styles = StyleSheet.create({
+
   defaultPage: {
     marginTop: 30,
   },

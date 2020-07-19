@@ -23,7 +23,7 @@ import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
 const TabNavigation = props => {
   const dispatch = useDispatch();
   const { colors } = props.theme;
-  const [index, setIndex] = React.useState(4);
+  const [index, setIndex] = React.useState(1);
 
   const ProfileStack = createStackNavigator();
 

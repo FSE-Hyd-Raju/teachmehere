@@ -8,6 +8,7 @@ export const initialState = {
     searchResults: [],
     loading: false,
     hasErrors: false,
+    searchQuery: "",
     recentlySearchedText: [],
     recentlyViewedCourses: []
 };
@@ -16,6 +17,9 @@ const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
+        setSearchQuery: (state, { payload }) => {
+            state.searchQuery = payload
+        },
         getSearchResults: state => {
             state.loading = true;
             state.searchResults = []
@@ -30,6 +34,9 @@ const searchSlice = createSlice({
             state.hasErrors = payload;
             state.searchResults = [];
         },
+        clearSearchResults: state => {
+            state.searchResults = []
+        },
         setRecentlySearchedText: (state, { payload }) => {
             state.recentlySearchedText = payload;
         },
@@ -40,9 +47,11 @@ const searchSlice = createSlice({
 });
 
 export const {
+    setSearchQuery,
     getSearchResults,
     getSearchResultsSuccess,
     getSearchResultsFailure,
+    clearSearchResults,
     setRecentlySearchedText,
     setRecentlyViewedCourses
 } = searchSlice.actions;
@@ -55,6 +64,7 @@ export function fetchSearchResults(data) {
         dispatch(getSearchResults());
         try {
             const response = await axios.post(searchUrl, data);
+            console.log(response.data)
             if (response) {
                 dispatch(getSearchResultsSuccess(response.data));
             }
@@ -87,7 +97,6 @@ export function updateRecentSearches(item, recentlySearchedText, recentlyViewedC
             if (!(recentlyViewedCourses.filter(e => e._id === item.course._id).length)) {
                 recentlyViewedCourses.length > 4 ? recentlyViewedCourses.pop() : recentlyViewedCourses.unshift(item.course)
             }
-            alert(recentlySearchedText)
 
             dispatch(setRecentlySearchedText(recentlySearchedText))
             dispatch(setRecentlyViewedCourses(recentlyViewedCourses))

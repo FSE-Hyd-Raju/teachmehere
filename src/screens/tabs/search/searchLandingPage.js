@@ -8,7 +8,7 @@ import CourseCard from '../../../components/common/coursecard';
 import { searchSelector, fetchSearchResults, getRecentSearches, updateRecentSearches, removeRecentlyViewedCourses, removeRecentlySearchedText } from '../../../redux/slices/searchSlice'
 
 
-export default function SearchDefaultPage({ searchChipSelected }) {
+export default function SearchLandingPage({ searchChipSelected }) {
 
     const dispatch = useDispatch()
     const { searchResults, loading, hasErrors, recentlySearchedText, recentlyViewedCourses } = useSelector(searchSelector)
@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
         padding: 6,
     },
     SearchDefaultPageContainer: {
-        marginBottom: 100
+        marginBottom: 100,
+        marginTop: 50
     },
     category: {
         minWidth: 140,
