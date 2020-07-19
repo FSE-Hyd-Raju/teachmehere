@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
 import postReducer from './post';
-import searchReducer from './search';
+import searchReducer from './searchSlice';
 import loginReducer from './loginSlice';
 import signupReducer from './signupSlice';
 import forgotPasswordReducer from './forgotPasswordSlice';

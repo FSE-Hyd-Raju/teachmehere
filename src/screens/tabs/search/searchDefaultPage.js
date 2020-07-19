@@ -3,9 +3,15 @@ import { StyleSheet, Image, Text, View, TouchableOpacity, Dimensions, ScrollView
 import { Button, Chip } from 'react-native-paper';
 import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useDispatch, useSelector } from 'react-redux'
 import CourseCard from '../../../components/common/coursecard';
+import { searchSelector, fetchSearchResults, getRecentSearches, updateRecentSearches, removeRecentlyViewedCourses, removeRecentlySearchedText } from '../../../redux/slices/searchSlice'
 
-export default function SearchDefaultPage({ recentSearchesData, recentViewedCoursesData, removeRecentSearchItem, remmoveRecentlyViewedCourses, searchChipSelected }) {
+
+export default function SearchDefaultPage({ searchChipSelected }) {
+
+    const dispatch = useDispatch()
+    const { searchResults, loading, hasErrors, recentlySearchedText, recentlyViewedCourses } = useSelector(searchSelector)
 
     const topCategoriesData = [
         {
@@ -25,28 +31,6 @@ export default function SearchDefaultPage({ recentSearchesData, recentViewedCour
             "iconName": "local-dining",
         }
     ]
-
-    const recentlyViewedCategoriesData = [
-        {
-            "categoryName": "IT & Software",
-            "iconName": "computer",
-        },
-        {
-            "categoryName": "Painting",
-            "iconName": "brush",
-        },
-        {
-            "categoryName": "Communication",
-            "iconName": "record-voice-over",
-        }
-    ]
-
-    const courseData = [
-        { "_id": "5ea3239be75b624c81f71f56", "uid": "5ed1d67917fb06f371418c64", "coursename": "Angularjs", "courselevel": "medium", "category": "art", "subcategory": "dancing", "totalhours": 10, "price": 2000, "experience": 4, "demo": "no", "speakinglanguages": ["telugu", "english"], "usersrated": 1, "createddate": "2020-05-30 03:43:51.957000", "updateddate": "2020-06-06 14:49:10.982000", "rating": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 1 }, "avgrating": 5, "username": "jakkulaashwini.3@gmail.com", "email": "jakkulaashwini.3@gmail.com", "phonenumber": "9999999999", "devicetoken": "czfA6V3956s:APA91bEA7KMfRh_2xlgOzpcbrHawyoC5SBIfGkCiq9rQbM72cnIMTCPFUNwuBE3YDAsuVNH6ZDAlpNZfX1YIulXyZ5cskrlDNQDocwWF8sebq6PiTOkJB4ax8DYFFRQHLhEs9bgXNvNo", "description": "Okay" }, { "_id": "5ea3d6e299306cc7f99b9d4c", "uid": "5ed1d67917fb06f371418c64", "coursename": "Reactjs", "courselevel": "medium", "category": "software", "subcategory": "FrontendTech", "totalhours": 10, "price": { "oneonone": 2000, "group": { "members": 6, "price": 1000 } }, "experience": 4, "demo": "no", "speakinglanguages": ["telugu", "english"], "usersrated": 0, "createddate": "2020-05-30 03:43:51.957000", "updateddate": "2020-06-06 14:49:10.982000", "avgrating": 4, "username": "jakkulaashwini.3@gmail.com", "email": "jakkulaashwini.3@gmail.com", "phonenumber": "9999999999", "devicetoken": "czfA6V3956s:APA91bEA7KMfRh_2xlgOzpcbrHawyoC5SBIfGkCiq9rQbM72cnIMTCPFUNwuBE3YDAsuVNH6ZDAlpNZfX1YIulXyZ5cskrlDNQDocwWF8sebq6PiTOkJB4ax8DYFFRQHLhEs9bgXNvNo", "description": "Okay" },
-        { "_id": "5ea3239be75b624c81f71f56", "uid": "5ed1d67917fb06f371418c64", "coursename": "Python", "courselevel": "medium", "category": "art", "subcategory": "dancing", "totalhours": 10, "price": 2000, "experience": 4, "demo": "no", "speakinglanguages": ["telugu", "english"], "usersrated": 1, "createddate": "2020-05-30 03:43:51.957000", "updateddate": "2020-06-06 14:49:10.982000", "rating": { "1": 0, "2": 0, "3": 0, "4": 0, "5": 1 }, "avgrating": 5, "username": "jakkulaashwini.3@gmail.com", "email": "jakkulaashwini.3@gmail.com", "phonenumber": "9999999999", "devicetoken": "czfA6V3956s:APA91bEA7KMfRh_2xlgOzpcbrHawyoC5SBIfGkCiq9rQbM72cnIMTCPFUNwuBE3YDAsuVNH6ZDAlpNZfX1YIulXyZ5cskrlDNQDocwWF8sebq6PiTOkJB4ax8DYFFRQHLhEs9bgXNvNo", "description": "Okay" }, { "_id": "5ea3d6e299306cc7f99b9d4c", "uid": "5ed1d67917fb06f371418c64", "coursename": "Ielts", "courselevel": "medium", "category": "software", "subcategory": "FrontendTech", "totalhours": 10, "price": { "oneonone": 2000, "group": { "members": 6, "price": 1000 } }, "experience": 4, "demo": "no", "speakinglanguages": ["telugu", "english"], "usersrated": 0, "createddate": "2020-05-30 03:43:51.957000", "updateddate": "2020-06-06 14:49:10.982000", "avgrating": 4, "username": "jakkulaashwini.3@gmail.com", "email": "jakkulaashwini.3@gmail.com", "phonenumber": "9999999999", "devicetoken": "czfA6V3956s:APA91bEA7KMfRh_2xlgOzpcbrHawyoC5SBIfGkCiq9rQbM72cnIMTCPFUNwuBE3YDAsuVNH6ZDAlpNZfX1YIulXyZ5cskrlDNQDocwWF8sebq6PiTOkJB4ax8DYFFRQHLhEs9bgXNvNo", "description": "Okay" }
-    ]
-
-    const recentser = ["angasdfasdfasdfasdfsdafs", "angular", "asdfj"]
 
     const topCategories = () => {
         return (
@@ -73,40 +57,16 @@ export default function SearchDefaultPage({ recentSearchesData, recentViewedCour
         )
     }
 
-    const recentlyViewedCategories = () => {
+    const recentlyViewedCoursesComponent = () => {
         return (
-            <View style={styles.topCategories}>
-                <Text h2 style={styles.topCategoriesHeading}>Recently Viewed Categories</Text>
-                <View style={styles.topCategoriesContainer}>
-                    {recentlyViewedCategoriesData.map(category => (
-                        <TouchableOpacity
-                            style={styles.category}
-                        // onPress={() => this.showSubCategories(category)}
-                        >
-                            <View style={styles.IconAndName}>
-                                <IconMaterialIcons
-                                    name={category.iconName}
-                                    color="#000"
-                                    size={30}
-                                />
-                                <Text>{category.categoryName}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </View>
-        )
-    }
-
-    const recentlyViewedCourses = () => {
-        return (
+            recentlyViewedCourses && !!recentlyViewedCourses.length &&
             <View style={[styles.topCategories, { marginBottom: 0 }]}>
                 <View >
                     <Text h2 style={styles.topCategoriesHeading}>Recently Viewed Courses</Text>
                 </View>
                 <View style={styles.recentlyViewedCoursesContainer}>
                     <FlatList
-                        data={recentViewedCoursesData}
+                        data={recentlyViewedCourses}
                         keyExtractor={item => item._id}
                         renderItem={({ item }) => {
                             return (
@@ -117,13 +77,12 @@ export default function SearchDefaultPage({ recentSearchesData, recentViewedCour
                                         color="rgb(102, 94, 94)"
                                         size={20}
                                         style={{ height: 20 }}
-                                        onPress={() => remmoveRecentlyViewedCourses(item)}
+                                        onPress={() => dispatch(removeRecentlyViewedCourses(item))}
                                     />
                                 </View>
                             )
                         }}
                     />
-
                 </View>
             </View>
         )
@@ -131,20 +90,15 @@ export default function SearchDefaultPage({ recentSearchesData, recentViewedCour
 
     const recentSearches = () => {
         return (
+            recentlySearchedText && !!recentlySearchedText.length &&
             <View style={styles.topCategories}>
                 <Text h2 style={styles.topCategoriesHeading}>Recent Searches</Text>
                 <View style={styles.topCategoriesContainer}>
-                    {recentSearchesData.map(searchQuery => (
-                        // <TouchableOpacity
-                        //     style={styles.recentSearchsItem}
-                        // // onPress={() => this.showSubCategories(category)}
-                        // >
+                    {recentlySearchedText.map(searchQuery => (
                         <View style={styles.IconAndName}>
-                            <Chip textStyle={{ minWidth: 45 }} mode="outlined" onClose={() => removeRecentSearchItem(searchQuery)}
+                            <Chip textStyle={{ minWidth: 45 }} mode="outlined" onClose={() => dispatch(removeRecentlySearchedText(searchQuery))}
                                 onPress={() => searchChipSelected(searchQuery)} >{searchQuery}</Chip>
                         </View>
-                        // </TouchableOpacity>
-
                     ))}
                 </View>
             </View>
@@ -154,14 +108,9 @@ export default function SearchDefaultPage({ recentSearchesData, recentViewedCour
     return (
         <ScrollView showsVerticalScrollIndicator={false} >
             <View style={styles.SearchDefaultPageContainer}>
-
-                {/* {recentSearches()} */}
-                {recentSearchesData && !!recentSearchesData.length && recentSearches()}
-                {/* {recentlyViewedCategories()} */}
+                {recentSearches()}
                 {topCategories()}
-                {/* {recentlyViewedCourses()} */}
-
-                {recentViewedCoursesData && !!recentViewedCoursesData.length && recentlyViewedCourses()}
+                {recentlyViewedCoursesComponent()}
             </View >
 
         </ScrollView>

@@ -15,8 +15,9 @@ const theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: 'black',
-    accent: 'white',
+    primary: 'white',
+    accent: 'black',
+    text: 'black'
   },
 };
 const App = () => {

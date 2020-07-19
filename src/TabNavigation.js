@@ -46,32 +46,20 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="Login" component={LoginPage} />
         <ProfileStack.Screen name="Signup" component={signupPage} />
         <ProfileStack.Screen name="ForgotPassword" component={forgotPassword} />
-        <ProfileStack.Screen
-          name="ProfileSettings"
-          component={ProfileSettingsPage}
-        />
-        <ProfileStack.Screen
-          name="RequestedCourses"
-          component={RequestedCoursesPage}
-        />
-        <ProfileStack.Screen
-          name="WishlistCourses"
-          component={WishlistCoursesPage}
-        />
-        <ProfileStack.Screen
-          name="PostedCourses"
-          component={PostedCoursesPage}
-        />
+        <ProfileStack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
+        <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
+        <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
+        <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
       </ProfileStack.Navigator>
     );
   }
 
   const [routes] = React.useState([
     { key: 'home', title: 'Home', icon: 'home', color: colors.primary },
-    { key: 'search', title: 'Search', icon: 'search', color: colors.primary },
-    { key: 'post', title: 'Post', icon: 'plus', color: colors.primary },
+    { key: 'search', title: 'Search', icon: 'magnify', color: colors.primary },
+    { key: 'post', title: 'Post', icon: 'plus-circle', color: colors.primary },
     { key: 'chat', title: 'Chat', icon: 'chat', color: colors.primary },
-    { key: 'profile', title: 'Profile', icon: 'user', color: colors.primary },
+    { key: 'profile', title: 'Profile', icon: 'account', color: colors.primary },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
@@ -88,6 +76,7 @@ const TabNavigation = props => {
         navigationState={{ index, routes }}
         onIndexChange={setIndex}
         renderScene={renderScene}
+        sceneAnimationEnabled={false}
       />
     </NavigationContainer>
   );
