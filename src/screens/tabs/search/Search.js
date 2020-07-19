@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Image, Text, View, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native';
 import { Searchbar, ActivityIndicator, Colors, Button } from 'react-native-paper';
 import { Icon, Header } from 'react-native-elements';
-import { storeAsyncData, getAsyncData, clearAsyncData } from '../../../components/common/asyncStorage';
 import SideMenu from 'react-native-side-menu';
 import { useDispatch, useSelector } from 'react-redux'
 import FilterPage from '../../../components/common/filterPage';
@@ -61,16 +60,13 @@ export default function SearchPage() {
 
   const searchFun = (query) => {
     setSearchQuery(query)
-    // setCourseData([])
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-    if (query)
-      timerRef.current = setTimeout(() => {
-        fetchData(query, filterObj)
-      }, 200)
+    timerRef.current = setTimeout(() => {
+      fetchData(query, filterObj)
+    }, 200)
   }
-
 
   const searchChipSelected = (searchQuery) => {
     setIsSearchFocused(true)
@@ -86,30 +82,6 @@ export default function SearchPage() {
     setIsSearchFocused(false)
   }
 
-  const searchComponent = () => {
-    return (
-      <Searchbar
-        ref={searchBarRef}
-        onFocus={() => setIsSearchFocused(true)}
-        icon={isSearchFocused ? "arrow-left" : null}
-        onIconPress={isSearchFocused ? searchBackFun : null}
-        inputStyle={{ fontSize: 13 }}
-        placeholder="Search by course name, category.."
-        placeholderStyle={{ fontSize: 10 }}
-        onChangeText={searchFun}
-        value={searchQuery}
-      />
-    )
-  }
-
-  const loadingComponent = () => {
-    return (
-      <View style={styles.loadingBar}>
-        <ActivityIndicator size={35} animating={true} color={Colors.red800} />
-      </View>
-    )
-  }
-
   const courseClicked = (course) => {
     Keyboard.dismiss()
     console.log(course.coursename)
@@ -118,7 +90,7 @@ export default function SearchPage() {
       search: searchQuery,
       course: course
     }
-    dispatch(updateRecentSearches(item))
+    dispatch(updateRecentSearches(item, recentlySearchedText, recentlyViewedCourses))
   }
 
   const wishlistClicked = (item) => {
@@ -136,6 +108,28 @@ export default function SearchPage() {
     return (
       !!searchQuery ? (searchResults.length + " course" + (searchResults.length > 1 ? "s" : "") + " found") : ""
     )
+  }
+
+  const applyFilter = (filterObj) => {
+    console.log(filterObj)
+    // alert(JSON.stringify(filterObj))
+    setOpenFilterPage(false)
+    var filter = {}
+    if (filterObj && filterObj["$and"] && filterObj["$and"].length)
+      filter = filterObj;
+    setFilterObj(filterObj)
+
+    // setCourseData([])
+    if (searchQuery) fetchData(searchQuery, filter)
+  }
+
+  const clearFilter = () => {
+    console.log("clear")
+    // alert("cleared")
+    setFilterObj({})
+    setOpenFilterPage(false)
+    // setCourseData([])
+    if (searchQuery) fetchData(searchQuery, {})
   }
 
   const cardListComponent = () => {
@@ -174,26 +168,28 @@ export default function SearchPage() {
     )
   }
 
-  const applyFilter = (filterObj) => {
-    console.log(filterObj)
-    // alert(JSON.stringify(filterObj))
-    setOpenFilterPage(false)
-    var filter = {}
-    if (filterObj && filterObj["$and"] && filterObj["$and"].length)
-      filter = filterObj;
-    setFilterObj(filterObj)
-
-    // setCourseData([])
-    if (searchQuery) fetchData(searchQuery, filter)
+  const loadingComponent = () => {
+    return (
+      <View style={styles.loadingBar}>
+        <ActivityIndicator size={35} animating={true} color={Colors.red800} />
+      </View>
+    )
   }
 
-  const clearFilter = () => {
-    console.log("clear")
-    // alert("cleared")
-    setFilterObj({})
-    setOpenFilterPage(false)
-    // setCourseData([])
-    if (searchQuery) fetchData(searchQuery, {})
+  const searchComponent = () => {
+    return (
+      <Searchbar
+        ref={searchBarRef}
+        onFocus={() => setIsSearchFocused(true)}
+        icon={isSearchFocused ? "arrow-left" : null}
+        onIconPress={isSearchFocused ? searchBackFun : null}
+        inputStyle={{ fontSize: 13 }}
+        placeholder="Search by course name, category.."
+        placeholderStyle={{ fontSize: 10 }}
+        onChangeText={searchFun}
+        value={searchQuery}
+      />
+    )
   }
 
   return (
@@ -219,6 +215,8 @@ export default function SearchPage() {
       </View >
     </SideMenu>
   );
+
+
 }
 
 const styles = StyleSheet.create({

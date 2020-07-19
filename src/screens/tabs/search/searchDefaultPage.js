@@ -77,7 +77,7 @@ export default function SearchDefaultPage({ searchChipSelected }) {
                                         color="rgb(102, 94, 94)"
                                         size={20}
                                         style={{ height: 20 }}
-                                        onPress={() => dispatch(removeRecentlyViewedCourses(item))}
+                                        onPress={() => dispatch(removeRecentlyViewedCourses(item, recentlyViewedCourses))}
                                     />
                                 </View>
                             )
@@ -96,7 +96,7 @@ export default function SearchDefaultPage({ searchChipSelected }) {
                 <View style={styles.topCategoriesContainer}>
                     {recentlySearchedText.map(searchQuery => (
                         <View style={styles.IconAndName}>
-                            <Chip textStyle={{ minWidth: 45 }} mode="outlined" onClose={() => dispatch(removeRecentlySearchedText(searchQuery))}
+                            <Chip textStyle={{ minWidth: 45 }} mode="outlined" onClose={() => dispatch(removeRecentlySearchedText(searchQuery, recentlySearchedText))}
                                 onPress={() => searchChipSelected(searchQuery)} >{searchQuery}</Chip>
                         </View>
                     ))}

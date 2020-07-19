@@ -70,43 +70,40 @@ export function getRecentSearches() {
             const recentlySearchedTextResponse = await getAsyncData("recentlySearchedText")
             const recentlyViewedCoursesResponse = await getAsyncData("recentlyViewedCourses")
 
-            if (response) {
-                console.log(JSON.stringify(data))
-                dispatch(setRecentlySearchedText(recentlySearchedTextResponse))
-                dispatch(setRecentlyViewedCourses(recentlyViewedCoursesResponse))
-            }
+            dispatch(setRecentlySearchedText(recentlySearchedTextResponse))
+            dispatch(setRecentlyViewedCourses(recentlyViewedCoursesResponse))
         } catch (error) {
             // dispatch(getSearchResultsFailure(error));
         }
     };
 }
 
-export function updateRecentSearches(item) {
-    return async (dispatch, getState) => {
+export function updateRecentSearches(item, recentlySearchedText, recentlyViewedCourses) {
+    return async dispatch => {
         try {
-            let { recentlySearchedText, recentlyViewedCourses } = getState()
             if (!recentlySearchedText.includes(item.search)) {
                 (recentlySearchedText.length > 5) ? recentlySearchedText.pop() : recentlySearchedText.unshift(item.search)
             }
             if (!(recentlyViewedCourses.filter(e => e._id === item.course._id).length)) {
                 recentlyViewedCourses.length > 4 ? recentlyViewedCourses.pop() : recentlyViewedCourses.unshift(item.course)
             }
+            alert(recentlySearchedText)
+
+            dispatch(setRecentlySearchedText(recentlySearchedText))
+            dispatch(setRecentlyViewedCourses(recentlyViewedCourses))
 
             storeAsyncData("recentlySearchedText", recentlySearchedText)
             storeAsyncData("recentlyViewedCourses", recentlyViewedCourses)
 
-            dispatch(setRecentlySearchedText(recentlySearchedText))
-            dispatch(setRecentlyViewedCourses(recentlyViewedCourses))
         } catch (error) {
             // dispatch(getSearchResultsFailure(error));
         }
     };
 }
 
-export function removeRecentlySearchedText(searchItem) {
-    return async (dispatch, getState) => {
+export function removeRecentlySearchedText(searchItem, recentlySearchedText) {
+    return async dispatch => {
         try {
-            let { recentlySearchedText } = getState()
             recentlySearchedText = recentlySearchedText.filter((ele) => {
                 return ele != searchItem
             })
@@ -118,11 +115,9 @@ export function removeRecentlySearchedText(searchItem) {
     };
 }
 
-export function removeRecentlyViewedCourses(course) {
-    return async (dispatch, getState) => {
+export function removeRecentlyViewedCourses(course, recentlyViewedCourses) {
+    return async dispatch => {
         try {
-            let { recentlyViewedCourses } = getState()
-
             recentlyViewedCourses = recentlyViewedCourses.filter((ele) => {
                 return ele._id != course._id;
             })
