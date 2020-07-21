@@ -5,17 +5,17 @@ import SideMenu from 'react-native-side-menu';
 import { useDispatch, useSelector } from 'react-redux'
 import FilterPage from '../../../components/common/filterPage';
 import SearchLandingPage from './searchLandingPage';
-import { searchSelector, fetchSearchResults, getRecentSearches, clearSearchResults, setSearchQuery, fetchTopCategories } from '../../../redux/slices/searchSlice'
+import { searchSelector, fetchSearchResults, getRecentSearches, clearSearchResults, setSearchQuery, fetchTopCategories, setFilterObj } from '../../../redux/slices/searchSlice'
 import SearchResultsPage from './searchResults'
 
 export default function SearchPage() {
 
   const dispatch = useDispatch()
-  const { searchQuery, loading, topCategories } = useSelector(searchSelector)
+  const { searchQuery, loading, topCategories, filterObj } = useSelector(searchSelector)
 
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [openFilterPage, setOpenFilterPage] = React.useState(false);
-  const [filterObj, setFilterObj] = React.useState({});
+  // const [filterObj, setFilterObj] = React.useState({});
 
   const timerRef = useRef(null);
   const searchBarRef = useRef(null);
@@ -56,7 +56,8 @@ export default function SearchPage() {
   const fetchData = (query, filterObj) => {
     dispatch(fetchSearchResults({
       "textentered": query,
-      "filterQuery": filterObj
+      "filterQuery": filterObj,
+      "page": 0
     }))
   }
 
@@ -90,13 +91,13 @@ export default function SearchPage() {
     var filter = {}
     if (filterObj && filterObj["$and"] && filterObj["$and"].length)
       filter = filterObj;
-    setFilterObj(filterObj)
+    dispatch(setFilterObj(filterObj))
     if (searchQuery) fetchData(searchQuery, filter)
   }
 
   const clearFilter = () => {
     console.log("clear")
-    setFilterObj({})
+    dispatch(setFilterObj({}))
     setOpenFilterPage(false)
     if (searchQuery) fetchData(searchQuery, {})
   }

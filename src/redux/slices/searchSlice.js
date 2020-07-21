@@ -11,7 +11,9 @@ export const initialState = {
     searchQuery: "",
     recentlySearchedText: [],
     recentlyViewedCourses: [],
-    topCategories: []
+    topCategories: [],
+    filterObj: {},
+    isRefreshing: false
 };
 
 const searchSlice = createSlice({
@@ -20,6 +22,12 @@ const searchSlice = createSlice({
     reducers: {
         setSearchQuery: (state, { payload }) => {
             state.searchQuery = payload
+        },
+        setFilterObj: (state, { payload }) => {
+            state.filterObj = payload
+        },
+        setIsRefreshing: (state, { payload }) => {
+            state.isRefreshing = payload
         },
         getTopCategories: state => {
             state.topCategories = []
@@ -35,11 +43,13 @@ const searchSlice = createSlice({
             state.searchResults = payload;
             state.loading = false;
             state.hasErrors = false;
+            state.isRefreshing = false;
         },
-        getSearchResultsFailure: (state, { payload }) => {
+        getSearchResultsFailure: state => {
             state.loading = false;
-            state.hasErrors = payload;
+            state.hasErrors = true;
             state.searchResults = [];
+            state.isRefreshing = false;
         },
         clearSearchResults: state => {
             state.searchResults = []
@@ -55,6 +65,8 @@ const searchSlice = createSlice({
 
 export const {
     setSearchQuery,
+    setFilterObj,
+    setIsRefreshing,
     getTopCategories,
     getTopCategoriesSuccess,
     getSearchResults,
@@ -72,12 +84,7 @@ export function fetchTopCategories() {
     return async dispatch => {
         dispatch(getTopCategories());
         try {
-            console.log("in response")
-
             const response = await axios.get("https://teachmeproject.herokuapp.com/getTopCategories");
-            console.log("response")
-            console.log(response)
-
             if (response) {
                 dispatch(getTopCategoriesSuccess(response.data));
             }
@@ -88,16 +95,21 @@ export function fetchTopCategories() {
 }
 
 export function fetchSearchResults(data) {
-    return async dispatch => {
-        dispatch(getSearchResults());
+    return async (dispatch, getState) => {
+        if (!data.page)
+            dispatch(getSearchResults());
+        else
+            dispatch(setIsRefreshing(true));
         try {
             const response = await axios.post(searchUrl, data);
-            console.log(response.data)
-            if (response) {
-                dispatch(getSearchResultsSuccess(response.data));
+            if (data.page) {
+                availableData = [...getState().search.searchResults];
+                response.data = availableData.concat(response.data)
             }
+            if (response.data.length || !data.page)
+                dispatch(getSearchResultsSuccess(response.data));
         } catch (error) {
-            dispatch(getSearchResultsFailure(error));
+            dispatch(getSearchResultsFailure());
         }
     };
 }

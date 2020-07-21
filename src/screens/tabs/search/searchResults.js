@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableWithoutFeedback, Keyboard, Dimensions } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, Text, View, FlatList, TouchableWithoutFeedback, Keyboard, Dimensions, RefreshControl } from 'react-native';
+import { Button, ActivityIndicator, Colors } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux'
 import CourseCard from '../../../components/common/coursecard';
-import { searchSelector, updateRecentSearches } from '../../../redux/slices/searchSlice'
+import { searchSelector, updateRecentSearches, setFilterObj, fetchSearchResults } from '../../../redux/slices/searchSlice'
 
 export default function SearchResultsPage({ filterclicked }) {
     const dispatch = useDispatch()
-    const { searchQuery, searchResults, recentlySearchedText, recentlyViewedCourses } = useSelector(searchSelector)
+    const { searchQuery, searchResults, recentlySearchedText, recentlyViewedCourses, loading, filterObj, isRefreshing } = useSelector(searchSelector)
+    const [page, setPage] = React.useState(0);
 
     const courseClicked = (course) => {
         Keyboard.dismiss()
@@ -36,6 +37,37 @@ export default function SearchResultsPage({ filterclicked }) {
         )
     }
 
+    const renderFooter = () => {
+        if (!isRefreshing) return null;
+        return (
+            // <ActivityIndicator
+            //     style={{ color: '#000' }}
+            // />
+            <ActivityIndicator color={Colors.black} />
+
+        );
+    };
+
+    const fetchData = (page) => {
+        dispatch(fetchSearchResults({
+            "textentered": searchQuery,
+            "filterQuery": filterObj,
+            "page": page
+        }))
+    }
+
+    const handleLoadMore = () => {
+        if (!loading) {
+            fetchData(page + 1);
+            setPage(page + 1);
+        }
+    };
+
+    const onRefresh = () => {
+        fetchData(0)
+        setPage(0);
+    }
+
     const cardListComponent = () => {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -56,6 +88,15 @@ export default function SearchResultsPage({ filterclicked }) {
                             data={searchResults}
                             keyExtractor={item => item._id}
                             renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
+                            ListFooterComponent={renderFooter}
+                            onEndReachedThreshold={0.4}
+                            onEndReached={handleLoadMore}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={loading}
+                                    onRefresh={onRefresh}
+                                />
+                            }
                         />
                     </View>
                 </View>
