@@ -5,7 +5,7 @@ import { storeAsyncData, getAsyncData, clearAsyncData } from '../../components/c
 
 
 export const initialState = {
-    searchResults: [],
+    searchResults: {},
     loading: false,
     hasErrors: false,
     searchQuery: "",
@@ -37,7 +37,7 @@ const searchSlice = createSlice({
         },
         getSearchResults: state => {
             state.loading = true;
-            state.searchResults = []
+            state.searchResults = {}
         },
         getSearchResultsSuccess: (state, { payload }) => {
             state.searchResults = payload;
@@ -48,11 +48,11 @@ const searchSlice = createSlice({
         getSearchResultsFailure: state => {
             state.loading = false;
             state.hasErrors = true;
-            state.searchResults = [];
+            state.searchResults = {};
             state.isRefreshing = false;
         },
         clearSearchResults: state => {
-            state.searchResults = []
+            state.searchResults = {}
         },
         setRecentlySearchedText: (state, { payload }) => {
             state.recentlySearchedText = payload;
@@ -103,10 +103,10 @@ export function fetchSearchResults(data) {
         try {
             const response = await axios.post(searchUrl, data);
             if (data.page) {
-                availableData = [...getState().search.searchResults];
-                response.data = availableData.concat(response.data)
+                availableData = [...getState().search.searchResults.response];
+                response.data.response = availableData.concat(response.data.response)
             }
-            if (response.data.length || !data.page)
+            if (response.data.response.length || !data.page)
                 dispatch(getSearchResultsSuccess(response.data));
         } catch (error) {
             dispatch(getSearchResultsFailure());

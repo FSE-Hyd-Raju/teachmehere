@@ -33,7 +33,8 @@ export default function SearchLandingPage({ searchChipSelected }) {
 
     const showTopCategories = () => {
         return (
-            <View style={styles.topCategories}>
+            !!topCategories.length &&
+            (<View style={styles.topCategories}>
                 <Text h2 style={styles.topCategoriesHeading}>Top Categories</Text>
                 <View style={styles.topCategoriesContainer}>
                     {topCategories.map(category => (
@@ -52,7 +53,7 @@ export default function SearchLandingPage({ searchChipSelected }) {
                         </TouchableOpacity>
                     ))}
                 </View>
-            </View>
+            </View>)
         )
     }
 

@@ -33,7 +33,7 @@ export default function SearchResultsPage({ filterclicked }) {
 
     const couseCountFound = () => {
         return (
-            !!searchResults.length ? (searchResults.length + " skill" + (searchResults.length > 1 ? "s" : "") + " found") : ""
+            !!searchResults.count ? (searchResults.count + " skill" + (searchResults.count > 1 ? "s" : "") + " found") : ""
         )
     }
 
@@ -57,7 +57,7 @@ export default function SearchResultsPage({ filterclicked }) {
     }
 
     const handleLoadMore = () => {
-        if (!loading) {
+        if (!loading && searchResults.response.length < searchResults.count) {
             fetchData(page + 1);
             setPage(page + 1);
         }
@@ -85,7 +85,7 @@ export default function SearchResultsPage({ filterclicked }) {
                             onScrollBeginDrag={Keyboard.dismiss}
                             showsVerticalScrollIndicator={false}
                             keyboardShouldPersistTaps={'handled'}
-                            data={searchResults}
+                            data={searchResults.response}
                             keyExtractor={item => item._id}
                             renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
                             ListFooterComponent={renderFooter}

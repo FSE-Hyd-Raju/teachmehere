@@ -68,7 +68,7 @@ export default function SearchPage() {
     }
     timerRef.current = setTimeout(() => {
       fetchData(query, filterObj)
-    }, 800)
+    }, 700)
   }
 
   const searchChipSelected = (searchQuery) => {
