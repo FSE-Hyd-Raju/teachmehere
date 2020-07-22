@@ -25,7 +25,7 @@ const Step1 = props => {
   const { getState } = props;
   const options = [
     { value: 'basic', label: 'Basic' },
-    { value: 'intermediate', label: 'Inermediate' },
+    { value: 'intermediate', label: 'Intermediate' },
     { value: 'advanced', label: 'Advanced' },
   ];
 

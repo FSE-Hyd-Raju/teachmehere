@@ -40,7 +40,7 @@ export default function SearchLandingPage({ searchChipSelected }) {
                     {topCategories.map(category => (
                         <TouchableOpacity
                             style={styles.category}
-                            onPress={() => alert("Imagine it navigated to category based courses page")}
+                            onPress={() => alert("Imagine it navigated to category based skill page")}
                         >
                             <View style={styles.IconAndName}>
                                 <IconMaterialIcons
@@ -62,7 +62,7 @@ export default function SearchLandingPage({ searchChipSelected }) {
             recentlyViewedCourses && !!recentlyViewedCourses.length &&
             <View style={[styles.topCategories, { marginBottom: 0 }]}>
                 <View >
-                    <Text h2 style={styles.topCategoriesHeading}>Recently Viewed Courses</Text>
+                    <Text h2 style={styles.topCategoriesHeading}>Recently Viewed Skills</Text>
                 </View>
                 <View style={styles.recentlyViewedCoursesContainer}>
                     <FlatList
@@ -71,7 +71,7 @@ export default function SearchLandingPage({ searchChipSelected }) {
                         renderItem={({ item }) => {
                             return (
                                 <View style={styles.recentlyViewedCoursesTextIcon}>
-                                    <CourseCard course={item} courseClicked={() => alert("Imagine it navigated to course detail page")} wishlistClicked={() => alert("Imagine course added to wishlist")} />
+                                    <CourseCard course={item} courseClicked={() => alert("Imagine it navigated to skill detail page")} wishlistClicked={() => alert("Imagine skill added to wishlist")} />
                                     <IconMaterialIcons
                                         name={"cancel"}
                                         color="rgb(102, 94, 94)"

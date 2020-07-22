@@ -33,16 +33,13 @@ export default function SearchResultsPage({ filterclicked }) {
 
     const couseCountFound = () => {
         return (
-            !!searchResults.count ? (searchResults.count + " skill" + (searchResults.count > 1 ? "s" : "") + " found") : ""
+            searchResults.count != undefined ? (searchResults.count + " skill" + (searchResults.count != 1 ? "s" : "") + " found") : ""
         )
     }
 
     const renderFooter = () => {
         if (!isRefreshing) return null;
         return (
-            // <ActivityIndicator
-            //     style={{ color: '#000' }}
-            // />
             <ActivityIndicator color={Colors.black} />
 
         );
@@ -71,7 +68,7 @@ export default function SearchResultsPage({ filterclicked }) {
     const cardListComponent = () => {
         return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={{ flex: 1, marginBottom: 80 }}>
+                <View style={{ flex: 1 }}>
                     <View>
                         <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                             <Text style={{ paddingTop: 12 }}> {couseCountFound()}</Text>
@@ -97,6 +94,7 @@ export default function SearchResultsPage({ filterclicked }) {
                                     onRefresh={onRefresh}
                                 />
                             }
+                            contentContainerStyle={{ paddingBottom: 80 }}
                         />
                     </View>
                 </View>

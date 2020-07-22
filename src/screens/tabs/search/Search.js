@@ -117,9 +117,9 @@ export default function SearchPage() {
         onFocus={() => setIsSearchFocused(true)}
         icon={isSearchFocused ? "arrow-left" : null}
         onIconPress={isSearchFocused ? searchBackFun : null}
-        inputStyle={{ fontSize: 13 }}
-        placeholder="Search by course name, category.."
-        placeholderStyle={{ fontSize: 10 }}
+        inputStyle={{ fontSize: 13, justifyContent: "center", overflow: "hidden" }}
+        placeholder="Search by skill name, category ..."
+        // placeholderStyle={{ fontSize: 256 }}
         onChangeText={searchFun}
         value={searchQuery}
       />
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 30,
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   loadingBar: {
     marginTop: 40

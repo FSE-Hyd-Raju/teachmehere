@@ -106,8 +106,8 @@ export function fetchSearchResults(data) {
                 availableData = [...getState().search.searchResults.response];
                 response.data.response = availableData.concat(response.data.response)
             }
-            if (response.data.response.length || !data.page)
-                dispatch(getSearchResultsSuccess(response.data));
+            console.log(response.data.response)
+            dispatch(getSearchResultsSuccess(response.data));
         } catch (error) {
             dispatch(getSearchResultsFailure());
         }

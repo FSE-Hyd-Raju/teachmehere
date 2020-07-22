@@ -68,7 +68,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             <View style={{ justifyContent: "center", marginTop: 10, paddingLeft: 3 }}>
 
                 <List.Accordion
-                    title="Course Level"
+                    title="Skill Level"
                     titleStyle={{ color: "black", fontSize: 18 }}
                     style={{ color: "black" }}
                     left={props => <FeatherIcons color={Colors.black} size={17} name="bar-chart-2" style={{ margin: 0 }} />}
@@ -147,7 +147,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             // </View>
             <View style={{ justifyContent: "center", marginTop: 10, paddingLeft: 3 }}>
                 <List.Accordion
-                    title="Course Duration"
+                    title="Skill Duration"
                     titleStyle={{ color: "black", fontSize: 18 }}
                     style={{ color: "black" }}
                     expanded={courseDuartionexpanded}
@@ -425,14 +425,12 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             var hoursObj = { 'coursedetails.totalhours': { "$gte": courseDurationObj.Min } }
         }
         if (courseDurationObj.Max && (courseDurationObj.Max >= courseDurationObj.Min)) {
-            if (!hoursObj) var hoursObj = {}
+            if (!hoursObj) var hoursObj = { 'coursedetails.totalhours': {} }
             hoursObj['coursedetails.totalhours']["$lte"] = courseDurationObj.Max
         }
         if (hoursObj) obj['$and'].push(hoursObj)
-        console.log(priceRangeObj)
-        if (priceRangeObj.Min) {
-            console.log("in min")
 
+        if (priceRangeObj.Min) {
             var priceObj = {
                 "$or": [
                     { 'coursedetails.price.oneonone': { "$gte": priceRangeObj.Min } },
@@ -441,8 +439,6 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             }
         }
         if (priceRangeObj.Max || (priceRangeObj.Max && priceRangeObj.Min && priceRangeObj.Max >= priceRangeObj.Min)) {
-            console.log("in max")
-
             if (!priceObj) var priceObj = { "$or": [{ 'coursedetails.price.oneonone': {} }, { 'coursedetails.price.group.price': {} }] }
             priceObj["$or"][0]['coursedetails.price.oneonone']["$lte"] = priceRangeObj.Max
             priceObj["$or"][1]['coursedetails.price.group.price']["$lte"] = priceRangeObj.Max

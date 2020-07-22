@@ -36,7 +36,8 @@ class TouchableScale extends React.PureComponent {
 
     Animated.timing(buttonAnimatedValue, {
       toValue: initialScale,
-      duration: animationTime
+      duration: animationTime,
+      useNativeDriver: true
     }).start();
 
     onPressOut();
@@ -85,8 +86,8 @@ TouchableScale.defaultProps = {
   scaleFactor: 0.95,
   toScale: true,
 
-  onPressIn: () => {},
-  onPressOut: () => {}
+  onPressIn: () => { },
+  onPressOut: () => { }
 };
 
 export default TouchableScale;

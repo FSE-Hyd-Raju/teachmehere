@@ -70,11 +70,11 @@ const footerComponent = (course) => {
     return (
         <View style={styles.footer}>
             <View style={[styles.footerContent, styles.footerCourse, styles.footerBorderLine]}>
-                <Text style={styles.footerTextHeader}> Course Duration</Text>
+                <Text style={styles.footerTextHeader} numberOfLines={1}> Skill Duration</Text>
                 <Text > {course.totalhours} hours</Text>
             </View>
             <View style={[styles.footerContent, styles.footerExp, styles.footerBorderLine]}>
-                <Text style={styles.footerTextHeader}> Experience</Text>
+                <Text style={styles.footerTextHeader} numberOfLines={1}> Experience</Text>
                 <Text > {course.experience} yrs</Text>
             </View>
             <View style={[styles.footerContent, styles.footerUpdatedDate]}>
@@ -114,15 +114,17 @@ const imageContentWidth = 0.3;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         // backgroundColor: '#fff'
+        // margin: 5,
+        marginBottom: 20
     },
     cardContent: {
         minHeight: cardHeight,
         height: cardHeight,
         padding: 0,
         margin: 5,
-        marginBottom: 20
+        // marginBottom: 20
     },
     body: {
         flexDirection: 'row',
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     footerContent: {
         textAlign: "center",
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     footerCourse: {
         width: '39%',
