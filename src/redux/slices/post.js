@@ -38,7 +38,6 @@ export default postSlice.reducer;
 export function postNewSkill(data) {
   return async dispatch => {
     dispatch(postSkill());
-
     try {
       const response = await axios.post(postSkillUrl, data);
       if (response) {

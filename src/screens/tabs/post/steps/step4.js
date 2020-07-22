@@ -138,7 +138,7 @@ const Step4 = props => {
                   marginTop: 20,
                 }}>
                 <Text style={{ fontSize: 13, margin: 5 }}>
-                  Available for a short demo*
+                  Available for a short demo
                 </Text>
                 <Switch
                   value={formProps.values.availableForDemo}
