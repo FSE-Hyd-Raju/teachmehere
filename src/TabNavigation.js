@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
-import Home from './screens/tabs/Home';
+import Home from './screens/tabs/home/Home';
 import Search from './screens/tabs/search/Search';
 import Post from './screens/tabs/post/Post';
-import Chat from './screens/tabs/Chat';
+import Chat from './screens/tabs/chat/Chat';
 import Profile from './screens/tabs/profile/Profile';
 import { withTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -23,7 +23,7 @@ import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
 const TabNavigation = props => {
   const dispatch = useDispatch();
   const { colors } = props.theme;
-  const [index, setIndex] = React.useState(1);
+  const [index, setIndex] = React.useState(0);
 
   const ProfileStack = createStackNavigator();
 
@@ -46,10 +46,22 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="Login" component={LoginPage} />
         <ProfileStack.Screen name="Signup" component={signupPage} />
         <ProfileStack.Screen name="ForgotPassword" component={forgotPassword} />
-        <ProfileStack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
-        <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
-        <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
-        <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
+        <ProfileStack.Screen
+          name="ProfileSettings"
+          component={ProfileSettingsPage}
+        />
+        <ProfileStack.Screen
+          name="RequestedCourses"
+          component={RequestedCoursesPage}
+        />
+        <ProfileStack.Screen
+          name="WishlistCourses"
+          component={WishlistCoursesPage}
+        />
+        <ProfileStack.Screen
+          name="PostedCourses"
+          component={PostedCoursesPage}
+        />
       </ProfileStack.Navigator>
     );
   }
@@ -59,7 +71,12 @@ const TabNavigation = props => {
     { key: 'search', title: 'Search', icon: 'magnify', color: colors.primary },
     { key: 'post', title: 'Post', icon: 'plus-circle', color: colors.primary },
     { key: 'chat', title: 'Chat', icon: 'chat', color: colors.primary },
-    { key: 'profile', title: 'Profile', icon: 'account', color: colors.primary },
+    {
+      key: 'profile',
+      title: 'Profile',
+      icon: 'account',
+      color: colors.primary,
+    },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
