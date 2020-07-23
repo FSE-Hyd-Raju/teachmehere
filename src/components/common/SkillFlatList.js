@@ -12,13 +12,13 @@ import { Button } from 'react-native-paper';
 import { random_rgba } from '../../utils/random_rgba';
 import Price from '../common/Price';
 
+const { labelColor, buttonColor } = random_rgba();
 const SkillFlatList = props => {
-  const { labelColor, buttonColor } = random_rgba();
   const renderItem = ({ item }) => (
     <View style={styles.cardStyle}>
       <Image
         source={require('../../assets/img/skill.jpeg')}
-        style={{ height: 100, width: 165 }}
+        style={{ height: 95, width: 160 }}
       />
       <Text style={styles.skillName} numberOfLines={2}>
         Complete React native basics and redux concepts
@@ -31,24 +31,23 @@ const SkillFlatList = props => {
           type="star"
           imageSize={16}
           startingValue={4}
+          readonly
           style={{ marginTop: 5, marginLeft: -90 }}
         />
       </View>
       <View style={{ marginTop: 7, width: 110 }}>
         <Price />
       </View>
-      {/* <Text style={styles.teacherName} numberOfLines={1}>
-        $500 | $50 / head
-      </Text> */}
       <View style={styles.platform}>
-        <Button
+        {/* <Button
           mode="contained"
           disabled
           uppercase={false}
           style={{ backgroundColor: buttonColor }}
-          labelStyle={{ color: labelColor, fontSize: 12 }}>
+          labelStyle={{ color: labelColor, fontSize: 7 }}>
           Skype
-        </Button>
+        </Button> */}
+        <Text style={styles.platformText}>Skype</Text>
       </View>
     </View>
   );
@@ -85,6 +84,15 @@ const styles = StyleSheet.create({
   platform: {
     marginTop: 8,
     width: 90,
+    backgroundColor: buttonColor,
+    padding: 3,
+    borderRadius: 2,
+  },
+  platformText: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: labelColor,
   },
   cardStyle: {
     width: 170,

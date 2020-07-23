@@ -14,24 +14,25 @@ import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+const categories = require('../post/categories.json');
 
 const ENTRIES1 = [
   {
     title: 'IT & Software',
-	subtitle: 'Learn Now',
-	icon: 'laptop',
+    subtitle: 'Learn Now',
+    icon: 'laptop',
     illustration: 'https://i.imgur.com/UYiroysl.jpg',
   },
   {
     title: 'Finance & Accounting',
-	subtitle: 'Explore',
-	icon: 'account_balance',
+    subtitle: 'Explore',
+    icon: 'account_balance',
     illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
   },
   {
     title: 'Marketing',
-	subtitle: 'Learn Marketing',
-	icon: 'marketing',
+    subtitle: 'Learn Marketing',
+    icon: 'marketing',
     illustration: 'https://i.imgur.com/MABUbpDl.jpg',
   },
   {
@@ -71,7 +72,7 @@ const Home = props => {
   }, []);
 
   const { index } = useState(0);
-  const _renderItem = ({ item, index }, parallaxProps) => {
+  const renderItem = ({ item, index }, parallaxProps) => {
     return (
       <View>
         <ParallaxImage
@@ -89,7 +90,7 @@ const Home = props => {
     );
   };
   return (
-    <ScrollView style={[styles.container]}>
+    <ScrollView style={styles.container}>
       <View style={styles.logo}>
         <Image
           source={require('../../../assets/img/logo.png')}
@@ -105,7 +106,7 @@ const Home = props => {
           itemWidth={screenWidth - 60}
           data={entries}
           firstItem={0}
-          renderItem={_renderItem}
+          renderItem={renderItem}
           hasParallaxImages={true}
           autoplay={true}
           autoplayDelay={2000}
@@ -116,31 +117,35 @@ const Home = props => {
           pagingEnabled={true}
         />
       </View>
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 7 }}>
         <CategoryWrapper
           title={'Featured Skills'}
           btnText={'See All'}
           onButtonPress={() => showMore()}
         />
         <SkillFlatList categories={categories} />
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: 5 }}>
           <CategoryWrapper
             title={'Top Categories'}
             btnText={'See All'}
             onButtonPress={() => showMore()}
           />
-          <View style={{ flexDirection: 'row', marginTop: 2, marginLeft: 15 }}>
-            {entries &&
-              entries.map(cat => {
-                return (
-                  <Chip
-                    style={{ margin: 5, padding: 3 }}
-                    avatar={<IconMaterialIcons name={cat.icon} size={20} />}
-                    onPress={() => console.log('Pressed')}>
-                    {cat.title}
-                  </Chip>
-                );
-              })}
+          <View style={{ marginLeft: 15 }}>
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}>
+              {entries &&
+                entries.map(cat => {
+                  return (
+                    <Chip
+                      style={{ margin: 5, padding: 3 }}
+                      avatar={<IconMaterialIcons name={cat.icon} size={20} />}
+                      onPress={() => console.log('Pressed')}>
+                      {cat.title}
+                    </Chip>
+                  );
+                })}
+            </ScrollView>
           </View>
         </View>
       </View>
