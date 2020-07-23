@@ -16,33 +16,38 @@ import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const categories = require('../post/categories.json');
 
+import { random_rgba } from '../../../utils/random_rgba';
+import CategoryFlatList from '../../../components/common/CategoryFlatList';
+
+const { labelColor } = random_rgba();
+
 const ENTRIES1 = [
   {
     title: 'IT & Software',
-    subtitle: 'Learn Now',
+    subTitle: 'Learn Now',
     icon: 'laptop',
     illustration: 'https://i.imgur.com/UYiroysl.jpg',
   },
   {
     title: 'Finance & Accounting',
-    subtitle: 'Explore',
+    subTitle: 'Learn from experts',
     icon: 'account_balance',
     illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
   },
   {
     title: 'Marketing',
-    subtitle: 'Learn Marketing',
+    subTitle: 'Learn Marketing',
     icon: 'marketing',
     illustration: 'https://i.imgur.com/MABUbpDl.jpg',
   },
   {
     title: 'Designing',
-    subtitle: 'Learn to design',
+    subTitle: 'Learn to design',
     illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
   },
   {
     title: 'Business',
-    subtitle: 'Learn & Earn',
+    subTitle: 'Learn & Earn',
     illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
   },
 ];
@@ -86,6 +91,17 @@ const Home = props => {
         <Text style={styles.title} numberOfLines={2}>
           {item.title}
         </Text>
+        <View style={styles.subTitleContainer}>
+          <Text style={styles.subTitle} numberOfLines={2}>
+            {item.subTitle}
+          </Text>
+          <IconMaterialIcons
+            name={'school'}
+            size={24}
+            color={'white'}
+            style={{ marginLeft: 10 }}
+          />
+        </View>
       </View>
     );
   };
@@ -97,26 +113,24 @@ const Home = props => {
           style={{ height: 60, width: 150 }}
         />
       </View>
-      <View>
-        <Carousel
-          ref={carouselRef}
-          containerCustomStyle={styles.carouselContainer}
-          sliderWidth={screenWidth}
-          sliderHeight={screenWidth}
-          itemWidth={screenWidth - 60}
-          data={entries}
-          firstItem={0}
-          renderItem={renderItem}
-          hasParallaxImages={true}
-          autoplay={true}
-          autoplayDelay={2000}
-          autoplayInterval={5000}
-          enableMomentum={false}
-          lockScrollWhileSnapping={true}
-          loop={true}
-          pagingEnabled={true}
-        />
-      </View>
+      <Carousel
+        ref={carouselRef}
+        containerCustomStyle={styles.carouselContainer}
+        sliderWidth={screenWidth}
+        sliderHeight={screenWidth}
+        itemWidth={screenWidth - 60}
+        data={entries}
+        firstItem={0}
+        renderItem={renderItem}
+        hasParallaxImages={true}
+        autoplay={true}
+        autoplayDelay={2000}
+        autoplayInterval={5000}
+        enableMomentum={false}
+        lockScrollWhileSnapping={true}
+        loop={true}
+        pagingEnabled={true}
+      />
       <View style={{ marginTop: 7 }}>
         <CategoryWrapper
           title={'Featured Skills'}
@@ -124,30 +138,36 @@ const Home = props => {
           onButtonPress={() => showMore()}
         />
         <SkillFlatList categories={categories} />
-        <View style={{ marginTop: 5 }}>
-          <CategoryWrapper
-            title={'Top Categories'}
-            btnText={'See All'}
-            onButtonPress={() => showMore()}
-          />
-          <View style={{ marginLeft: 15 }}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}>
-              {entries &&
-                entries.map(cat => {
-                  return (
-                    <Chip
-                      style={{ margin: 5, padding: 3 }}
-                      avatar={<IconMaterialIcons name={cat.icon} size={20} />}
-                      onPress={() => console.log('Pressed')}>
-                      {cat.title}
-                    </Chip>
-                  );
-                })}
-            </ScrollView>
-          </View>
+      </View>
+      <View style={{ marginTop: 5 }}>
+        <CategoryWrapper
+          title={'Top Categories'}
+          btnText={'See All'}
+          onButtonPress={() => showMore()}
+        />
+        <View style={{ marginLeft: 15 }}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {entries &&
+              entries.map(cat => {
+                return (
+                  <Chip
+                    style={{ margin: 5, padding: 3 }}
+                    avatar={<IconMaterialIcons name={cat.icon} size={20} />}
+                    onPress={() => console.log('Pressed')}>
+                    {cat.title}
+                  </Chip>
+                );
+              })}
+          </ScrollView>
         </View>
+      </View>
+      <View style={{ marginTop: 5 }}>
+        <CategoryWrapper
+          title={'Recomended'}
+          btnText={'See All'}
+          onButtonPress={() => showMore()}
+        />
+        <CategoryFlatList categories={entries} />
       </View>
     </ScrollView>
   );
@@ -156,6 +176,7 @@ const Home = props => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    marginBottom: 20,
     flex: 1,
   },
   logo: {
@@ -177,10 +198,21 @@ const styles = StyleSheet.create({
   title: {
     position: 'absolute',
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     marginVertical: 100,
     color: 'white',
+  },
+  subTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  subTitleContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    alignSelf: 'center',
+    marginVertical: 150,
   },
 });
 

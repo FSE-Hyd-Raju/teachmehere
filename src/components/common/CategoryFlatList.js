@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList, Text, Dimensions } from 'react-native';
 const CategoryFlatList = props => {
   const renderItem = ({ item }) => (
     <View style={styles.cardStyle}>
-      <Text>{item.value}</Text>
+      <Text>{item.title}</Text>
     </View>
   );
 
