@@ -5,13 +5,13 @@ import SideMenu from 'react-native-side-menu';
 import { useDispatch, useSelector } from 'react-redux'
 import FilterPage from '../../../components/common/filterPage';
 import SearchLandingPage from './searchLandingPage';
-import { searchSelector, fetchSearchResults, getRecentSearches, clearSearchResults, setSearchQuery, fetchTopCategories, setFilterObj } from '../../../redux/slices/searchSlice'
+import { searchSelector, fetchSearchResults, clearSearchResults, setSearchQuery, setFilterObj } from '../../../redux/slices/searchSlice'
 import SearchResultsPage from './searchResults'
 
 export default function SearchPage() {
 
   const dispatch = useDispatch()
-  const { searchQuery, loading, topCategories, filterObj } = useSelector(searchSelector)
+  const { searchQuery, loading, filterObj } = useSelector(searchSelector)
 
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const [openFilterPage, setOpenFilterPage] = React.useState(false);
@@ -42,10 +42,6 @@ export default function SearchPage() {
   }
 
   useEffect(() => {
-
-    dispatch(getRecentSearches())
-    if (topCategories && !topCategories.length)
-      dispatch(fetchTopCategories())
     let backhandler = backButtonHandler()
     return () => {
       backhandler.remove();

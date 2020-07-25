@@ -6,7 +6,7 @@ import { storeAsyncData } from '../../components/common/asyncStorage';
 
 export const initialState = {
   loading: false,
-  userInfo: '',
+  userInfo: { _id: "5ed1622d0b0329e1036266f9" },
   loginPassword: '',
   loginPasswordError: '',
   loginEmail: '',

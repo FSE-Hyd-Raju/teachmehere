@@ -19,22 +19,36 @@ import forgotPassword from './screens/tabs/userauth/forgotPassword';
 import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
+import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
 
 const TabNavigation = props => {
   const dispatch = useDispatch();
+
   const { colors } = props.theme;
   const [index, setIndex] = React.useState(0);
 
   const ProfileStack = createStackNavigator();
 
   useEffect(() => {
-    userInfo();
+    loadInitialData()
   });
+
+  const loadInitialData = () => {
+    userInfo();
+    searchInitialData();
+
+  }
+
+  const searchInitialData = () => {
+    dispatch(getRecentSearches())
+    dispatch(fetchTopCategories())
+  }
 
   const userInfo = async () => {
     const userData = await getAsyncData('userInfo');
     dispatch(loadUserInfo(userData));
   };
+
 
   function ProfileStackScreen() {
     return (
@@ -71,12 +85,7 @@ const TabNavigation = props => {
     { key: 'search', title: 'Search', icon: 'magnify', color: colors.primary },
     { key: 'post', title: 'Post', icon: 'plus-circle', color: colors.primary },
     { key: 'chat', title: 'Chat', icon: 'chat', color: colors.primary },
-    {
-      key: 'profile',
-      title: 'Profile',
-      icon: 'account',
-      color: colors.primary,
-    },
+    { key: 'profile', title: 'Profile', icon: 'account', color: colors.primary },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
