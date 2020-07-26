@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
 import { BottomNavigation, Text } from 'react-native-paper';
-import Home from './screens/tabs/home/Home';
-import Search from './screens/tabs/search/Search';
-import Post from './screens/tabs/post/Post';
-import Chat from './screens/tabs/chat/Chat';
-import Profile from './screens/tabs/profile/Profile';
 import { withTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,14 +15,23 @@ import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
 import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
+import Home from './screens/tabs/home/Home';
+import Search from './screens/tabs/search/Search';
+import Post from './screens/tabs/post/Post';
+import Chat from './screens/tabs/chat/Chat';
+import ChatRoom from './screens/tabs/chat/ChatRoom';
+import NewChat from './screens/tabs/chat/newChat';
+import Profile from './screens/tabs/profile/Profile';
 
 const TabNavigation = props => {
   const dispatch = useDispatch();
 
   const { colors } = props.theme;
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(3);
 
   const ProfileStack = createStackNavigator();
+  const ChatStack = createStackNavigator();
+
 
   useEffect(() => {
     loadInitialData()
@@ -46,7 +50,7 @@ const TabNavigation = props => {
 
   const userInfo = async () => {
     const userData = await getAsyncData('userInfo');
-    dispatch(loadUserInfo(userData));
+    // dispatch(loadUserInfo(userData));
   };
 
 
@@ -60,39 +64,39 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="Login" component={LoginPage} />
         <ProfileStack.Screen name="Signup" component={signupPage} />
         <ProfileStack.Screen name="ForgotPassword" component={forgotPassword} />
-        <ProfileStack.Screen
-          name="ProfileSettings"
-          component={ProfileSettingsPage}
-        />
-        <ProfileStack.Screen
-          name="RequestedCourses"
-          component={RequestedCoursesPage}
-        />
-        <ProfileStack.Screen
-          name="WishlistCourses"
-          component={WishlistCoursesPage}
-        />
-        <ProfileStack.Screen
-          name="PostedCourses"
-          component={PostedCoursesPage}
-        />
+        <ProfileStack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
+        <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
+        <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
+        <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
       </ProfileStack.Navigator>
     );
   }
 
+  function ChatStackScreen() {
+    return (
+      <ChatStack.Navigator
+        headerMode={'none'}
+        initialRouteName={'ChatPage'}>
+        <ChatStack.Screen name="ChatPage" component={Chat} />
+        <ChatStack.Screen name="ChatRoom" component={ChatRoom} />
+        <ChatStack.Screen name="NewChat" component={NewChat} />
+      </ChatStack.Navigator>
+    );
+  }
+
   const [routes] = React.useState([
-    { key: 'home', title: 'Home', icon: 'home', color: colors.primary },
+    { key: 'home', title: 'Home', icon: 'home-outline', color: colors.primary },
     { key: 'search', title: 'Search', icon: 'magnify', color: colors.primary },
-    { key: 'post', title: 'Post', icon: 'plus-circle', color: colors.primary },
-    { key: 'chat', title: 'Chat', icon: 'chat', color: colors.primary },
-    { key: 'profile', title: 'Profile', icon: 'account', color: colors.primary },
+    { key: 'post', title: 'Post', icon: 'plus-circle-outline', color: colors.primary },
+    { key: 'chat', title: 'Chat', icon: 'message-outline', color: colors.primary },
+    { key: 'profile', title: 'Profile', icon: 'account-outline', color: colors.primary },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: Home,
     search: Search,
     post: Post,
-    chat: Chat,
+    chat: ChatStackScreen,
     profile: ProfileStackScreen,
   });
 

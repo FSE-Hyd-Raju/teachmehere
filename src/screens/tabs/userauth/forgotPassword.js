@@ -261,7 +261,8 @@ const styles = StyleSheet.create({
         // Setting up View inside content in Vertically center.
         // flex: 1,
         padding: 30,
-        backgroundColor: "rgb(255, 255, 255)",
+        backgroundColor: "#fff",
+        flex: 1
 
     },
     loginButton: {

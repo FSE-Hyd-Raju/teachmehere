@@ -1,19 +1,23 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Button, Text } from 'react-native';
-import { List, Divider } from 'react-native-paper';
+import { List, Divider, Searchbar, FAB } from 'react-native-paper';
+import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
-import { AuthContext } from '../navigation/AuthProvider';
 import moment from 'moment';
 import messaging from "@react-native-firebase/messaging";
 import PushNotification from 'react-native-push-notification';
 import { useDispatch, useSelector } from 'react-redux'
-import { loginSelector } from '../../../redux/slices/loginSlice'
+import { loginSelector } from '../../../redux/slices/loginSlice';
+import { chatSelector } from '../../../redux/slices/chatSlice';
 
-export default function Chat() {
+import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
+
+export default function Chat({ navigation }) {
 
   const dispatch = useDispatch()
   const { userInfo } = useSelector(loginSelector)
-
+  // const { chatResults, loading } = useSelector(chatSelector)
   const [threads, setThreads] = useState([]);
   const [homeloading, setLoading] = useState(true);
   // const { user } = useContext(AuthContext);
@@ -26,39 +30,16 @@ export default function Chat() {
   useEffect(() => {
     unsubscribe && unsubscribe()
     notificunsubscribe && notificunsubscribe();
-    unsubscribe = getChats()
+    getChats()
     notificationListener();
     notificunsubscribe = appOpenedNotificationListener()
     // return () => unsubscribe();
 
   }, []);
 
-
-
   const getChats = () => {
-    return firestore()
-      .collection('THREADS')
-      .where("ids", "array-contains", userInfo._id)
-      .orderBy('latestMessage.createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        if (querySnapshot) {
-          res = querySnapshot.docs.map(documentSnapshot => {
-            senderDetails = documentSnapshot.data().userDetails.find(o => o.id != userInfo._id);
-            return {
-              _id: documentSnapshot.id,
-              name: (senderDetails && senderDetails.name) ? senderDetails.name : "",
-              latestMessage: {
-                text: ''
-              },
-              ...documentSnapshot.data()
-            };
-          });
-          setThreads(res);
-        }
-        setLoading(false);
-      });
+    // return dispatch(fetchChats(userInfo))
   }
-
 
   const notificationListener = async () => {
     PushNotification.configure({
@@ -77,7 +58,6 @@ export default function Chat() {
       requestPermissions: true
     })
   }
-
 
   appOpenedNotificationListener = () => {
     return messaging().onMessage(async remoteMessage => {
@@ -100,23 +80,36 @@ export default function Chat() {
     });
   }
 
+  const searchFun = (query) => {
+    const newData = orithreads.filter((ele) => (ele.name).toLowerCase().includes(query.toLowerCase()));
+    setThreads(newData)
+  }
+
   return (
     <View style={styles.container}>
-
-      {/* <Button title="Update Profile" onPress={() => navigation.navigate('Update Profile')} /> */}
-
+      <Searchbar
+        style={{ margin: 15, borderRadius: 18 }}
+        inputStyle={{ fontSize: 13, justifyContent: "center", overflow: "hidden" }}
+        placeholder="Search by name .."
+        onChangeText={searchFun}
+      />
       <FlatList
         data={threads}
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Room', { thread: item })}
+            onPress={() => navigation.navigate('ChatRoom', { thread: item })}
           >
             <List.Item
               title={item.name}
               description={item.latestMessage.text}
-              left={props => <List.Icon  {...props} style={{ fontSize: 30 }} icon="account-circle-outline" />}
+              left={props => <Avatar
+                rounded
+                containerStyle={{ margin: 7 }}
+                size={50}
+                source={require('../../../assets/img/default-mask-avatar.png')}
+              />}
               right={props => <Text style={styles.datetime}>{moment(item.latestMessage.createdAt).fromNow()} </Text>}
               titleNumberOfLines={1}
               titleStyle={styles.listTitle}
@@ -126,25 +119,40 @@ export default function Chat() {
           </TouchableOpacity>
         )}
       />
+      <FAB
+        style={styles.fab}
+        small
+        icon={props => <AwesomeIcon {...props} name="pencil-square-o" />}
+        color="black"
+        onPress={() => navigation.navigate("NewChat")}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    margin: 20,
+    right: 0,
+    bottom: 10,
+    backgroundColor: "#fff"
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 30,
+  },
   icon: {
     fontSize: 20
   },
   datetime: {
     marginTop: 20
   },
-  container: {
-    backgroundColor: '#f5f5f5',
-    flex: 1
-  },
   listTitle: {
-    fontSize: 22
+    fontSize: 20
   },
   listDescription: {
-    fontSize: 16
+    fontSize: 13
   }
 });
