@@ -8,7 +8,7 @@ import messaging from "@react-native-firebase/messaging";
 import PushNotification from 'react-native-push-notification';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice';
-import { chatSelector } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/chatSlice';
 
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -17,11 +17,7 @@ export default function Chat({ navigation }) {
 
   const dispatch = useDispatch()
   const { userInfo } = useSelector(loginSelector)
-  // const { chatResults, loading } = useSelector(chatSelector)
-  const [threads, setThreads] = useState([]);
-  const [homeloading, setLoading] = useState(true);
-  // const { user } = useContext(AuthContext);
-  // const { loading } = useContext(AuthContext);
+  const { chatResults, searchChatResults } = useSelector(chatSelector)
   var focusNotiMsg = null
   var unsubscribe = null;
   var notificunsubscribe = null;
@@ -30,7 +26,7 @@ export default function Chat({ navigation }) {
   useEffect(() => {
     unsubscribe && unsubscribe()
     notificunsubscribe && notificunsubscribe();
-    getChats()
+    unsubscribe = getChats()
     notificationListener();
     notificunsubscribe = appOpenedNotificationListener()
     // return () => unsubscribe();
@@ -38,7 +34,7 @@ export default function Chat({ navigation }) {
   }, []);
 
   const getChats = () => {
-    // return dispatch(fetchChats(userInfo))
+    return dispatch(fetchChats(userInfo))
   }
 
   const notificationListener = async () => {
@@ -81,8 +77,8 @@ export default function Chat({ navigation }) {
   }
 
   const searchFun = (query) => {
-    const newData = orithreads.filter((ele) => (ele.name).toLowerCase().includes(query.toLowerCase()));
-    setThreads(newData)
+    const newData = chatResults.filter((ele) => (ele.name).toLowerCase().includes(query.toLowerCase()));
+    dispatch(setChatResults(newData))
   }
 
   return (
@@ -94,7 +90,7 @@ export default function Chat({ navigation }) {
         onChangeText={searchFun}
       />
       <FlatList
-        data={threads}
+        data={searchChatResults}
         keyExtractor={item => item._id}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item }) => (

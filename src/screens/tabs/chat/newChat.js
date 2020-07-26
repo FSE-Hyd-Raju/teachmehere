@@ -7,12 +7,15 @@ import { Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
     const [roomName, setRoomName] = useState('');
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const { userInfo } = useSelector(loginSelector)
+    const { chatResults } = useSelector(chatSelector)
+
 
     useEffect(() => {
 
@@ -46,138 +49,148 @@ export default function NewChat({ navigation }) {
     }
 
 
-    function sendRequest(item) {
-        setLoading(true);
-        fetch('https://teachmeproject.herokuapp.com/addToRequestedCourses', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                "uid": user._id,
-                "courseid": item._id,
-            })
+    // function sendRequest(item) {
+    //     setLoading(true);
+    //     fetch('https://teachmeproject.herokuapp.com/addToRequestedCourses', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             "uid": user._id,
+    //             "courseid": item._id,
+    //         })
 
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                addFirebaseNotification(item);
-            }).catch((error) => {
-                navigation.navigate('Home');
-                console.error(error);
-                setLoading(false);
-            });
-    }
-
-
-    const addFirebaseNotification = (item) => {
-        // notifyobj = {
-        //     senderName: user.username,
-        //     senderId: user._id,
-        //     receiverName: item.username,
-        //     receiverId: item._id,
-        //     status: "PENDING",
-        //     type: "REQUEST",
-        //     createdAt: new Date().getTime(),
-        //     message: "Lets be friends..!"
-        // }
-
-        // firestore().collection('NOTIFICATIONS').add(notifyobj).then(docRef => {
-        //     sendNotification(item, notifyobj)
-        // });
-    }
+    //     }).then((response) => response.json())
+    //         .then((responseJson) => {
+    //             addFirebaseNotification(item);
+    //         }).catch((error) => {
+    //             navigation.navigate('Home');
+    //             console.error(error);
+    //             setLoading(false);
+    //         });
+    // }
 
 
-    const sendNotification = (item, notifyobj) => {
-        fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "username": user.username,
-                "message": notifyobj.message,
-                "_id": item._id,
-                "data": notifyobj
-            })
+    // const addFirebaseNotification = (item) => {
+    //     // notifyobj = {
+    //     //     senderName: user.username,
+    //     //     senderId: user._id,
+    //     //     receiverName: item.username,
+    //     //     receiverId: item._id,
+    //     //     status: "PENDING",
+    //     //     type: "REQUEST",
+    //     //     createdAt: new Date().getTime(),
+    //     //     message: "Lets be friends..!"
+    //     // }
 
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                alert("Notification sent to the user")
-                navigation.navigate('Home');
-                setLoading(false);
-                // Showing response message coming from server after inserting records.
-            }).catch((error) => {
-                navigation.navigate('Home');
-                console.error(error);
-                setLoading(false);
-            });
-    }
+    //     // firestore().collection('NOTIFICATIONS').add(notifyobj).then(docRef => {
+    //     //     sendNotification(item, notifyobj)
+    //     // });
+    // }
+
+
+    // const sendNotification = (item, notifyobj) => {
+    //     fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             "username": user.username,
+    //             "message": notifyobj.message,
+    //             "_id": item._id,
+    //             "data": notifyobj
+    //         })
+
+    //     }).then((response) => response.json())
+    //         .then((responseJson) => {
+    //             alert("Notification sent to the user")
+    //             navigation.navigate('Home');
+    //             setLoading(false);
+    //             // Showing response message coming from server after inserting records.
+    //         }).catch((error) => {
+    //             navigation.navigate('Home');
+    //             console.error(error);
+    //             setLoading(false);
+    //         });
+    // }
 
 
     function sendMessage(item) {
-        // const ref = firestore().collection('THREADS').doc()
+        const ref = firestore().collection('THREADS').doc()
 
-        // obj = {
-        //     // id: ref.id,
-        //     userDetails: [{
-        //         id: user._id,
-        //         name: user.username
-        //     }, {
-        //         id: item._id,
-        //         name: item.username
-        //     }],
-        //     ids: [user._id, item._id],
-        //     latestMessage: {
-        //         text: `You have joined the room.`,
-        //         createdAt: new Date().getTime()
-        //     }
-        // }
-        // ref.set(obj)
-        //     .then(() => {
-        //         // ref.get().then(doc => {
-        //         //    alert(JSON.stringify(doc.data()))
-        //         // })
-        //         ref.collection('MESSAGES').add({
-        //             text: `You have joined the room.`,
-        //             createdAt: new Date().getTime(),
-        //             system: true
-        //         });
-        //         item = {
-        //             ...item,
-        //             ...obj,
-        //             _id: ref.id,
-        //             name: item.username
-        //         }
-        //         navigation.navigate('Room', { thread: item });
-        //     })
+        obj = {
+            // id: ref.id,
+            userDetails: [{
+                id: userInfo._id,
+                name: userInfo.username
+            }, {
+                id: item.courseuid,
+                name: item.username
+            }],
+            ids: [userInfo._id, item.courseuid],
+            latestMessage: {
+                text: 'Keep the discussions healthy',
+                createdAt: Date.now()
+            }
+        }
+        ref.set(obj)
+            .then(() => {
+                // ref.get().then(doc => {
+                //    alert(JSON.stringify(doc.data()))
+                // })
+                ref.collection('MESSAGES').add({
+                    text: 'Keep the discussions healthy',
+                    createdAt: Date.now(),
+                    system: true
+                });
+                item = {
+                    // ...item,
+                    ...obj,
+                    _id: ref.id,
+                    name: item.username
+                }
+                navigation.navigate('ChatRoom', { thread: item });
+            })
 
     }
 
     const checkIfChatExists = (item) => {
-        exists = false;
-        firestore().collection('THREADS').
-            where("ids", "array-contains", user._id).
-            get().then(querySnapshot => {
-                querySnapshot.forEach(documentSnapshot => {
-                    data = documentSnapshot.data();
-                    if (data["ids"].indexOf(item._id) > -1) {
-                        exists = true;
+        // alert("item " + JSON.stringify(item))
+        // alert("chatResults" + JSON.stringify(chatResults))
 
-                        item = {
-                            ...item,
-                            _id: documentSnapshot.id,
-                            name: item.username
-                        }
-                    }
-                })
-                if (!exists) {
-                    sendMessage(item)
-                } else {
-                    navigation.navigate('Room', { thread: item });
-                }
-            });
+        var filterRes = chatResults.filter(ele => ele["ids"].indexOf(item.courseuid) > -1)
+        if (filterRes.length) {
+            navigation.popToTop();
+            navigation.navigate('ChatRoom', { thread: filterRes[0] });
+        } else {
+            sendMessage(item)
+        }
+
+        // firestore().collection('THREADS').
+        //     where("ids", "array-contains", user._id).
+        //     get().then(querySnapshot => {
+        //         querySnapshot.forEach(documentSnapshot => {
+        //             data = documentSnapshot.data();
+        //             if (data["ids"].indexOf(item._id) > -1) {
+        //                 exists = true;
+
+        //                 item = {
+        //                     ...item,
+        //                     _id: documentSnapshot.id,
+        //                     name: item.username
+        //                 }
+        //             }
+        //         })
+        //         if (!exists) {
+        //             sendMessage(item)
+        //         } else {
+        //             navigation.navigate('Room', { thread: item });
+        //         }
+        //     });
     };
 
 
@@ -206,35 +219,37 @@ export default function NewChat({ navigation }) {
                 ItemSeparatorComponent={() => <Divider />}
 
                 renderItem={({ item }) => (
-                    <List.Item
-                        title={item.username}
-                        left={props => <Avatar
-                            rounded
-                            containerStyle={{ margin: 7, marginTop: 15 }}
-                            size={30}
-                            source={require('../../../assets/img/default-mask-avatar.png')}
-                        />}
-                        right={props => <Icons
-                            style={{ margin: 7, marginTop: 20 }}
-                            name={"message-text-outline"}
-                            color="rgb(102, 94, 94)"
-                            size={25}
-                        />}
-                        description={item.coursename}
-                        // right={props =>
-                        //     <View style={styles.iconContainer}>
-                        //         {!item.request_status && <Button title="Send Request" onPress={() => sendRequest(item)} />}
-                        //         {(item.request_status == "REJECTED" || item.request_status == "PENDING") && <Button title={item.request_status} disabled={true} />}
-                        //         {item.request_status == "ACCEPTED" && <Button title="Message" onPress={() => checkIfChatExists(item)} />}
-                        //     </View>
-                        // }
-                        // titleNumberOfLines={1}
-                        titleStyle={styles.listTitle}
-                        descriptionStyle={styles.listDescription}
-                        descriptionNumberOfLines={1}
-                        titleNumberOfLines={1}
-                        style={{ padding: 15, justifyContent: "center", alignItems: "center" }}
-                    />
+                    <TouchableOpacity onPress={() => checkIfChatExists(item)}>
+                        <List.Item
+                            title={item.username}
+                            left={props => <Avatar
+                                rounded
+                                containerStyle={{ margin: 7, marginTop: 15 }}
+                                size={30}
+                                source={require('../../../assets/img/default-mask-avatar.png')}
+                            />}
+                            right={props => <Icons
+                                style={{ margin: 7, marginTop: 20 }}
+                                name={"message-text-outline"}
+                                color="rgb(102, 94, 94)"
+                                size={25}
+                            />}
+                            description={item.coursename}
+                            // right={props =>
+                            //     <View style={styles.iconContainer}>
+                            //         {!item.request_status && <Button title="Send Request" onPress={() => sendRequest(item)} />}
+                            //         {(item.request_status == "REJECTED" || item.request_status == "PENDING") && <Button title={item.request_status} disabled={true} />}
+                            //         {item.request_status == "ACCEPTED" && <Button title="Message" onPress={() => checkIfChatExists(item)} />}
+                            //     </View>
+                            // }
+                            // titleNumberOfLines={1}
+                            titleStyle={styles.listTitle}
+                            descriptionStyle={styles.listDescription}
+                            descriptionNumberOfLines={1}
+                            titleNumberOfLines={1}
+                            style={{ padding: 15, justifyContent: "center", alignItems: "center" }}
+                        />
+                    </TouchableOpacity>
                 )}
             />
         </View>

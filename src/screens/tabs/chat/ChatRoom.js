@@ -16,72 +16,7 @@ export default function ChatRoom({ route, navigation }) {
     const [messages, setMessages] = useState([]);
     const { thread } = route.params;
 
-    function handleSend(messages) {
-        const text = messages[0].text;
-        updateMessage(text)
-        // alert(JSON.stringify(thread.ids))
-    }
 
-
-    updateMessage = async (text) => {
-
-        // firestore()
-        //     .collection('THREADS')
-        //     .doc(thread._id)
-        //     .collection('MESSAGES')
-        //     .add({
-        //         text,
-        //         createdAt: new Date().getTime(),
-        //         user: {
-        //             _id: user._id,
-        //             email: user.email,
-        //             name: user.username
-        //         }
-        //     });
-
-        // await firestore()
-        //     .collection('THREADS')
-        //     .doc(thread._id)
-        //     .set(
-        //         {
-        //             latestMessage: {
-        //                 text,
-        //                 createdAt: new Date().getTime()
-        //             }
-        //         },
-        //         { merge: true }
-        //     );
-
-        // sendNotification(text)
-    }
-
-
-    sendNotification = (text) => {
-        // receiverId = thread.ids.filter(ele => ele != user._id);
-        // dataobj = {
-        //     ...thread,
-        //     type: "CHAT",
-        //     name: user.username
-        // }
-        // fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         "username": user.username,
-        //         "message": text,
-        //         "_id": receiverId[0],
-        //         "data": dataobj
-        //     })
-        // }).then((response) => response.json())
-        //     .then((responseJson) => {
-        //         // Showing response message coming from server after inserting records.
-        //     }).catch((error) => {
-        //         console.error(error);
-        //     });
-    }
 
 
     useEffect(() => {
@@ -118,6 +53,73 @@ export default function ChatRoom({ route, navigation }) {
                     return data;
                 });
                 setMessages(messages1);
+            });
+    }
+
+    const handleSend = (messages) => {
+        const text = messages[0].text;
+        updateMessage(text)
+        // alert(JSON.stringify(thread.ids))
+    }
+
+
+    const updateMessage = async (text) => {
+
+        firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .collection('MESSAGES')
+            .add({
+                text,
+                createdAt: new Date().getTime(),
+                user: {
+                    _id: userInfo._id,
+                    email: userInfo.email,
+                    name: userInfo.username
+                }
+            });
+
+        await firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .set(
+                {
+                    latestMessage: {
+                        text,
+                        createdAt: new Date().getTime()
+                    }
+                },
+                { merge: true }
+            );
+
+        sendNotification(text)
+    }
+
+
+    const sendNotification = (text) => {
+        receiverId = thread.ids.filter(ele => ele != user._id);
+        dataobj = {
+            ...thread,
+            type: "CHAT",
+            name: userInfo.username
+        }
+        fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "username": userInfo.username,
+                "message": text,
+                "_id": receiverId[0],
+                "data": dataobj
+            })
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                // Showing response message coming from server after inserting records.
+            }).catch((error) => {
+                console.error(error);
             });
     }
 
@@ -190,13 +192,14 @@ export default function ChatRoom({ route, navigation }) {
                     name={"keyboard-backspace"}
                     // color="#fff"
                     size={27}
-                    style={{ flex: 0.2 }}
+                    // style={{ flex: 0.2 }}
                     onPress={() => navigation.goBack()}
                 />
                 <View style={{
                     // alignItems: 'center',
                     // justifyContent: "center",
-                    flex: 0.4
+                    // flex: 0.6
+                    marginLeft: 25
                 }}>
                     <TouchableOpacity>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -206,7 +209,7 @@ export default function ChatRoom({ route, navigation }) {
                                 size={30}
                                 source={require('../../../assets/img/default-mask-avatar.png')}
                             />
-                            <Text style={styles.headerTitle} numberOfLines={1}>Akhil</Text>
+                            <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
