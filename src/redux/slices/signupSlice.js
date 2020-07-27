@@ -117,16 +117,17 @@ export default signupSlice.reducer;
 export function onSignupPressed(param) {
     console.log("insidesignup")
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         console.log(param.email)
         console.log(param.username)
         console.log(param.phonenumber)
         dispatch(signupStarted());
+        devietokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             console.log("insdie try")
             const response = await axios.post(validateNewUserUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devietokenValue,
                 username: param.username,
                 email: param.email,
                 phonenumber: param.phonenumber
@@ -165,13 +166,14 @@ export function onSignupPressed(param) {
 export function onSignupOtpPressed(param) {
     console.log("insideonlogin")
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(signupStarted());
+        devietokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(validateOtpUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devietokenValue,
                 email: param.email,
                 otp: param.otp,
                 password: param.password,

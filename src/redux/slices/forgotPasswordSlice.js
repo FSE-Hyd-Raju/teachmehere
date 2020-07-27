@@ -93,13 +93,14 @@ export default forgotPasswordSlice.reducer;
 export function onforgotPasswordPressed(param) {
     console.log("insideonlogin")
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(resetPasswordStarted());
+        devietokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(forgotPasswordUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devietokenValue,
                 email: param.email,
             });
             console.log(response.data)
@@ -126,13 +127,14 @@ export function onforgotPasswordPressed(param) {
 
 export function onOtpPressed(param) {
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(resetPasswordStarted());
+        devietokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(validateOtpUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devietokenValue,
                 email: param.email,
                 otp: param.otp,
                 password: param.password,

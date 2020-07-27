@@ -8,7 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 export const initialState = {
     chatResults: [],
     searchChatResults: [],
-    loading: false,
+    loading: true,
     hasErrors: false
 };
 
@@ -71,8 +71,8 @@ export function fetchChats(userInfo) {
                                 ...documentSnapshot.data()
                             };
                         });
-                        dispatch(getChatsSuccess(res));
                     }
+                    dispatch(getChatsSuccess(res));
                 });
         } catch (error) {
             dispatch(getChatsFailure());

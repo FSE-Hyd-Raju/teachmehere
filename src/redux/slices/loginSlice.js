@@ -12,12 +12,16 @@ export const initialState = {
   loginEmail: '',
   loginEmailError: '',
   loginError: '',
+  devicetoken: ''
 };
 
 const loginSlice = createSlice({
   name: 'login',
   initialState,
   reducers: {
+    setDeviceToken: (state, { payload }) => {
+      state.devicetoken = payload;
+    },
     loginStarted: state => {
       state.loading = true;
     },
@@ -58,6 +62,7 @@ const loginSlice = createSlice({
 });
 
 export const {
+  setDeviceToken,
   loginStarted,
   loginSuccess,
   clearErrors,
@@ -75,14 +80,13 @@ export default loginSlice.reducer;
 export function onLoginPressed(param) {
   console.log('insideonlogin');
 
-  return async (dispatch, state) => {
+  return async (dispatch, getState) => {
     console.log(param.email);
     dispatch(loginStarted());
-
+    devietokenValue = JSON.stringify(getState().login.devicetoken);
     try {
       const response = await axios.post(authLoginUrl, {
-        devicetoken:
-          'ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu',
+        devicetoken: devietokenValue,
         email: param.email,
         password: param.password,
       });

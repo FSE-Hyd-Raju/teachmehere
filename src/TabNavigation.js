@@ -13,8 +13,10 @@ import signupPage from './screens/tabs/userauth/signup';
 import forgotPassword from './screens/tabs/userauth/forgotPassword';
 import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
-import loginSelector, { loadUserInfo } from './redux/slices/loginSlice';
+import { loginSelector, loadUserInfo, setDeviceToken } from './redux/slices/loginSlice';
 import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
+import messaging from "@react-native-firebase/messaging";
+
 import Home from './screens/tabs/home/Home';
 import Search from './screens/tabs/search/Search';
 import Post from './screens/tabs/post/Post';
@@ -40,7 +42,7 @@ const TabNavigation = props => {
   const loadInitialData = () => {
     userInfo();
     searchInitialData();
-
+    checkPermission();
   }
 
   const searchInitialData = () => {
@@ -52,6 +54,37 @@ const TabNavigation = props => {
     const userData = await getAsyncData('userInfo');
     // dispatch(loadUserInfo(userData));
   };
+
+  const checkPermission = async () => {
+    const enabled = await messaging().hasPermission();
+    if (enabled) {
+      getFcmToken();
+    } else {
+      requestPermission();
+    }
+  }
+
+  const getFcmToken = async () => {
+    fcmToken = await messaging().getToken();
+    if (fcmToken) {
+      // alert(fcmToken)
+      dispatch(setDeviceToken(fcmToken))
+      console.log(fcmToken);
+      // this.showAlert("Your Firebase Token is:", fcmToken);
+    } else {
+      alert("Failed", "No token received");
+    }
+  }
+
+  const requestPermission = async () => {
+    try {
+      await messaging().requestPermission();
+      getFcmToken()
+      // User has authorised
+    } catch (error) {
+      // User has rejected permissions
+    }
+  }
 
 
   function ProfileStackScreen() {

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Button, Text } from 'react-native';
-import { List, Divider, Searchbar, FAB } from 'react-native-paper';
+import { View, StyleSheet, FlatList, TouchableOpacity, Button, Text, Image, Dimensions } from 'react-native';
+import { List, Divider, Searchbar, FAB, ActivityIndicator, Colors } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
 import moment from 'moment';
@@ -17,7 +17,7 @@ export default function Chat({ navigation }) {
 
   const dispatch = useDispatch()
   const { userInfo } = useSelector(loginSelector)
-  const { chatResults, searchChatResults } = useSelector(chatSelector)
+  const { chatResults, searchChatResults, loading } = useSelector(chatSelector)
   var focusNotiMsg = null
   var unsubscribe = null;
   var notificunsubscribe = null;
@@ -81,52 +81,121 @@ export default function Chat({ navigation }) {
     dispatch(setChatResults(newData))
   }
 
+  const loadingComponent = () => {
+    return (
+      <View style={styles.loadingBar}>
+        <ActivityIndicator size={35} animating={true} color={Colors.black} />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <Searchbar
         style={{ margin: 15, borderRadius: 18 }}
         inputStyle={{ fontSize: 13, justifyContent: "center", overflow: "hidden" }}
-        placeholder="Search by name .."
+        placeholder="Search by name..."
         onChangeText={searchFun}
       />
-      <FlatList
-        data={searchChatResults}
-        keyExtractor={item => item._id}
-        ItemSeparatorComponent={() => <Divider />}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ChatRoom', { thread: item })}
-          >
-            <List.Item
-              title={item.name}
-              description={item.latestMessage.text}
-              left={props => <Avatar
-                rounded
-                containerStyle={{ margin: 7 }}
-                size={50}
-                source={require('../../../assets/img/default-mask-avatar.png')}
-              />}
-              right={props => <Text style={styles.datetime}>{moment(item.latestMessage.createdAt).fromNow()} </Text>}
-              titleNumberOfLines={1}
-              titleStyle={styles.listTitle}
-              descriptionStyle={styles.listDescription}
-              descriptionNumberOfLines={1}
-            />
-          </TouchableOpacity>
-        )}
-      />
-      <FAB
-        style={styles.fab}
-        small
-        icon={props => <AwesomeIcon {...props} name="pencil-square-o" />}
-        color="black"
-        onPress={() => navigation.navigate("NewChat")}
-      />
+
+      {!!loading &&
+        loadingComponent()
+      }
+      {!loading && !!searchChatResults.length &&
+        <View>
+
+
+          <FlatList
+            data={searchChatResults}
+            keyExtractor={item => item._id}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ChatRoom', { thread: item })}
+              >
+                <List.Item
+                  title={item.name}
+                  description={item.latestMessage.text}
+                  left={props => <Avatar
+                    rounded
+                    containerStyle={{ margin: 7 }}
+                    size={50}
+                    source={require('../../../assets/img/default-mask-avatar.png')}
+                  />}
+                  right={props => <Text style={styles.datetime}>{moment(item.latestMessage.createdAt).fromNow()} </Text>}
+                  titleNumberOfLines={1}
+                  titleStyle={styles.listTitle}
+                  descriptionStyle={styles.listDescription}
+                  descriptionNumberOfLines={1}
+
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      }
+      {!loading && !searchChatResults.length &&
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+          <Image
+            // width={Dimensions.get('window').width}
+            //     resizeMode={"center"}
+            style={styles.backgroundImage}
+            source={require('../../../assets/img/charfromhome.png')}
+          />
+          <Text style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: "center",
+            fontSize: 20,
+            color: "#105883",
+          }}>
+            You have no chats!
+            </Text>
+          <Text style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: "center",
+            margin: 10,
+            color: "grey",
+            fontSize: 15
+          }}>
+            Search for skills you like, send them requests and chat with them.
+          </Text>
+        </View>
+      }
+      {!loading &&
+        <FAB
+          style={styles.fab}
+          // small
+          icon={props => <AwesomeIcon {...props} name="pencil-square-o" />}
+          color="black"
+          onPress={() => navigation.navigate("NewChat")}
+        />
+      }
     </View>
   );
 }
 
+const win = Dimensions.get('window');
+const ratio = win.width / 4000;
 const styles = StyleSheet.create({
+  loadingBar: {
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    marginTop: 100
+  },
+  backgroundImage: {
+    // width: 360,
+    // height: 275,
+    // flex: 1,
+    width: 200,
+    height: 200, //362 is actual height of image
+  },
   fab: {
     position: 'absolute',
     margin: 20,

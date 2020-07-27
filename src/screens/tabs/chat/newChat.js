@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Text, Button } from 'react-native';
-import { IconButton, Title, List, Divider } from 'react-native-paper';
+import { View, StyleSheet, FlatList, TouchableOpacity, Text, Button, Image } from 'react-native';
+import { IconButton, Title, List, Divider, ActivityIndicator, Colors } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 
 import { Avatar } from 'react-native-elements';
@@ -10,7 +10,6 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
-    const [roomName, setRoomName] = useState('');
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const { userInfo } = useSelector(loginSelector)
@@ -194,6 +193,14 @@ export default function NewChat({ navigation }) {
     };
 
 
+    const loadingComponent = () => {
+        return (
+            <View style={styles.loadingBar}>
+                <ActivityIndicator size={35} animating={true} color={Colors.black} />
+            </View>
+        )
+    }
+
 
     return (
         <View style={styles.rootContainer}>
@@ -213,50 +220,95 @@ export default function NewChat({ navigation }) {
                     <Text style={styles.headerTitle} numberOfLines={1}>New Chat</Text>
                 </View>
             </View>
-            <FlatList
-                data={allUsers}
-                keyExtractor={item => item._id}
-                ItemSeparatorComponent={() => <Divider />}
+            {!loading &&
+                <FlatList
+                    data={allUsers}
+                    keyExtractor={item => item._id}
+                    ItemSeparatorComponent={() => <Divider />}
 
-                renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => checkIfChatExists(item)}>
-                        <List.Item
-                            title={item.username}
-                            left={props => <Avatar
-                                rounded
-                                containerStyle={{ margin: 7, marginTop: 15 }}
-                                size={30}
-                                source={require('../../../assets/img/default-mask-avatar.png')}
-                            />}
-                            right={props => <Icons
-                                style={{ margin: 7, marginTop: 20 }}
-                                name={"message-text-outline"}
-                                color="rgb(102, 94, 94)"
-                                size={25}
-                            />}
-                            description={item.coursename}
-                            // right={props =>
-                            //     <View style={styles.iconContainer}>
-                            //         {!item.request_status && <Button title="Send Request" onPress={() => sendRequest(item)} />}
-                            //         {(item.request_status == "REJECTED" || item.request_status == "PENDING") && <Button title={item.request_status} disabled={true} />}
-                            //         {item.request_status == "ACCEPTED" && <Button title="Message" onPress={() => checkIfChatExists(item)} />}
-                            //     </View>
-                            // }
-                            // titleNumberOfLines={1}
-                            titleStyle={styles.listTitle}
-                            descriptionStyle={styles.listDescription}
-                            descriptionNumberOfLines={1}
-                            titleNumberOfLines={1}
-                            style={{ padding: 15, justifyContent: "center", alignItems: "center" }}
-                        />
-                    </TouchableOpacity>
-                )}
-            />
+                    renderItem={({ item }) => (
+                        <TouchableOpacity onPress={() => checkIfChatExists(item)}>
+                            <List.Item
+                                title={item.username}
+                                left={props => <Avatar
+                                    rounded
+                                    containerStyle={{ margin: 7, marginTop: 15 }}
+                                    size={30}
+                                    source={require('../../../assets/img/default-mask-avatar.png')}
+                                />}
+                                right={props => <Icons
+                                    style={{ margin: 7, marginTop: 20 }}
+                                    name={"message-text-outline"}
+                                    color="rgb(102, 94, 94)"
+                                    size={25}
+                                />}
+                                description={item.coursename}
+                                // right={props =>
+                                //     <View style={styles.iconContainer}>
+                                //         {!item.request_status && <Button title="Send Request" onPress={() => sendRequest(item)} />}
+                                //         {(item.request_status == "REJECTED" || item.request_status == "PENDING") && <Button title={item.request_status} disabled={true} />}
+                                //         {item.request_status == "ACCEPTED" && <Button title="Message" onPress={() => checkIfChatExists(item)} />}
+                                //     </View>
+                                // }
+                                // titleNumberOfLines={1}
+                                titleStyle={styles.listTitle}
+                                descriptionStyle={styles.listDescription}
+                                descriptionNumberOfLines={1}
+                                titleNumberOfLines={1}
+                                style={{ padding: 15, justifyContent: "center", alignItems: "center" }}
+                            />
+                        </TouchableOpacity>
+                    )}
+                />
+            }
+            {!!loading && loadingComponent()
+            }
+
+            {!loading && !allUsers.length && <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                <Image
+                    // width={Dimensions.get('window').width}
+                    //     resizeMode={"center"}
+                    style={styles.backgroundImage}
+                    source={require('../../../assets/img/charfromhome.png')}
+                />
+                <Text style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: "center",
+                    fontSize: 20,
+                    color: "#105883",
+                }}>
+                    You have no accepted requests to chat!
+                  </Text>
+                <Text style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: "center",
+                    margin: 10,
+                    color: "grey",
+                    fontSize: 15
+                }}>
+                    Search for skills you like, send them requests and chat with them.
+                 </Text>
+            </View>
+            }
+
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    loadingBar: {
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+        marginTop: 100
+    },
     icon: {
         fontSize: 36
     },
