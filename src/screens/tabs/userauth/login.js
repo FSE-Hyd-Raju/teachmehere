@@ -10,7 +10,6 @@ import {
 import { Input, Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
-import AppButton from '../../../components/common/AppButton';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loginSelector,
@@ -95,66 +94,67 @@ export default function LoginPage({ navigation }) {
           isValid,
           handleSubmit,
         }) => (
-          <Fragment>
-            <View style={styles.inputComponentStyle}>
-              <Input
-                placeholder="Email"
-                leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
-                errorMessage={loginEmailError}
-                value={values.email}
-                onChangeText={e => {
-                  handleChange('email')(e);
-                  dispatch(clearErrors());
-                }}
-                onBlur={() => setFieldTouched('email')}
+            <Fragment>
+              <View style={styles.inputComponentStyle}>
+                <Input
+                  placeholder="Email"
+                  leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
+                  errorMessage={loginEmailError}
+                  value={values.email}
+                  onChangeText={e => {
+                    handleChange('email')(e);
+                    dispatch(clearErrors());
+                  }}
+                  onBlur={() => setFieldTouched('email')}
+                />
+                {touched.email && errors.email && (
+                  <Text style={{ fontSize: 13, color: 'red' }}>
+                    {errors.email}
+                  </Text>
+                )}
+                <Input
+                  placeholder="Password"
+                  secureTextEntry={hidePassword}
+                  leftIcon={<IconMaterialIcons name="lock" size={20} />}
+                  rightIcon={
+                    <IconMaterialIcons
+                      name={eyeicon}
+                      size={20}
+                      margin="10"
+                      onPress={toggleEyeIcon}
+                    />
+                  }
+                  errorMessage={loginPasswordError}
+                  value={values.password}
+                  onChangeText={e => {
+                    handleChange('password')(e);
+                    dispatch(clearErrors());
+                  }}
+                  onBlur={() => setFieldTouched('password')}
+                />
+                {touched.password && errors.password && (
+                  <Text style={{ fontSize: 13, color: 'red' }}>
+                    {errors.password}
+                  </Text>
+                )}
+              </View>
+              <Button
+                title="Signin"
+                disabled={!isValid}
+                type="solid"
+                containerStyle={styles.loginButton}
+                onPress={handleSubmit}
               />
-              {touched.email && errors.email && (
-                <Text style={{ fontSize: 13, color: 'red' }}>
-                  {errors.email}
-                </Text>
-              )}
-              <Input
-                placeholder="Password"
-                secureTextEntry={hidePassword}
-                leftIcon={<IconMaterialIcons name="lock" size={20} />}
-                rightIcon={
-                  <IconMaterialIcons
-                    name={eyeicon}
-                    size={20}
-                    margin="10"
-                    onPress={toggleEyeIcon}
-                  />
-                }
-                errorMessage={loginPasswordError}
-                value={values.password}
-                onChangeText={e => {
-                  handleChange('password')(e);
-                  dispatch(clearErrors());
-                }}
-                onBlur={() => setFieldTouched('password')}
-              />
-              {touched.password && errors.password && (
-                <Text style={{ fontSize: 13, color: 'red' }}>
-                  {errors.password}
-                </Text>
-              )}
-            </View>
-            <Button
-              title="Signin"
-              disabled={!isValid}
-              type="solid"
-              containerStyle={styles.loginButton}
-              onPress={handleSubmit}
-            />
-          </Fragment>
-        )}
+            </Fragment>
+          )}
       </Formik>
     );
   };
   const buttonComponent = () => {
     return (
       <View>
-        <AppButton
+        <Button title="Forgot password?" type="clear" containerStyle={styles.forgotButton} onPress={onForgotPress} />
+        {/* <AppButton
           onlyText
           style={styles.forgotButton}
           marginTop="50"
@@ -162,7 +162,7 @@ export default function LoginPage({ navigation }) {
           color="#00008B"
           onPress={onForgotPress}>
           Forgot password?
-        </AppButton>
+        </AppButton> */}
         <View
           style={{
             flexDirection: 'row',
@@ -171,13 +171,15 @@ export default function LoginPage({ navigation }) {
             marginTop: 10,
           }}>
           <Text>Don't have an account?</Text>
-          <AppButton
+          <Button title="Register" type="clear" containerStyle={styles.register} onPress={onSignupPress} />
+
+          {/* <AppButton
             onlyText
             style={styles.register}
             color="#00008B"
             onPress={onSignupPress}>
             Register
-          </AppButton>
+          </AppButton> */}
         </View>
       </View>
     );
