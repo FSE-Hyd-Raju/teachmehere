@@ -4,12 +4,12 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { withTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from './screens/tabs/Home';
+import Home from './screens/tabs/home/Home';
 import Search from './screens/tabs/search/Search';
-import Post from './screens/tabs/post/Post';
-import Chat from './screens/tabs/Chat/Chat';
-import ChatRoom from './screens/tabs/Chat/ChatRoom';
-import NewChat from './screens/tabs/Chat/newChat';
+import Post from './screens/tabs/post/Post'
+import Chat from './screens/tabs/chat/Chat';
+import ChatRoom from './screens/tabs/chat/ChatRoom';
+import NewChat from './screens/tabs/chat/newChat';
 import Profile from './screens/tabs/profile/Profile';
 import ProfileSettingsPage from './screens/tabs/profile/profileSettingsPage';
 import RequestedCoursesPage from './screens/tabs/profile/requestedCourses';

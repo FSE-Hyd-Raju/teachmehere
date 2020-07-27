@@ -220,7 +220,7 @@ export default function NewChat({ navigation }) {
                     <Text style={styles.headerTitle} numberOfLines={1}>New Chat</Text>
                 </View>
             </View>
-            {!loading &&
+            {!loading && !!allUsers.length &&
                 <FlatList
                     data={allUsers}
                     keyExtractor={item => item._id}
@@ -273,7 +273,7 @@ export default function NewChat({ navigation }) {
                     // width={Dimensions.get('window').width}
                     //     resizeMode={"center"}
                     style={styles.backgroundImage}
-                    source={require('../../../assets/img/charfromhome.png')}
+                    source={require('../../../assets/img/chatroom.png')}
                 />
                 <Text style={{
                     justifyContent: 'center',
@@ -282,7 +282,7 @@ export default function NewChat({ navigation }) {
                     fontSize: 20,
                     color: "#105883",
                 }}>
-                    You have no accepted requests to chat!
+                    You have no accepted requests!
                   </Text>
                 <Text style={{
                     justifyContent: 'center',
@@ -303,6 +303,13 @@ export default function NewChat({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    backgroundImage: {
+        // width: 360,
+        // height: 275,
+        // flex: 1,
+        width: 200,
+        height: 200, //362 is actual height of image
+    },
     loadingBar: {
         justifyContent: "center",
         alignItems: "center",

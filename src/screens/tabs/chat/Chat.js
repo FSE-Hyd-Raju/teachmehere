@@ -32,7 +32,7 @@ export default function Chat({ navigation }) {
     notificunsubscribe = appOpenedNotificationListener()
     // return () => unsubscribe();
 
-  }, []);
+  }, [userInfo]);
 
   const getChats = () => {
     return dispatch(fetchChats(userInfo))

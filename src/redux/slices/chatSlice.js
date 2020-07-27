@@ -8,7 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 export const initialState = {
     chatResults: [],
     searchChatResults: [],
-    loading: true,
+    loading: false,
     hasErrors: false
 };
 
