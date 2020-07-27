@@ -135,7 +135,7 @@ export default function Chat({ navigation }) {
           />
         </View>
       }
-      {!loading && !searchChatResults.length &&
+      {!loading && !chatResults.length &&
         <View
           style={{
             justifyContent: 'center',

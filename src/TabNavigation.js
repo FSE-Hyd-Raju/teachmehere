@@ -1,8 +1,16 @@
 import React, { useEffect } from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { withTheme } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import Home from './screens/tabs/Home';
+import Search from './screens/tabs/search/Search';
+import Post from './screens/tabs/post/Post';
+import Chat from './screens/tabs/Chat/Chat';
+import ChatRoom from './screens/tabs/Chat/ChatRoom';
+import NewChat from './screens/tabs/Chat/newChat';
+import Profile from './screens/tabs/profile/Profile';
 import ProfileSettingsPage from './screens/tabs/profile/profileSettingsPage';
 import RequestedCoursesPage from './screens/tabs/profile/requestedCourses';
 import WishlistCoursesPage from './screens/tabs/profile/wishlistCourses';
@@ -17,22 +25,13 @@ import { loginSelector, loadUserInfo, setDeviceToken } from './redux/slices/logi
 import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
 import messaging from "@react-native-firebase/messaging";
 
-import Home from './screens/tabs/home/Home';
-import Search from './screens/tabs/search/Search';
-import Post from './screens/tabs/post/Post';
-import Chat from './screens/tabs/chat/Chat';
-import ChatRoom from './screens/tabs/chat/ChatRoom';
-import NewChat from './screens/tabs/chat/newChat';
-import Profile from './screens/tabs/profile/Profile';
-
 const TabNavigation = props => {
   const dispatch = useDispatch();
-
   const { colors } = props.theme;
-  const [index, setIndex] = React.useState(3);
 
   const ProfileStack = createStackNavigator();
   const ChatStack = createStackNavigator();
+  const Tab = createMaterialBottomTabNavigator();
 
 
   useEffect(() => {
@@ -117,30 +116,49 @@ const TabNavigation = props => {
     );
   }
 
-  const [routes] = React.useState([
-    { key: 'home', title: 'Home', icon: 'home-outline', color: colors.primary },
-    { key: 'search', title: 'Search', icon: 'magnify', color: colors.primary },
-    { key: 'post', title: 'Post', icon: 'plus-circle-outline', color: colors.primary },
-    { key: 'chat', title: 'Chat', icon: 'message-outline', color: colors.primary },
-    { key: 'profile', title: 'Profile', icon: 'account-outline', color: colors.primary },
-  ]);
+  function MyTabs() {
+    return (
+      <Tab.Navigator
+        initialRouteName="Home"
+        activeColor={"black"}
+        inactiveColor="grey"
+        barStyle={{ backgroundColor: colors.primary }}
+        sceneAnimationEnabled={false}
+      >
+        <Tab.Screen name="Home" component={Home} options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home-outline" color={color} size={26} />)
+        }}
+        />
+        <Tab.Screen name="Search" component={Search} options={{
+          tabBarLabel: 'Search',
+          tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="magnify" color={color} size={26} />)
+        }}
+        />
+        <Tab.Screen name="Post" component={Post} options={{
+          tabBarLabel: 'Post',
+          tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="plus-circle-outline" color={color} size={26} />),
+        }}
+        />
+        <Tab.Screen name="Chat" component={ChatStackScreen} options={{
+          tabBarLabel: 'Chat',
+          tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="message-outline" color={color} size={26} />),
+        }}
+        />
+        <Tab.Screen name="Profile" component={ProfileStackScreen} options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="account-outline" color={color} size={26} />),
+        }}
+        />
 
-  const renderScene = BottomNavigation.SceneMap({
-    home: Home,
-    search: Search,
-    post: Post,
-    chat: ChatStackScreen,
-    profile: ProfileStackScreen,
-  });
+      </Tab.Navigator>
+    );
+  }
 
   return (
     <NavigationContainer>
-      <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-        sceneAnimationEnabled={false}
-      />
+      {MyTabs()}
     </NavigationContainer>
   );
 };
