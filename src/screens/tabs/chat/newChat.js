@@ -11,18 +11,18 @@ import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/
 
 export default function NewChat({ navigation }) {
     const [allUsers, setAllUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const { userInfo } = useSelector(loginSelector)
     const { chatResults } = useSelector(chatSelector)
 
 
     useEffect(() => {
-
-        getRequestedCourses()
-
+        if (userInfo._id)
+            getRequestedCourses()
     }, []);
 
     const getRequestedCourses = () => {
+        setLoading(true)
         fetch('https://teachmeproject.herokuapp.com/requestedCoursesByid', {
             method: 'POST',
             headers: {

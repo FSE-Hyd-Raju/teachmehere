@@ -26,7 +26,8 @@ export default function Chat({ navigation }) {
   useEffect(() => {
     unsubscribe && unsubscribe()
     notificunsubscribe && notificunsubscribe();
-    unsubscribe = getChats()
+    if (userInfo._id)
+      unsubscribe = getChats()
     notificationListener();
     notificunsubscribe = appOpenedNotificationListener()
     // return () => unsubscribe();
