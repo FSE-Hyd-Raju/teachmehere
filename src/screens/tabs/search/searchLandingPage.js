@@ -71,14 +71,18 @@ export default function SearchLandingPage({ searchChipSelected }) {
                         renderItem={({ item }) => {
                             return (
                                 <View style={styles.recentlyViewedCoursesTextIcon}>
-                                    <CourseCard course={item} courseClicked={() => alert("Imagine it navigated to skill detail page")} wishlistClicked={() => alert("Imagine skill added to wishlist")} />
-                                    <IconMaterialIcons
-                                        name={"cancel"}
-                                        color="rgb(102, 94, 94)"
-                                        size={20}
-                                        style={{ height: 20 }}
-                                        onPress={() => dispatch(removeRecentlyViewedCourses(item, recentlyViewedCourses))}
-                                    />
+                                    <View style={{ flex: 0.9 }}>
+                                        <CourseCard course={item} courseClicked={() => alert("Imagine it navigated to skill detail page")} wishlistClicked={() => alert("Imagine skill added to wishlist")} />
+                                    </View>
+                                    <View style={{ flex: 0.1 }}>
+                                        <IconMaterialIcons
+                                            name={"cancel"}
+                                            color="rgb(102, 94, 94)"
+                                            size={20}
+                                            style={{ height: 20 }}
+                                            onPress={() => dispatch(removeRecentlyViewedCourses(item, recentlyViewedCourses))}
+                                        />
+                                    </View>
                                 </View>
                             )
                         }}

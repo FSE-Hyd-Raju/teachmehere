@@ -131,18 +131,22 @@ export function getRecentSearches() {
 export function updateRecentSearches(item, recentlySearchedText, recentlyViewedCourses) {
     return async dispatch => {
         try {
-            if (!recentlySearchedText.includes(item.search)) {
-                (recentlySearchedText.length > 5) ? recentlySearchedText.pop() : recentlySearchedText.unshift(item.search)
+
+            temprecentlySearchedText = recentlySearchedText ? [...recentlySearchedText] : []
+            temprecentlyViewedCourses = recentlyViewedCourses ? [...recentlyViewedCourses] : []
+
+            if (!temprecentlySearchedText.includes(item.search)) {
+                (temprecentlySearchedText.length > 5) ? temprecentlySearchedText.pop() : temprecentlySearchedText.unshift(item.search)
             }
-            if (!(recentlyViewedCourses.filter(e => e._id === item.course._id).length)) {
-                recentlyViewedCourses.length > 4 ? recentlyViewedCourses.pop() : recentlyViewedCourses.unshift(item.course)
+            if (!(temprecentlyViewedCourses.filter(e => e._id === item.course._id).length)) {
+                temprecentlyViewedCourses.length > 4 ? temprecentlyViewedCourses.pop() : temprecentlyViewedCourses.unshift(item.course)
             }
 
-            dispatch(setRecentlySearchedText(recentlySearchedText))
-            dispatch(setRecentlyViewedCourses(recentlyViewedCourses))
+            dispatch(setRecentlySearchedText(temprecentlySearchedText))
+            dispatch(setRecentlyViewedCourses(temprecentlyViewedCourses))
 
-            storeAsyncData("recentlySearchedText", recentlySearchedText)
-            storeAsyncData("recentlyViewedCourses", recentlyViewedCourses)
+            storeAsyncData("recentlySearchedText", temprecentlySearchedText)
+            storeAsyncData("recentlyViewedCourses", temprecentlyViewedCourses)
 
         } catch (error) {
             // dispatch(getSearchResultsFailure(error));
@@ -153,11 +157,12 @@ export function updateRecentSearches(item, recentlySearchedText, recentlyViewedC
 export function removeRecentlySearchedText(searchItem, recentlySearchedText) {
     return async dispatch => {
         try {
-            recentlySearchedText = recentlySearchedText.filter((ele) => {
+            temprecentlySearchedText = recentlySearchedText
+            temprecentlySearchedText = temprecentlySearchedText.filter((ele) => {
                 return ele != searchItem
             })
-            storeAsyncData("recentlySearchedText", recentlySearchedText)
-            dispatch(setRecentlySearchedText(recentlySearchedText))
+            storeAsyncData("recentlySearchedText", temprecentlySearchedText)
+            dispatch(setRecentlySearchedText(temprecentlySearchedText))
         } catch (error) {
             // dispatch(getSearchResultsFailure(error));
         }
@@ -167,11 +172,12 @@ export function removeRecentlySearchedText(searchItem, recentlySearchedText) {
 export function removeRecentlyViewedCourses(course, recentlyViewedCourses) {
     return async dispatch => {
         try {
-            recentlyViewedCourses = recentlyViewedCourses.filter((ele) => {
+            temprecentlyViewedCourses = recentlyViewedCourses
+            temprecentlyViewedCourses = temprecentlyViewedCourses.filter((ele) => {
                 return ele._id != course._id;
             })
-            storeAsyncData("recentlyViewedCourses", recentlyViewedCourses)
-            dispatch(setRecentlyViewedCourses(recentlyViewedCourses))
+            storeAsyncData("recentlyViewedCourses", temprecentlyViewedCourses)
+            dispatch(setRecentlyViewedCourses(temprecentlyViewedCourses))
         } catch (error) {
             // dispatch(getSearchResultsFailure(error));
         }

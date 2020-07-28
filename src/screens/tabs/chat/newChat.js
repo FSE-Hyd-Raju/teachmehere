@@ -35,7 +35,7 @@ export default function NewChat({ navigation }) {
         }).then((response) => response.json())
             .then((requestedJson) => {
                 if (requestedJson.length) {
-                    let userslist = requestedJson.filter((ele, ind) => (ele.request_status == "ACCEPTED") && (ind === requestedJson.findIndex(elem => elem.username === ele.username)))
+                    let userslist = requestedJson.filter((ele, ind) => (ele.status == "ACCEPTED") && (ind === requestedJson.findIndex(elem => elem.userinfo._id === ele.userinfo._id)))
                     console.log(userslist)
                     setAllUsers(userslist)
                 }
@@ -127,10 +127,10 @@ export default function NewChat({ navigation }) {
                 id: userInfo._id,
                 name: userInfo.username
             }, {
-                id: item.courseuid,
-                name: item.username
+                id: item.userinfo._id,
+                name: item.userinfo.username
             }],
-            ids: [userInfo._id, item.courseuid],
+            ids: [userInfo._id, item.userinfo._id],
             latestMessage: {
                 text: 'Keep the discussions healthy',
                 createdAt: Date.now()
@@ -150,7 +150,7 @@ export default function NewChat({ navigation }) {
                     // ...item,
                     ...obj,
                     _id: ref.id,
-                    name: item.username
+                    name: item.userinfo.username
                 }
                 navigation.navigate('ChatRoom', { thread: item });
             })
@@ -161,7 +161,7 @@ export default function NewChat({ navigation }) {
         // alert("item " + JSON.stringify(item))
         // alert("chatResults" + JSON.stringify(chatResults))
 
-        var filterRes = chatResults.filter(ele => ele["ids"].indexOf(item.courseuid) > -1)
+        var filterRes = chatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
         if (filterRes.length) {
             navigation.popToTop();
             navigation.navigate('ChatRoom', { thread: filterRes[0] });
@@ -229,7 +229,7 @@ export default function NewChat({ navigation }) {
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => checkIfChatExists(item)}>
                             <List.Item
-                                title={item.username}
+                                title={item.userinfo.username}
                                 left={props => <Avatar
                                     rounded
                                     containerStyle={{ margin: 7, marginTop: 15 }}
@@ -242,7 +242,7 @@ export default function NewChat({ navigation }) {
                                     color="rgb(102, 94, 94)"
                                     size={25}
                                 />}
-                                description={item.coursename}
+                                description={item.coursedetails.coursename}
                                 // right={props =>
                                 //     <View style={styles.iconContainer}>
                                 //         {!item.request_status && <Button title="Send Request" onPress={() => sendRequest(item)} />}
