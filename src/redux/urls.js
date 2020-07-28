@@ -9,3 +9,5 @@ export const authLoginUrl = `${SERVER_URL}/authorizeUserDetails`;
 export const validateNewUserUrl = `${SERVER_URL}/validateNewUser`;
 export const validateOtpUrl = `${SERVER_URL}/registerUserDetails`;
 export const forgotPasswordUrl = `${SERVER_URL}/forgotPassword`;
+export const changeProfileUrl = `${SERVER_URL}/updateUserDetailsWithId`;
+export const changePasswordUrl = `${SERVER_URL}/updateUserPassword`;

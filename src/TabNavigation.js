@@ -15,6 +15,7 @@ import ProfileSettingsPage from './screens/tabs/profile/profileSettingsPage';
 import RequestedCoursesPage from './screens/tabs/profile/requestedCourses';
 import WishlistCoursesPage from './screens/tabs/profile/wishlistCourses';
 import PostedCoursesPage from './screens/tabs/profile/postedCourses';
+import ChangeProfilePage from './screens/tabs/profile/changeProfile';
 import GuestPage from './screens/tabs/profile/guestPage';
 import LoginPage from './screens/tabs/userauth/login';
 import signupPage from './screens/tabs/userauth/signup';
@@ -90,7 +91,7 @@ const TabNavigation = props => {
     return (
       <ProfileStack.Navigator
         headerMode={'none'}
-        initialRouteName={'GuestPage'}>
+        initialRouteName={'Profile'}>
         <ProfileStack.Screen name="Profile" component={Profile} />
         <ProfileStack.Screen name="GuestPage" component={GuestPage} />
         <ProfileStack.Screen name="Login" component={LoginPage} />
@@ -100,6 +101,7 @@ const TabNavigation = props => {
         <ProfileStack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
         <ProfileStack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
         <ProfileStack.Screen name="PostedCourses" component={PostedCoursesPage} />
+        <ProfileStack.Screen name="ChangeProfile" component={ChangeProfilePage} />
       </ProfileStack.Navigator>
     );
   }

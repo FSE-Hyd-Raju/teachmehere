@@ -21,6 +21,8 @@ const theme = {
   },
 };
 const App = () => {
+  console.disableYellowBox = true
+  window.console = console;
   return (
     <Provider store={store}>
       <PaperProvider theme={theme}>

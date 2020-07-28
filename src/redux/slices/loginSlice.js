@@ -38,7 +38,7 @@ const loginSlice = createSlice({
     },
     loadUserInfo: (state, { payload }) => {
       console.log('inside reducer');
-      console.log(payload);
+      console.log(payload.username);
       state.userInfo = payload;
     },
     loginPasswordChanged: (state, { payload }) => {
@@ -101,7 +101,7 @@ export function onLoginPressed(param) {
           }
         } else {
           dispatch(loginSuccess(response.data[0]));
-          storeAsyncData('userInfo', response.data[0].email);
+          storeAsyncData('userInfo', response.data[0]);
 
           param.onSuccess();
         }
