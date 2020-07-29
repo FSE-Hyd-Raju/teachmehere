@@ -27,6 +27,7 @@ import {
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import ImagePicker from 'react-native-image-picker';
+import { getAsyncData, stGetUser } from './../../../components/common/asyncStorage';
 
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -75,7 +76,10 @@ export default function ChangeProfilePage({ navigation }) {
             setIsImageAvailable(true);
         }
     }
-    chooseFile = () => {
+    const chooseFile = async () => {
+        const profilePic = await AsyncStorage.getItem("profilePic");
+        const userData = await getAsyncData('userInfo');
+
         var options = {
             title: 'Select Image',
             customButtons: [
@@ -396,9 +400,12 @@ export default function ChangeProfilePage({ navigation }) {
                     editButton={{
                         name: 'arrow-left', type: 'feather'
                     }}
-                    source={profilePic}
-
+                    // source={profilePic}
+                    // source={profilePic == null ? { require('./Placeholder.jpeg'): { uri: profilePic } }}
                     style={{ width: 200, height: 200 }}
+                    source={!isImageAvailable ?
+                        { uri: 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg' } : profilePic}
+                // style={{ width: 200, height: 200 }}
 
                 />
                 <View style={{

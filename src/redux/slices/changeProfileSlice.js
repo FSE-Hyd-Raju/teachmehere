@@ -221,9 +221,6 @@ export function onChangeImagePressed(param) {
         dispatch(changeDisplayImage());
 
         try {
-            console.log("inside try")
-            console.log(param.displaypic)
-            console.log(param.userId)
             const response = await axios.post(changeProfileUrl, {
                 devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
                 displaypic: param.displaypic,
