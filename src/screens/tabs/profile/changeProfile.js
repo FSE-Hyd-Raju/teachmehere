@@ -5,7 +5,7 @@ import {
     ScrollView,
     Text,
     Image,
-    Dimensions, AsyncStorage
+    Dimensions, AsyncStorage, ActivityIndicator
 } from 'react-native';
 import { Input, Button, Avatar, ButtonGroup, Icon } from 'react-native-elements';
 import Theme from '../../../Theme';
@@ -64,7 +64,7 @@ export default function ChangeProfilePage({ navigation }) {
     const [showImage, setShowImage] = React.useState('');
 
 
-    const componentDidMount = () => {
+    componentDidMount = () => {
         getImage();
     }
 
@@ -415,7 +415,12 @@ export default function ChangeProfilePage({ navigation }) {
                         type='material'
                         color='black'
                         onPress={() => chooseFile()} />
+                    <ActivityIndicator
+                        style={styles.activityIndicator}
+                        animating={loading}
+                    />
                 </View>
+
 
                 {/* <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
                     <Icon
@@ -470,6 +475,13 @@ const styles = StyleSheet.create({
     headerComponent: {
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    activityIndicator: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
     },
     headerComponentText: {
         fontWeight: 'bold',

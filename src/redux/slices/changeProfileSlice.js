@@ -146,9 +146,6 @@ export default changeProfileSlice.reducer;
 export function onChangeProfilePressed(param) {
 
     return async (dispatch, state) => {
-        console.log(param.email)
-        console.log(param.username)
-        console.log(param.description)
         dispatch(changeProfileStarted());
 
         try {

@@ -79,7 +79,8 @@ export default function ProfileSettingsPage({ navigation }) {
                                     color="rgb(102, 94, 94)"
                                     size={25}
                                 />}
-                            // onPress={() => console.log("yep")}
+                                onPress={() => navigation.navigate('ChangeProfile')}
+
                             />
                         </TouchableOpacity>
                         <TouchableOpacity>
