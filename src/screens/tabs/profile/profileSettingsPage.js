@@ -4,9 +4,14 @@ import { Searchbar, ActivityIndicator, Colors, Button, Title, Caption, Paragraph
 import { Icon, Header, Avatar, ListItem } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+    logOutUser,
+} from '../../../redux/slices/loginSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function ProfileSettingsPage({ navigation }) {
+    const dispatch = useDispatch();
     const [showSettingsPage, setShowSettingsPage] = React.useState(true);
 
     useEffect(() => {
@@ -24,6 +29,17 @@ export default function ProfileSettingsPage({ navigation }) {
         //     backhandler.remove();
         // };
     }, []);
+
+    const logout = () => {
+        dispatch(
+            logOutUser({
+                onSuccess: () => {
+                    navigation.navigate('GuestPage');
+                },
+            }))
+
+    }
+
 
     const settingsPageComponent = () => {
         return (
@@ -67,7 +83,7 @@ export default function ProfileSettingsPage({ navigation }) {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity>
-                            <ListItem
+                            <ListItem onPress={logout}
                                 title={"logout"}
                                 leftIcon={<Icons
                                     name={"logout"}
@@ -82,7 +98,7 @@ export default function ProfileSettingsPage({ navigation }) {
                                     color="rgb(102, 94, 94)"
                                     size={25}
                                 />}
-                            // onPress={() => console.log("yep")}
+
                             />
                         </TouchableOpacity>
                     </View>

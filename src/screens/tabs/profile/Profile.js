@@ -75,7 +75,7 @@ export default function Profile({ navigation }) {
                             'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
                     }}
                 />
-                <Text style={styles.userName}>{userInfo.email}</Text>
+                <Text style={styles.userName}>{userInfo.username}</Text>
                 <Text style={styles.userEmail}>{userInfo.email}</Text>
             </View>
         );

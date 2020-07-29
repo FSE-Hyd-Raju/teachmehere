@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { authLoginUrl } from '../urls';
 import { replace } from 'formik';
-import { storeAsyncData } from '../../components/common/asyncStorage';
+import { storeAsyncData, clearAsyncData } from '../../components/common/asyncStorage';
 
 export const initialState = {
   loading: false,
@@ -12,7 +12,7 @@ export const initialState = {
   loginEmail: '',
   loginEmailError: '',
   loginError: '',
-  devicetoken: ''
+  devicetoken: '',
 };
 
 const loginSlice = createSlice({
@@ -37,8 +37,6 @@ const loginSlice = createSlice({
       state.loginError = '';
     },
     loadUserInfo: (state, { payload }) => {
-      console.log('inside reducer');
-      console.log(payload.username);
       state.userInfo = payload;
     },
     loginPasswordChanged: (state, { payload }) => {
@@ -58,6 +56,14 @@ const loginSlice = createSlice({
       state.loginEmailError = payload;
       state.loading = false;
     },
+    logoutSuccess: state => {
+      state.userInfo = '';
+      state.loginEmailError = '';
+      state.loginPasswordError = '';
+      state.loginError = '';
+      state.devicetoken = '';
+      state.loading = false;
+    },
   },
 });
 
@@ -71,6 +77,7 @@ export const {
   passwordIncorrect,
   EmailIncorrect,
   loadUserInfo,
+  logoutSuccess
 } = loginSlice.actions;
 
 export const loginSelector = state => state.login;
@@ -112,4 +119,14 @@ export function onLoginPressed(param) {
       dispatch(loginFailure());
     }
   };
+}
+
+
+export function logOutUser(param) {
+  param.onSuccess();
+
+  return async (dispatch, getState) => {
+    clearAsyncData();
+    dispatch(logoutSuccess());
+  }
 }

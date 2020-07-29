@@ -33,13 +33,14 @@ const TabNavigation = props => {
   const ProfileStack = createStackNavigator();
   const ChatStack = createStackNavigator();
   const Tab = createMaterialBottomTabNavigator();
-
+  const [intailroutename, setIntialroutename] = React.useState("GuestPage");
 
   useEffect(() => {
     loadInitialData()
   });
 
   const loadInitialData = () => {
+
     userInfo();
     searchInitialData();
     checkPermission();
@@ -52,8 +53,16 @@ const TabNavigation = props => {
 
   const userInfo = async () => {
     const userData = await getAsyncData('userInfo');
-    // dispatch(loadUserInfo(userData));
+
+    if (userData) {
+      dispatch(loadUserInfo(userData));
+      setIntialroutename("Profile")
+    } else {
+      setIntialroutename("GuestPage")
+    }
   };
+
+
 
   const checkPermission = async () => {
     const enabled = await messaging().hasPermission();
@@ -91,7 +100,7 @@ const TabNavigation = props => {
     return (
       <ProfileStack.Navigator
         headerMode={'none'}
-        initialRouteName={'Profile'}>
+        initialRouteName={intailroutename}>
         <ProfileStack.Screen name="Profile" component={Profile} />
         <ProfileStack.Screen name="GuestPage" component={GuestPage} />
         <ProfileStack.Screen name="Login" component={LoginPage} />
