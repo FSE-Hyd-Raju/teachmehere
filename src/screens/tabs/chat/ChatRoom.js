@@ -97,7 +97,7 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const sendNotification = (text) => {
-        receiverId = thread.ids.filter(ele => ele != user._id);
+        receiverId = thread.ids.filter(ele => ele != userInfo._id);
         dataobj = {
             ...thread,
             type: "CHAT",
