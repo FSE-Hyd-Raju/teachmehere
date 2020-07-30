@@ -23,7 +23,7 @@ export default function NewChat({ navigation }) {
 
     const getRequestedCourses = () => {
         setLoading(true)
-        fetch('https://teachmeproject.herokuapp.com/requestedCoursesByid', {
+        fetch('https://teachmeproject.herokuapp.com/newChatListByid', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
