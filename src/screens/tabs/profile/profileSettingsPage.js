@@ -34,7 +34,10 @@ export default function ProfileSettingsPage({ navigation }) {
         dispatch(
             logOutUser({
                 onSuccess: () => {
-                    navigation.navigate('GuestPage');
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'GuestPage' }],
+                    });
                 },
             }))
 

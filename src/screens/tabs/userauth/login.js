@@ -69,7 +69,10 @@ export default function LoginPage({ navigation }) {
               email: values.email,
               password: values.password,
               onSuccess: () => {
-                navigation.navigate('Profile');
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Profile' }],
+                });
               },
             }),
           )
