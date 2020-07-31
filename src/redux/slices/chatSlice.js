@@ -35,7 +35,13 @@ const chatSlice = createSlice({
         },
         setChatResults: (state, { payload }) => {
             state.searchChatResults = payload;
+        },
+        clearData: (state) => {
+            state.loading = false;
+            state.chatResults = [];
+            state.searchChatResults = [];
         }
+
     },
 });
 
@@ -43,7 +49,8 @@ export const {
     getChats,
     getChatsSuccess,
     getChatsFailure,
-    setChatResults
+    setChatResults,
+    clearData
 } = chatSlice.actions;
 
 export const chatSelector = state => state.chat;

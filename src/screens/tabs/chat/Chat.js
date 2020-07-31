@@ -8,7 +8,7 @@ import messaging from "@react-native-firebase/messaging";
 import PushNotification from 'react-native-push-notification';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice';
-import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults, clearData } from '../../../redux/slices/chatSlice';
 
 import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 
@@ -24,6 +24,7 @@ export default function Chat({ navigation }) {
 
 
   useEffect(() => {
+    dispatch(clearData())
     unsubscribe && unsubscribe()
     notificunsubscribe && notificunsubscribe();
     if (userInfo._id)

@@ -61,7 +61,6 @@ const loginSlice = createSlice({
       state.loginEmailError = '';
       state.loginPasswordError = '';
       state.loginError = '';
-      state.devicetoken = '';
       state.loading = false;
     },
   },
@@ -90,10 +89,10 @@ export function onLoginPressed(param) {
   return async (dispatch, getState) => {
     console.log(param.email);
     dispatch(loginStarted());
-    devietokenValue = JSON.stringify(getState().login.devicetoken);
+    devicetokenValue = getState().login.devicetoken;
     try {
       const response = await axios.post(authLoginUrl, {
-        devicetoken: devietokenValue,
+        devicetoken: devicetokenValue,
         email: param.email,
         password: param.password,
       });
