@@ -31,7 +31,7 @@ export default function ChatRoom({ route, navigation }) {
             .collection('THREADS')
             .doc(thread._id)
             .collection('MESSAGES')
-            .orderBy('createdAt', 'desc')
+            .orderBy('serverTime', 'desc')
             .onSnapshot(querySnapshot => {
                 const messages1 = querySnapshot.docs.map(doc => {
                     const firebaseData = doc.data();
@@ -71,6 +71,7 @@ export default function ChatRoom({ route, navigation }) {
             .collection('MESSAGES')
             .add({
                 text,
+                serverTime: firestore.FieldValue.serverTimestamp(),
                 createdAt: new Date().getTime(),
                 user: {
                     _id: userInfo._id,
@@ -86,7 +87,8 @@ export default function ChatRoom({ route, navigation }) {
                 {
                     latestMessage: {
                         text,
-                        createdAt: new Date().getTime()
+                        createdAt: new Date().getTime(),
+                        serverTime: firestore.FieldValue.serverTimestamp()
                     }
                 },
                 { merge: true }
@@ -131,18 +133,24 @@ export default function ChatRoom({ route, navigation }) {
                 {...props}
                 wrapperStyle={{
                     right: {
-                        backgroundColor: '#105883'
+                        backgroundColor: 'rgb(0, 95, 132)'
                     },
                     left: {
-                        backgroundColor: '#fff'
+                        backgroundColor: "rgba(255, 255, 255, 0.15)",
+                        borderColor: "rgb(217, 231, 235)",
+                        borderWidth: 1
                     }
                 }}
                 textStyle={{
                     left: {
-                        color: '#105883'
+                        paddingVertical: 8,
+                        paddingHorizontal: 5,
+                        color: 'black'
                     },
                     right: {
-                        color: '#fff'
+                        paddingVertical: 8,
+                        paddingHorizontal: 5,
+                        color: 'white'
                     }
                 }}
             />
@@ -185,6 +193,22 @@ export default function ChatRoom({ route, navigation }) {
         );
     }
 
+    function renderTime(props) {
+        return (
+            <Time
+                {...props}
+                timeTextStyle={{
+                    right: {
+                        color: "white"
+                    },
+                    left: {
+                        color: "#7b8a91"
+                    }
+                }}
+            />
+        );
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 20 }}  >
             <View style={styles.headerComponent}>
@@ -221,6 +245,7 @@ export default function ChatRoom({ route, navigation }) {
                     onPress={() => handleAddPicture()}
                 /> */}
             </View>
+
             <GiftedChat
                 messages={messages}
                 onSend={handleSend}
@@ -233,6 +258,7 @@ export default function ChatRoom({ route, navigation }) {
                 // renderLoadEarlier={true}
                 // renderAvatar={null}
                 renderSend={renderSend}
+                renderTime={renderTime}
                 scrollToBottomComponent={scrollToBottomComponent}
                 // renderSystemMessage={renderSystemMessage}
                 showAvatarForEveryMessage={false}

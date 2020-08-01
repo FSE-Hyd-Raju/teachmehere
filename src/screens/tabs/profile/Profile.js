@@ -161,7 +161,7 @@ export default function Profile({ navigation }) {
                                     leftIcon={
                                         <Icons
                                             name={"account-circle-outline"}
-                                            color="blue"
+                                            color="rgb(91, 107, 168)"
                                             size={25}
                                         />
                                     }
@@ -184,7 +184,7 @@ export default function Profile({ navigation }) {
                                     leftIcon={
                                         <Icons
                                             name={"logout"}
-                                            color="blue"
+                                            color="rgb(91, 107, 168)"
                                             size={25}
                                         />}
                                     pad={30}
