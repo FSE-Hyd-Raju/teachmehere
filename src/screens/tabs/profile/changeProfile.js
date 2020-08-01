@@ -24,10 +24,9 @@ import {
     oldPasswordChanged,
     newPasswordChanged,
 } from '../../../redux/slices/changeProfileSlice';
-import { loginSelector } from '../../../redux/slices/loginSlice'
+import { loginSelector, loadUserInfo } from '../../../redux/slices/loginSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import ImagePicker from 'react-native-image-picker';
-import { getAsyncData, stGetUser } from './../../../components/common/asyncStorage';
 
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -47,7 +46,8 @@ export default function ChangeProfilePage({ navigation }) {
     } = useSelector(changeProfileSelector);
 
     const {
-        userInfo
+        userInfo,
+        devicetoken
     } = useSelector(loginSelector)
 
     const [hidePassword, sethidePassword] = React.useState(true);
@@ -59,27 +59,8 @@ export default function ChangeProfilePage({ navigation }) {
 
     const [selectedIndex, setSelectedIndex] = React.useState(1)
 
-    const [isImageAvailable, setIsImageAvailable] = React.useState(false);
-    const [profilePic, setProfilePic] = React.useState('');
-    const [filePath, setFilePath] = React.useState({});
-    const [showImage, setShowImage] = React.useState('');
 
-
-    componentDidMount = () => {
-        getImage();
-    }
-
-    const getImage = async () => {
-        const profilePic = await AsyncStorage.getItem("profilePic");
-        if (profilePic) {
-            setProfilePic(JSON.parse(profilePic));
-            setIsImageAvailable(true);
-        }
-    }
     const chooseFile = async () => {
-        const profilePic = await AsyncStorage.getItem("profilePic");
-        const userData = await getAsyncData('userInfo');
-
         var options = {
             title: 'Select Image',
             customButtons: [
@@ -92,7 +73,6 @@ export default function ChangeProfilePage({ navigation }) {
         };
         ImagePicker.showImagePicker(options, response => {
             console.log('Response = ', response);
-
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             } else if (response.error) {
@@ -101,35 +81,18 @@ export default function ChangeProfilePage({ navigation }) {
                 console.log('User tapped custom button: ', response.customButton);
                 alert(response.customButton);
             } else {
-                // let source = response;
-                // You can also display the image using data:
-
                 let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-                // const { user } = this.props.auth;
-
                 dispatch(
                     onChangeImagePressed({
                         userId: userInfo._id,
-                        displaypic: JSON.stringify(source),
-
+                        displaypic: source.uri,
+                        devicetoken: devicetoken,
                         // showToast: this.showToast,
-                        onSuccess: () => {
-                            navigation.navigate('Profile');
+                        onSuccess: (data) => {
+                            dispatch(loadUserInfo(data))
                         },
                     })
                 )
-                AsyncStorage.setItem("profilePic", JSON.stringify(source));
-                setProfilePic(source)
-                setFilePath(source)
-                setIsImageAvailable(true)
-                // this.setState({
-                //     ...this.state,
-                //     filePath: source,
-                //     profilePic: source,
-                //     isImageAvailable: true
-                // })
-
             }
         });
     };
@@ -365,55 +328,23 @@ export default function ChangeProfilePage({ navigation }) {
     const userImageContainer = () => {
         return (
             <View style={styles.userImageContainer}>
-
-                {/* <Avatar
-                    size={250}
-                    chevron
-                    activeOpacity={0.7}
-                    // avatarStyle={{ opacity: 0.7 }}
-                    onPress={() => console.log("Works!")}
-                    rounded
-                    // showEditButton={true}
-                    // overlayContainerStyle={{ borderRadius: 20 }}
-                    // containerStyle={{ borderRadius: 15 }}
-                    // rounded
-                    source={{
-                        uri:
-                            'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    }}
-                    showEditButton
-                    editButton={{
-                        name: 'edit', type: 'material'
-                    }}
-
-                /> */}
                 <Avatar
                     rounded
                     showEditButton
                     size={200}
-                    // source={{ uri: 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg' }}
                     title='Grace'
                     containerStyle={{ margin: 10 }}
-                    // onEditPress={() => console.log('edit button pressed')}
-                    // onLongPress={() => console.log('component long pressed')}
-                    // onPress={() => console.log('component pressed')}
                     editButton={{
                         name: 'arrow-left', type: 'feather'
                     }}
-                    // source={profilePic}
-                    // source={profilePic == null ? { require('./Placeholder.jpeg'): { uri: profilePic } }}
                     style={{ width: 200, height: 200 }}
-                    source={!isImageAvailable ?
-                        { uri: 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg' } : profilePic}
-                // style={{ width: 200, height: 200 }}
-
+                    source={{ uri: userInfo.displaypic ? userInfo.displaypic : 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg' }}
                 />
                 <View style={{
                     backgroundColor: 'white', position: 'relative',
                     bottom: 75, left: 70, alignItems: 'flex-end',
                     justifyContent: 'flex-end', borderRadius: 30, padding: 10
                 }}>
-
                     <Icon
                         // raised
                         size={40}
@@ -422,31 +353,11 @@ export default function ChangeProfilePage({ navigation }) {
                         type='material'
                         color='black'
                         onPress={() => chooseFile()} />
-                    <ActivityIndicator
+                    {/* <ActivityIndicator
                         style={styles.activityIndicator}
                         animating={loading}
-                    />
+                    /> */}
                 </View>
-
-
-                {/* <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
-                    <Icon
-                        // raised
-                        size={27}
-                        style={{ paddingLeft: 2 }}
-                        name='camera'
-                        type='feather'
-                        color='#1E90FF'
-                        onPress={() => navigation.goBack()} />
-                    <Text style={{
-                        textShadowColor: 'black',
-                        color: 'white',
-                        textShadowOffset: { width: -1, height: 1 },
-                        textShadowRadius: 10,
-                        fontSize: 20
-                    }}>Change  Photo</Text> */}
-                {/* </View> */}
-
             </View >
         )
     }
