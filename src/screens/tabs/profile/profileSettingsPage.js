@@ -133,7 +133,7 @@ export default function ProfileSettingsPage({ navigation }) {
                                     /> */}
                                     <Image
                                         source={require('../../../assets/img/settings_chatwithus.png')}
-                                        style={{ height: 70, width: 60, }}
+                                        style={{ height: 71, width: 77, }}
                                     />
                                     <Text style={styles.accountsText}>Chat With Us</Text>
                                 </Surface>
@@ -214,13 +214,15 @@ const styles = StyleSheet.create({
         // fontSize: 10,
         letterSpacing: 1,
         textAlign: "center",
-        marginTop: 10
+        marginTop: 10,
+        fontSize: 10
         // margin: 20
     },
     accountContainerBody: {
         marginTop: 10,
         flexDirection: "row",
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        justifyContent: "space-evenly"
     },
     accountContainerTitle: {
         fontSize: 16,
@@ -233,11 +235,12 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     surface: {
-        margin: 20,
-        marginTop: 5,
+        margin: 5,
+        // margin: 20,
+        // marginTop: 5,
         padding: 18,
-        height: 100,
-        width: 110,
+        height: 113,
+        width: 132,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
