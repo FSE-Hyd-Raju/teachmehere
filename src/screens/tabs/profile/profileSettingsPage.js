@@ -152,8 +152,8 @@ export default function ProfileSettingsPage({ navigation }) {
                                         size={iconSize}
                                     /> */}
                                     <Image
-                                        source={require('../../../assets/img/settings_version_icon.png')}
-                                        style={{ height: 60, width: 70, }}
+                                        source={require('../../../assets/img/settings_version_icon1.png')}
+                                        style={{ height: 50, width: 50, }}
                                     />
                                     <Text style={styles.accountsText}>Version</Text>
                                     <Text style={{}}>1.0.0</Text>
@@ -182,8 +182,8 @@ export default function ProfileSettingsPage({ navigation }) {
                                         size={iconSize}
                                     /> */}
                                     <Image
-                                        source={require('../../../assets/img/settings_share_icon.png')}
-                                        style={{ height: 70, width: 80, }}
+                                        source={require('../../../assets/img/settings_share_icon1.png')}
+                                        style={{ height: 60, width: 70, }}
                                     />
                                     <Text style={styles.accountsText}>Invite friends</Text>
                                 </Surface>
@@ -197,7 +197,7 @@ export default function ProfileSettingsPage({ navigation }) {
                                     /> */}
                                     <Image
                                         source={require('../../../assets/img/settings_privacy_icon.png')}
-                                        style={{ height: 70, width: 80, }}
+                                        style={{ height: 70, width: 90, }}
                                     />
                                     <Text style={styles.accountsText}>Privacy policy</Text>
                                 </Surface>
