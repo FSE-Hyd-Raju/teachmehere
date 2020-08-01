@@ -228,10 +228,10 @@ export function onChangeImagePressed(param) {
             if (response) {
                 dispatch(changeProfileSuccess(response.data[0]));
                 storeAsyncData('userInfo', response.data[0]);
-                param.onSuccess()
+                param.onSuccess(response.data[0])
             }
             else {
-                dispatch(changeDisplayImageError(response.data[0]));
+                dispatch(changeDisplayImageError());
             }
         } catch (error) {
             dispatch(changePasswordFailure());

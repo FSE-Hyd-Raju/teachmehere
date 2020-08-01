@@ -111,10 +111,14 @@ export default function ProfileSettingsPage({ navigation }) {
                         <View style={styles.accountContainerBody}>
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
+                                    {/* <Icons
                                         name={"file-document-edit-outline"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_feedback.png')}
+                                        style={{ height: 70, width: 80, }}
                                     />
                                     <Text style={styles.accountsText}>Feedback</Text>
                                 </Surface>
@@ -122,10 +126,14 @@ export default function ProfileSettingsPage({ navigation }) {
 
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
+                                    {/* <Icons
                                         name={"message-outline"}
                                         color="rgb(102, 94, 94)"
                                         size={18}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_chatwithus.png')}
+                                        style={{ height: 70, width: 60, }}
                                     />
                                     <Text style={styles.accountsText}>Chat With Us</Text>
                                 </Surface>
@@ -150,10 +158,14 @@ export default function ProfileSettingsPage({ navigation }) {
                             </TouchableOpacity>
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
-                                        name={"star-circle-outline"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
+                                    {/* <Image
+                                    // name={"star-circle-outline"}
+                                    // color="rgb(102, 94, 94)"
+                                    // size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_rating_icon.png')}
+                                        style={{ height: 70, width: 80, }}
                                     />
                                     <Text style={styles.accountsText}>Rate us</Text>
                                 </Surface>
