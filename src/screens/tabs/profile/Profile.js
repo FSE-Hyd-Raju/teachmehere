@@ -31,7 +31,7 @@ import RequestedCoursesPage from './requestedCourses';
 import WishlistCoursesPage from './wishlistCourses';
 import PostedCoursesPage from './postedCourses';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadUserInfo, loginSelector } from '../../../redux/slices/loginSlice';
+import { loadUserInfo, loginSelector, logOutUser } from '../../../redux/slices/loginSlice';
 
 
 export default function Profile({ navigation }) {
@@ -40,6 +40,20 @@ export default function Profile({ navigation }) {
     const [showSettingsPage, setShowSettingsPage] = React.useState(false);
 
     useEffect(() => { }, []);
+
+    const logout = () => {
+        dispatch(
+            logOutUser({
+                onSuccess: () => {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'GuestPage' }],
+                    });
+                },
+            }))
+
+    }
+
 
     const settingsIconContainer = () => {
         return (
@@ -64,16 +78,8 @@ export default function Profile({ navigation }) {
                     size="xlarge"
                     chevron
                     activeOpacity={0.7}
-                    onPress={() => console.log('Works!')}
                     rounded
-                    showEditButton={true}
-                    // overlayContainerStyle={{ borderRadius: 20 }}
-                    // containerStyle={{ borderRadius: 15 }}
-                    // rounded
-                    source={{
-                        uri:
-                            'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-                    }}
+                    source={{ uri: userInfo.displaypic ? userInfo.displaypic : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
                 />
                 <Text style={styles.userName}>{userInfo.username}</Text>
                 <Text style={styles.userEmail}>{userInfo.email}</Text>
@@ -131,7 +137,7 @@ export default function Profile({ navigation }) {
     const profilepagecomponent = () => {
         return (
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.container}>
+                <View>
                     {settingsIconContainer()}
                     <View style={styles.upperContainer}>
                         {userImageContainer()}
@@ -142,11 +148,57 @@ export default function Profile({ navigation }) {
                         {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
                         {userPagesContainer("Posted Courses", "plus-circle-outline", 'PostedCourses')}
                         {userPagesContainer("Wishlist Courses", "heart-outline", 'WishlistCourses')} */}
-                        {userPagesContainer(
+                        {/* {userPagesContainer(
                             'Login',
                             'send-circle-outline',
                             'RequestedCourses',
-                        )}
+                        )} */}
+
+                        <View style={styles.accountContainer}>
+                            <TouchableOpacity>
+                                <ListItem
+                                    title={"Change Profile"}
+                                    leftIcon={
+                                        <Icons
+                                            name={"account-circle-outline"}
+                                            color="blue"
+                                            size={25}
+                                        />
+                                    }
+
+                                    pad={30}
+                                    titleStyle={{ letterSpacing: 1 }}
+                                    containerStyle={{ backgroundColor: 'unset' }}
+                                    chevron={<Icons
+                                        name={"chevron-right"}
+                                        color="rgb(102, 94, 94)"
+                                        size={25}
+                                    />}
+                                    onPress={() => navigation.navigate('ChangeProfile')}
+
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <ListItem onPress={logout}
+                                    title={"logout"}
+                                    leftIcon={
+                                        <Icons
+                                            name={"logout"}
+                                            color="blue"
+                                            size={25}
+                                        />}
+                                    pad={30}
+                                    titleStyle={{ letterSpacing: 1 }}
+                                    containerStyle={{ backgroundColor: 'unset' }}
+                                    chevron={<Icons
+                                        name={"chevron-right"}
+                                        color="rgb(102, 94, 94)"
+                                        size={25}
+                                    />}
+
+                                />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
@@ -154,7 +206,7 @@ export default function Profile({ navigation }) {
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             {!showSettingsPage ? (
                 profilepagecomponent()
             ) : (
@@ -172,6 +224,30 @@ const styles = StyleSheet.create({
     lowerContainer: {
         margin: 30,
         justifyContent: 'center',
+    },
+    accountsText: {
+        // fontSize: 10,
+        letterSpacing: 1,
+        textAlign: "center",
+        marginTop: 10,
+        fontSize: 10
+        // margin: 20
+    },
+    accountContainerBody: {
+        marginTop: 10,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly"
+    },
+    accountContainerTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        letterSpacing: 1,
+        marginBottom: 10
+
+    },
+    accountContainer: {
+        marginTop: 30,
     },
     statText: {
         textAlign: 'center',
@@ -240,5 +316,7 @@ const styles = StyleSheet.create({
     },
     container: {
         paddingTop: 30,
+        flex: 1,
+        backgroundColor: "#fff"
     },
 });

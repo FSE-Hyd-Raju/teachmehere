@@ -338,7 +338,7 @@ export default function ChangeProfilePage({ navigation }) {
                         name: 'arrow-left', type: 'feather'
                     }}
                     style={{ width: 200, height: 200 }}
-                    source={{ uri: userInfo.displaypic ? userInfo.displaypic : 'https://cdn.pixabay.com/photo/2018/10/30/16/06/water-lily-3784022__340.jpg' }}
+                    source={{ uri: userInfo.displaypic ? userInfo.displaypic : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
                 />
                 <View style={{
                     backgroundColor: 'white', position: 'relative',

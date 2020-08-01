@@ -30,19 +30,6 @@ export default function ProfileSettingsPage({ navigation }) {
         // };
     }, []);
 
-    const logout = () => {
-        dispatch(
-            logOutUser({
-                onSuccess: () => {
-                    navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'GuestPage' }],
-                    });
-                },
-            }))
-
-    }
-
 
     const settingsPageComponent = () => {
         return (
@@ -61,50 +48,8 @@ export default function ProfileSettingsPage({ navigation }) {
                             justifyContent: "center",
                             flex: 0.6
                         }}>
-                            <Text style={styles.headerTitle}>App Settings</Text>
+                            <Text style={styles.headerTitle}>Settings</Text>
                         </View>
-                    </View>
-                    <View style={styles.accountContainer}>
-                        <Text style={styles.accountContainerTitle}>Account</Text>
-                        <TouchableOpacity>
-                            <ListItem
-                                title={"Change Profile"}
-                                leftIcon={<Icons
-                                    name={"account-circle-outline"}
-                                    color="rgb(102, 94, 94)"
-                                    size={25}
-                                />}
-                                pad={30}
-                                titleStyle={{ letterSpacing: 1 }}
-                                containerStyle={{ backgroundColor: 'unset' }}
-                                chevron={<Icons
-                                    name={"chevron-right"}
-                                    color="rgb(102, 94, 94)"
-                                    size={25}
-                                />}
-                                onPress={() => navigation.navigate('ChangeProfile')}
-
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <ListItem onPress={logout}
-                                title={"logout"}
-                                leftIcon={<Icons
-                                    name={"logout"}
-                                    color="rgb(102, 94, 94)"
-                                    size={25}
-                                />}
-                                pad={30}
-                                titleStyle={{ letterSpacing: 1 }}
-                                containerStyle={{ backgroundColor: 'unset' }}
-                                chevron={<Icons
-                                    name={"chevron-right"}
-                                    color="rgb(102, 94, 94)"
-                                    size={25}
-                                />}
-
-                            />
-                        </TouchableOpacity>
                     </View>
                     <View style={styles.accountContainer}>
                         <Text style={styles.accountContainerTitle}>Help And Support</Text>
@@ -117,7 +62,7 @@ export default function ProfileSettingsPage({ navigation }) {
                                         size={iconSize}
                                     /> */}
                                     <Image
-                                        source={require('../../../assets/img/settings_feedback.png')}
+                                        source={require('../../../assets/img/settings_feedback_icon1.png')}
                                         style={{ height: 70, width: 80, }}
                                     />
                                     <Text style={styles.accountsText}>Feedback</Text>
@@ -147,17 +92,15 @@ export default function ProfileSettingsPage({ navigation }) {
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
                                     {/* <Icons
-                                        name={"cellphone-arrow-down"}
+                                        name={"share-variant"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
                                     /> */}
                                     <Image
-                                        source={require('../../../assets/img/settings_version_icon1.png')}
-                                        style={{ height: 50, width: 50, }}
+                                        source={require('../../../assets/img/settings_share_icon2.png')}
+                                        style={{ height: 60, width: 70, }}
                                     />
-                                    <Text style={styles.accountsText}>Version</Text>
-                                    <Text style={{}}>1.0.0</Text>
-
+                                    <Text style={styles.accountsText}>Invite friends</Text>
                                 </Surface>
                             </TouchableOpacity>
                             <TouchableOpacity>
@@ -177,20 +120,6 @@ export default function ProfileSettingsPage({ navigation }) {
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
                                     {/* <Icons
-                                        name={"share-variant"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_share_icon1.png')}
-                                        style={{ height: 60, width: 70, }}
-                                    />
-                                    <Text style={styles.accountsText}>Invite friends</Text>
-                                </Surface>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
                                         name={"security"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
@@ -200,6 +129,22 @@ export default function ProfileSettingsPage({ navigation }) {
                                         style={{ height: 70, width: 90, }}
                                     />
                                     <Text style={styles.accountsText}>Privacy policy</Text>
+                                </Surface>
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <Surface style={styles.surface}>
+                                    {/* <Icons
+                                        name={"cellphone-arrow-down"}
+                                        color="rgb(102, 94, 94)"
+                                        size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_version_icon1.png')}
+                                        style={{ height: 50, width: 50, }}
+                                    />
+                                    <Text style={styles.accountsText}>Version</Text>
+                                    <Text style={{}}>1.0.0</Text>
+
                                 </Surface>
                             </TouchableOpacity>
                         </View>
@@ -221,30 +166,6 @@ const iconSize = 20;
 const styles = StyleSheet.create({
     settingsContainer: {
         margin: 20
-    },
-    accountsText: {
-        // fontSize: 10,
-        letterSpacing: 1,
-        textAlign: "center",
-        marginTop: 10,
-        fontSize: 10
-        // margin: 20
-    },
-    accountContainerBody: {
-        marginTop: 10,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-evenly"
-    },
-    accountContainerTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-        letterSpacing: 1,
-        marginBottom: 10
-
-    },
-    accountContainer: {
-        marginTop: 30,
     },
     surface: {
         margin: 5,
