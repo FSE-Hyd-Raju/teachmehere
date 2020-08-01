@@ -146,10 +146,14 @@ export default function ProfileSettingsPage({ navigation }) {
                         <View style={styles.accountContainerBody}>
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
+                                    {/* <Icons
                                         name={"cellphone-arrow-down"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_version_icon.png')}
+                                        style={{ height: 60, width: 70, }}
                                     />
                                     <Text style={styles.accountsText}>Version</Text>
                                     <Text style={{}}>1.0.0</Text>
@@ -172,20 +176,28 @@ export default function ProfileSettingsPage({ navigation }) {
                             </TouchableOpacity>
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
+                                    {/* <Icons
                                         name={"share-variant"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_share_icon.png')}
+                                        style={{ height: 70, width: 80, }}
                                     />
                                     <Text style={styles.accountsText}>Invite friends</Text>
                                 </Surface>
                             </TouchableOpacity>
                             <TouchableOpacity>
                                 <Surface style={styles.surface}>
-                                    <Icons
+                                    {/* <Icons
                                         name={"security"}
                                         color="rgb(102, 94, 94)"
                                         size={iconSize}
+                                    /> */}
+                                    <Image
+                                        source={require('../../../assets/img/settings_privacy_icon.png')}
+                                        style={{ height: 70, width: 80, }}
                                     />
                                     <Text style={styles.accountsText}>Privacy policy</Text>
                                 </Surface>
