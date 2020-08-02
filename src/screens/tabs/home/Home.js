@@ -62,7 +62,11 @@ const Home = props => {
     { key: 4, value: 'Another' },
   ];
   const showMore = () => {
-    console.log('===> more');
+    const data = {};
+    props.navigation.navigate('SkillListView', {
+      title: 'Featured Skills',
+      data,
+    });
   };
 
   const [entries, setEntries] = useState([]);
@@ -163,7 +167,7 @@ const Home = props => {
       </View>
       <View style={{ marginTop: 5 }}>
         <CategoryWrapper
-          title={'Recomended'}
+          title={'Recomended Skills'}
           btnText={'See All'}
           onButtonPress={() => showMore()}
         />
