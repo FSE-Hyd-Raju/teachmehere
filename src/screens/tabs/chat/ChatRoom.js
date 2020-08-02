@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { GiftedChat, Bubble, Send, SystemMessage } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, Send, SystemMessage, Time, Message, Avatar as Ava } from 'react-native-gifted-chat';
 import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
@@ -43,12 +43,12 @@ export default function ChatRoom({ route, navigation }) {
                         ...firebaseData
                     };
 
-                    if (!firebaseData.system) {
-                        data.user = {
-                            ...firebaseData.user,
-                            name: firebaseData.user.username
-                        };
-                    }
+                    // if (!firebaseData.system) {
+                    //     data.user = {
+                    //         ...firebaseData.user,
+                    //         name: firebaseData.user.username
+                    //     };
+                    // }
 
                     return data;
                 });
@@ -209,8 +209,53 @@ export default function ChatRoom({ route, navigation }) {
         );
     }
 
+    function renderMessage(props) {
+        return (
+            <Message
+                {...props}
+                timeTextStyle={{
+                    right: {
+                        color: "white"
+                    },
+                    left: {
+                        color: "#7b8a91"
+                    }
+                }}
+            />
+        );
+    }
+
+    function renderMessage(props) {
+        return (
+            <Message
+                {...props}
+                containerStyle={{
+                    right: {
+                        paddingRight: 5
+                    },
+                    left: {
+                        paddingLeft: 10
+                    }
+                }}
+            />
+        );
+    }
+
+    function renderAvatar(props) {
+        return (
+            <Ava
+                {...props}
+                imageStyle={{
+                    left: {
+                        backgroundColor: "rgb(0, 62, 86)"
+                    }
+                }}
+            />
+        );
+    }
+
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 20 }}  >
+        <View style={{ flex: 1, backgroundColor: "#fff" }}  >
             <View style={styles.headerComponent}>
                 <Icons
                     name={"keyboard-backspace"}
@@ -255,10 +300,13 @@ export default function ChatRoom({ route, navigation }) {
                 showUserAvatar={false}
                 scrollToBottom
                 renderBubble={renderBubble}
+                renderMessage={renderMessage}
+                renderAvatar={renderAvatar}
                 // renderLoadEarlier={true}
                 // renderAvatar={null}
                 renderSend={renderSend}
                 renderTime={renderTime}
+                renderMessage={renderMessage}
                 scrollToBottomComponent={scrollToBottomComponent}
                 // renderSystemMessage={renderSystemMessage}
                 showAvatarForEveryMessage={false}
@@ -311,7 +359,12 @@ const styles = StyleSheet.create({
     },
     headerComponent: {
         flexDirection: "row",
-        height: 80,
+        // height: 40,
         alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        // marginTop: 20,
+        borderBottomColor: "#eeeeee",
+        borderBottomWidth: 1
     },
 });

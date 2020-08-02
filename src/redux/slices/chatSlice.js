@@ -63,6 +63,7 @@ export function fetchChats(userInfo) {
             firestore()
                 .collection('THREADS')
                 .where("ids", "array-contains", userInfo._id)
+                // .where("deletedids", "array-contains", userInfo._id)
                 .orderBy('latestMessage.createdAt', 'desc')
                 .onSnapshot(querySnapshot => {
                     var res = []
