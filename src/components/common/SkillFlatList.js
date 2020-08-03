@@ -20,7 +20,7 @@ const SkillFlatList = props => {
   const showDetails = () => {
     const data = {};
     navigation.navigate('SkillDetail', {
-      title: 'Angular JS',
+      title: '',
       data,
     });
   };
