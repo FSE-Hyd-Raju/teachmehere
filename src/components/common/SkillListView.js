@@ -13,11 +13,12 @@ import Price from './Price';
 import { random_rgba } from '../../utils/random_rgba';
 import { Divider } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import CategoryChipView from './CategoryChipView';
 
 const { labelColor, buttonColor } = random_rgba();
 
 const SkillListView = ({ route, navigation }) => {
-  const { title } = route.params;
+  const { title, category, skills } = route.params;
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,6 +40,14 @@ const SkillListView = ({ route, navigation }) => {
         style={{
           padding: 5,
         }}>
+        {category && (
+          <View>
+            <Text style={{ padding: 10, fontSize: 15, fontWeight: 'bold' }}>
+              Sub Categories
+            </Text>
+            <CategoryChipView data={category.subCategories} keyProp={'name'} />
+          </View>
+        )}
         <TouchableOpacity style={styles.listview}>
           <Image
             source={require('../../assets/img/skill.jpeg')}

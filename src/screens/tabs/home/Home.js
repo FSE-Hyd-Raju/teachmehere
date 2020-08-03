@@ -7,29 +7,36 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import { Chip } from 'react-native-paper';
 import SkillFlatList from '../../../components/common/SkillFlatList';
 import CategoryWrapper from '../../../components/common/CategoryWrapper';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const categories = require('../post/categories.json');
 
 import { random_rgba } from '../../../utils/random_rgba';
 import CategoryFlatList from '../../../components/common/CategoryFlatList';
+import CategoryChipView from '../../../components/common/CategoryChipView';
 
 const { labelColor } = random_rgba();
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const Home = props => {
-  const showMore = () => {
-    console.log("YYHHHJ")
-    const data = {};
+  const showMore = (title, skills) => {
     props.navigation.navigate('SkillListView', {
-      title: 'Featured Skills',
-      data,
+      title: 'TEST',
+      category: {},
+      skills,
+    });
+  };
+
+  const showCategorySkills = skills => {
+    props.navigation.navigate('SkillListView', {
+      title: skills.category,
+      category: skills,
+      skills,
     });
   };
 
@@ -47,7 +54,7 @@ const Home = props => {
   const { index } = useState(0);
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
-      <View>
+      <TouchableOpacity onPress={() => showCategorySkills(item)}>
         <ParallaxImage
           source={{ uri: item.illustration }}
           containerStyle={styles.imageContainer}
@@ -57,7 +64,7 @@ const Home = props => {
           {...parallaxProps}
         />
         <Text style={styles.title} numberOfLines={2}>
-          {item.categoryName}
+          {item.category}
         </Text>
         <View style={styles.subTitleContainer}>
           <Text style={styles.subTitle} numberOfLines={2}>
@@ -70,7 +77,7 @@ const Home = props => {
             style={{ marginLeft: 10 }}
           />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
@@ -102,7 +109,7 @@ const Home = props => {
         <CategoryWrapper
           title={'Featured Skills'}
           btnText={'See All'}
-          onButtonPress={() => showMore()}
+          onButtonPress={() => showMore({})}
         />
         <SkillFlatList categories={categories} />
       </View>
@@ -110,29 +117,17 @@ const Home = props => {
         <CategoryWrapper
           title={'Top Categories'}
           btnText={'See All'}
-          onButtonPress={() => showMore()}
+          onButtonPress={() => showMore({})}
         />
         <View style={{ marginLeft: 15 }}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {entries &&
-              entries.map(cat => {
-                return (
-                  <Chip
-                    style={{ margin: 5, padding: 3 }}
-                    avatar={<IconMaterialIcons name={cat.icon} size={20} />}
-                    onPress={() => console.log('Pressed')}>
-                    {cat.title}
-                  </Chip>
-                );
-              })}
-          </ScrollView>
+          <CategoryChipView data={categories} keyProp={'category'} />
         </View>
       </View>
       <View style={{ marginTop: 5 }}>
         <CategoryWrapper
           title={'Recomended Skills'}
           btnText={'See All'}
-          onButtonPress={() => showMore()}
+          onButtonPress={() => showMore({})}
         />
         <CategoryFlatList categories={entries} />
       </View>

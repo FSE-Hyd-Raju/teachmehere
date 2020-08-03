@@ -1,8 +1,8 @@
 [
     {
         "id": "sdasd-asd-asd-as-dasd-2323",
-        "categoryName": "IT & Software",
-        "iconName": "computer",
+        "category": "IT & Software",
+        "icon": "computer",
         "hidden": false,
         "illustration": "https://i.imgur.com/UYiroysl.jpg",
         "helpText": "Learn Now",
@@ -62,8 +62,8 @@
     },
     {
         "id": "sdasd-asd-asd-as-dasd-23123123",
-        "categoryName": "Business",
-        "iconName": "insert-chart",
+        "category": "Business",
+        "icon": "insert-chart",
         "hidden": false,
         "illustration": "https://i.imgur.com/UPrs1EWl.jpg",
         "helpText": "Learn Now",
@@ -153,8 +153,8 @@
     },
     {
         "id": "sdasd-asd-asd-as-dasd-23154545",
-        "categoryName": "Photography",
-        "iconName": "camera",
+        "category": "Photography",
+        "icon": "camera",
         "hidden": false,
         "illustration": "https://i.imgur.com/MABUbpDl.jpg",
         "helpText": "Learn Now",

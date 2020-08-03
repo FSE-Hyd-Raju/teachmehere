@@ -102,7 +102,7 @@ export default class Post extends Component {
               style={styles.backButton}>
               <Icon name="md-arrow-round-back" size={28} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.heading}>{activeCategory.categoryName}</Text>
+            <Text style={styles.heading}>{activeCategory.category}</Text>
           </View>
         )}
 
@@ -116,11 +116,11 @@ export default class Post extends Component {
                 onPress={() => this.showSubCategories(category)}>
                 <View key={category.id} style={styles.IconAndName}>
                   <IconMaterialIcons
-                    name={category.iconName}
+                    name={category.icon}
                     color="#000"
                     size={30}
                   />
-                  <Text>{category.categoryName}</Text>
+                  <Text>{category.category}</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -137,7 +137,7 @@ export default class Post extends Component {
             <Provider>
               <Steps
                 backFromSteps={this.backFromSteps}
-                category={activeCategory.categoryName}
+                category={activeCategory.category}
                 subCategory={activeSubCategory.name}
               />
             </Provider>

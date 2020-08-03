@@ -34,6 +34,7 @@ import {
   fetchTopCategories,
 } from './redux/slices/searchSlice';
 import messaging from '@react-native-firebase/messaging';
+import SkillDetail from './components/SkillDetail';
 
 const TabNavigation = props => {
   const dispatch = useDispatch();
@@ -125,6 +126,7 @@ const TabNavigation = props => {
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SkillListView" component={SkillListView} />
         <Stack.Screen name="SkillGridView" component={SkillGridView} />
+        <Stack.Screen name="SkillDetail" component={SkillDetail} />
       </Stack.Navigator>
     );
   }

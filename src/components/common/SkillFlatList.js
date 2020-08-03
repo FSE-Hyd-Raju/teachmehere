@@ -11,11 +11,21 @@ import { Icon, Rating } from 'react-native-elements';
 import { Button } from 'react-native-paper';
 import { random_rgba } from '../../utils/random_rgba';
 import Price from '../common/Price';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 const { labelColor, buttonColor } = random_rgba();
 const SkillFlatList = props => {
+  const navigation = useNavigation();
+  const showDetails = () => {
+    const data = {};
+    navigation.navigate('SkillDetail', {
+      title: 'Angular JS',
+      data,
+    });
+  };
   const renderItem = ({ item }) => (
-    <View style={styles.cardStyle}>
+    <TouchableOpacity style={styles.cardStyle} onPress={() => showDetails()}>
       <Image
         source={require('../../assets/img/skill.jpeg')}
         style={{ height: 95, width: 160 }}
@@ -39,17 +49,9 @@ const SkillFlatList = props => {
         <Price />
       </View>
       <View style={styles.platform}>
-        {/* <Button
-          mode="contained"
-          disabled
-          uppercase={false}
-          style={{ backgroundColor: buttonColor }}
-          labelStyle={{ color: labelColor, fontSize: 7 }}>
-          Skype
-        </Button> */}
         <Text style={styles.platformText}>Skype</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
