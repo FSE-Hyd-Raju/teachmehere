@@ -29,6 +29,8 @@ export default function RequestedCoursesPage({ navigation }) {
             })
         }).then((response) => response.json())
             .then((responseJson) => {
+                console.log("no of courses")
+                console.log(responseJson.length)
                 console.log(JSON.stringify(responseJson))
                 if (responseJson && responseJson.length)
                     setCourseData(responseJson)
