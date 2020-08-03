@@ -21,47 +21,11 @@ import CategoryFlatList from '../../../components/common/CategoryFlatList';
 
 const { labelColor } = random_rgba();
 
-const ENTRIES1 = [
-  {
-    title: 'IT & Software',
-    subTitle: 'Learn Now',
-    icon: 'laptop',
-    illustration: 'https://i.imgur.com/UYiroysl.jpg',
-  },
-  {
-    title: 'Finance & Accounting',
-    subTitle: 'Learn from experts',
-    icon: 'account_balance',
-    illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
-  },
-  {
-    title: 'Marketing',
-    subTitle: 'Learn Marketing',
-    icon: 'marketing',
-    illustration: 'https://i.imgur.com/MABUbpDl.jpg',
-  },
-  {
-    title: 'Designing',
-    subTitle: 'Learn to design',
-    illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
-  },
-  {
-    title: 'Business',
-    subTitle: 'Learn & Earn',
-    illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
-  },
-];
-
 const { width: screenWidth } = Dimensions.get('window');
 
 const Home = props => {
-  const categories = [
-    { key: 1, value: 'Singing' },
-    { key: 2, value: 'Dancing' },
-    { key: 3, value: 'Other' },
-    { key: 4, value: 'Another' },
-  ];
   const showMore = () => {
+    console.log("YYHHHJ")
     const data = {};
     props.navigation.navigate('SkillListView', {
       title: 'Featured Skills',
@@ -77,7 +41,7 @@ const Home = props => {
   };
 
   useEffect(() => {
-    setEntries(ENTRIES1);
+    setEntries(categories);
   }, []);
 
   const { index } = useState(0);
@@ -93,11 +57,11 @@ const Home = props => {
           {...parallaxProps}
         />
         <Text style={styles.title} numberOfLines={2}>
-          {item.title}
+          {item.categoryName}
         </Text>
         <View style={styles.subTitleContainer}>
           <Text style={styles.subTitle} numberOfLines={2}>
-            {item.subTitle}
+            {item.helpText}
           </Text>
           <IconMaterialIcons
             name={'school'}
@@ -130,10 +94,9 @@ const Home = props => {
         autoplay={true}
         autoplayDelay={2000}
         autoplayInterval={5000}
-        enableMomentum={false}
-        lockScrollWhileSnapping={true}
+        enableMomentum={true}
+        lockScrollWhileSnapping={false}
         loop={true}
-        pagingEnabled={true}
       />
       <View style={{ marginTop: 7 }}>
         <CategoryWrapper

@@ -38,7 +38,6 @@ const SkillListView = ({ route, navigation }) => {
       <ScrollView
         style={{
           padding: 5,
-          marginTop: 20,
         }}>
         <TouchableOpacity style={styles.listview}>
           <Image
@@ -91,6 +90,7 @@ const styles = StyleSheet.create({
   listview: {
     flexDirection: 'row',
     paddingBottom: 20,
+    marginTop: 20,
   },
   skillName: {
     fontWeight: 'bold',
