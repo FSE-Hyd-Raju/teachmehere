@@ -42,6 +42,7 @@ const TabNavigation = props => {
 
   const Stack = createStackNavigator();
   const Tab = createMaterialBottomTabNavigator();
+  const [Intialroutename, setIntialroutename] = React.useState("GuestPage");
 
   useEffect(() => {
     loadInitialData();
@@ -102,7 +103,7 @@ const TabNavigation = props => {
 
   function ProfileStackScreen() {
     return (
-      <Stack.Navigator headerMode={'none'} initialRouteName={'Profile'}>
+      <Stack.Navigator headerMode={'none'} initialRouteName={Intialroutename}>
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="GuestPage" component={GuestPage} />
         <Stack.Screen name="Login" component={LoginPage} />
