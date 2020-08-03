@@ -31,6 +31,7 @@ export default function signupPage({ navigation }) {
     const [showEmail, setshowEmail] = React.useState("");
 
     const [eyeicon, seteyeicon] = React.useState("eye");
+    const onSigninPress = () => navigation.navigate('Login');
 
     const toggleEyeIcon = () => {
         if (eyeicon === "eye") {
@@ -172,7 +173,7 @@ export default function signupPage({ navigation }) {
                                 <Text style={{ fontSize: 10, color: 'red' }}>{errors.phonenumber}</Text>
                             }
 
-                            <Button title="Signin" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
+                            <Button title="Signup" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
                             <PageSpinner visible={loading} />
                         </View>
                     </Fragment>
@@ -273,6 +274,16 @@ export default function signupPage({ navigation }) {
                 {headerComponent()}
                 {!showOtpScreen ? screen1() : null}
                 {showOtpScreen ? screen2() : null}
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 10,
+                    }}>
+                    <Text>Already have an account?</Text>
+                    <Button title="Signin" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
+                </View>
             </ScrollView >
         </View>
 
@@ -285,6 +296,11 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 25,
         backgroundColor: "rgb(255, 255, 255)",
+    },
+    signin: {
+        paddingVertical: Theme.spacing.tiny,
+        // paddingRight: Theme.spacing.small,
+        marginLeft: 7,
     },
     inputComponentStyle: {
         justifyContent: 'center',

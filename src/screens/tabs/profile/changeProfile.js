@@ -5,7 +5,7 @@ import {
     ScrollView,
     Text,
     Image,
-    Dimensions, AsyncStorage, ActivityIndicator
+    Dimensions, AsyncStorage, ActivityIndicator, Alert
 } from 'react-native';
 import { Input, Button, Avatar, ButtonGroup, Icon } from 'react-native-elements';
 import Theme from '../../../Theme';
@@ -309,6 +309,22 @@ export default function ChangeProfilePage({ navigation }) {
             </Formik>
         );
     };
+
+    const logoutAlert = () =>
+        Alert.alert(
+            "Alert Title",
+            "My Alert Msg",
+            [
+                {
+                    text: "Yes",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "No", onPress: () => console.log("OK Pressed") }
+            ],
+            { cancelable: false }
+        );
+
     const buttons = ["Edit Profile", "Change Password"]
 
     const backButtonComponent = () => {
