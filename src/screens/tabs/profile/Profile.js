@@ -11,6 +11,7 @@ import {
     Keyboard,
     Dimensions,
     ScrollView,
+    Alert
 } from 'react-native';
 import {
     Searchbar,
@@ -53,6 +54,21 @@ export default function Profile({ navigation }) {
             }))
 
     }
+    const logoutAlert = () =>
+        Alert.alert(
+            "Logout",
+            "Do you want to logout?",
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("No Pressed"),
+                    style: "cancel"
+                },
+                { text: "Yes", onPress: () => logout() }
+            ],
+            { cancelable: false }
+        );
+
 
 
     const settingsIconContainer = () => {
@@ -204,7 +220,7 @@ export default function Profile({ navigation }) {
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity>
-                                <ListItem onPress={logout}
+                                <ListItem onPress={logoutAlert}
                                     title={"logout"}
                                     leftIcon={
                                         <Icons
