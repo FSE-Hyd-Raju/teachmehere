@@ -7,13 +7,14 @@ import { Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { chatSelector, fetchChats, setChatResults } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults, checkChatExists, enableLoading, disableLoading } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
     const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const { userInfo } = useSelector(loginSelector)
     const { chatResults } = useSelector(chatSelector)
+    const dispatch = useDispatch()
 
 
     useEffect(() => {
@@ -158,16 +159,71 @@ export default function NewChat({ navigation }) {
     }
 
     const checkIfChatExists = (item) => {
+        // alert("item" + JSON.stringify(item))
+        // alert("userInfo" + JSON.stringify(userInfo))
+        var exists = false
+
+        dispatch(enableLoading());
+        firestore().collection('THREADS').
+            where("ids", "array-contains", userInfo._id).
+            get().then(querySnapshot => {
+                for (var i in querySnapshot.docs) {
+                    alert("in")
+                    const data = querySnapshot.docs[i]
+                    // alert(data["ids"][0])
+                    // alert(data["ids"][1])
+                    alert(JSON.stringify(data))
+
+                    // if (data["ids"].indexOf(item._id) > -1) {
+                    //     alert("in if")
+
+                    //     exists = true;
+                    //     item = {
+                    //         ...item,
+                    //         _id: documentSnapshot.id,
+                    //         name: item.username
+                    //     }
+                    //     break;
+                    // }
+                }
+                // querySnapshot.forEach(documentSnapshot => {
+                //     data = documentSnapshot.data();
+                //     alert(JSON.stringify(data["ids"]))
+                //     if (data["ids"].indexOf(item._id) > -1) {
+                //         exists = true;
+
+                //         item = {
+                //             ...item,
+                //             _id: documentSnapshot.id,
+                //             name: item.username
+                //         }
+                //     }
+                // })
+                alert(exists)
+                // dispatch(disableLoading());
+                if (!exists) {
+                    sendMessage(item)
+                } else {
+                    navigation.popToTop();
+                    navigation.navigate('ChatRoom', { thread: item });
+                }
+            });
+
+
+
+
         // alert("item " + JSON.stringify(item))
         // alert("chatResults" + JSON.stringify(chatResults))
 
-        var filterRes = chatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
-        if (filterRes.length) {
-            navigation.popToTop();
-            navigation.navigate('ChatRoom', { thread: filterRes[0] });
-        } else {
-            sendMessage(item)
-        }
+        // var filterRes = chatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
+        // if (filterRes.length) {
+        //     navigation.popToTop();
+        //     navigation.navigate('ChatRoom', { thread: filterRes[0] });
+        // } else {
+        //     sendMessage(item)
+        // }
+
+        // dispatch(checkChatExists(userInfo, item))
 
         // firestore().collection('THREADS').
         //     where("ids", "array-contains", user._id).

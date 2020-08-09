@@ -8,14 +8,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import OptionsMenu from "react-native-options-menu";
 
 export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
     const { thread } = route.params;
-
 
 
 
@@ -254,6 +253,18 @@ export default function ChatRoom({ route, navigation }) {
         );
     }
 
+    clearChat = () => {
+        alert("clearChat")
+    }
+
+    deleteChat = () => {
+        alert("deleteChat")
+    }
+
+    blockUser = () => {
+        alert("blockUser")
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}  >
             <View style={styles.headerComponent}>
@@ -261,16 +272,16 @@ export default function ChatRoom({ route, navigation }) {
                     name={"keyboard-backspace"}
                     // color="#fff"
                     size={27}
-                    // style={{ flex: 0.2 }}
+                    style={{ flex: 0.1 }}
                     onPress={() => navigation.goBack()}
                 />
                 <View style={{
                     // alignItems: 'center',
                     // justifyContent: "center",
-                    // flex: 0.6
+                    flex: 0.9,
                     marginLeft: 25
                 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 0.9 }}>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 rounded
@@ -281,6 +292,16 @@ export default function ChatRoom({ route, navigation }) {
                             <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
                         </View>
                     </TouchableOpacity>
+                    <View style={{ flex: 0.1 }}>
+                        <OptionsMenu
+                            customButton={<Icons name={"dots-vertical"}    // color="#fff"
+                                size={27}
+                            // style={{ flex: 0.2 }}
+                            />}
+                            destructiveIndex={1}
+                            options={["Clear Chat", "Delete", "Block"]}
+                            actions={[clearChat, deleteChat, blockUser]} />
+                    </View>
                 </View>
                 {/* <Icons
                     name={"camera"}

@@ -40,6 +40,12 @@ const chatSlice = createSlice({
             state.loading = false;
             state.chatResults = [];
             state.searchChatResults = [];
+        },
+        enableLoading: (state) => {
+            state.loading = true;
+        },
+        disableLoading: (state) => {
+            state.loading = false;
         }
 
     },
@@ -50,7 +56,9 @@ export const {
     getChatsSuccess,
     getChatsFailure,
     setChatResults,
-    clearData
+    clearData,
+    enableLoading,
+    disableLoading
 } = chatSlice.actions;
 
 export const chatSelector = state => state.chat;
@@ -85,5 +93,41 @@ export function fetchChats(userInfo) {
         } catch (error) {
             dispatch(getChatsFailure());
         }
+    };
+}
+
+
+export function checkChatExists() {
+    return async dispatch => {
+        alert(JSON.stringify("khkh"))
+        // dispatch(enableLoading());
+        // try {
+        //     firestore().collection('THREADS').
+        //         where("ids", "array-contains", props.userInfo._id).
+        //         get().then(querySnapshot => {
+        //             querySnapshot.forEach(documentSnapshot => {
+        //                 data = documentSnapshot.data();
+        //                 if (data["ids"].indexOf(props.item._id) > -1) {
+        //                     exists = true;
+
+        //                     item = {
+        //                         ...props.item,
+        //                         _id: documentSnapshot.id,
+        //                         name: props.item.username
+        //                     }
+        //                 }
+        //             })
+        //             alert(exists)
+        //             dispatch(disableLoading());
+        //             if (!exists) {
+        //                 props.sendMessage()
+        //             } else {
+        //                 props.navigatefun()
+        //             }
+        //         });
+
+        // } catch (error) {
+        //     dispatch(disableLoading());
+        // }
     };
 }
