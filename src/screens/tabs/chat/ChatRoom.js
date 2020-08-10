@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GiftedChat, Bubble, Send, SystemMessage, Time, Message, Avatar as Ava } from 'react-native-gifted-chat';
-import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text, BackHandler } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
@@ -14,15 +14,46 @@ export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
+    const [emptyChat, setEmptyChat] = useState(true);
+
     const { thread } = route.params;
 
 
+    // const backButtonHandler = () => {
+    //     return BackHandler.addEventListener(
+    //         'hardwareBackPress',
+    //         function () {
+    //             if (openFilterPage) {
+    //                 setOpenFilterPage(false);
+    //                 return true;
+    //             }
+    //             else if ((isSearchFocused || searchBarRef.current.isFocused())) {
+    //                 searchBackFun();
+    //                 return true;
+    //             }
+    //             return false;
+    //         },
+    //     );
+    // }
 
     useEffect(() => {
+        // let backhandler = backButtonHandler()
+
         const messagesListener = getMessages()
         // Stop listening for updates whenever the component unmounts
-        return () => messagesListener();
+        return () => {
+            // backhandler.remove();
+            checkToRemoveChat()
+            messagesListener();
+        };
     }, []);
+
+    const checkToRemoveChat = () => {
+        if (thread.newChat && emptyChat)
+            firestore()
+                .collection('THREADS')
+                .doc(thread._id).delete();
+    }
 
 
     getMessages = () => {
@@ -32,26 +63,28 @@ export default function ChatRoom({ route, navigation }) {
             .collection('MESSAGES')
             .orderBy('serverTime', 'desc')
             .onSnapshot(querySnapshot => {
-                const messages1 = querySnapshot.docs.map(doc => {
+                const messagesArr = querySnapshot.docs.map(doc => {
                     const firebaseData = doc.data();
 
-                    const data = {
-                        _id: doc.id,
-                        text: '',
-                        createdAt: new Date().getTime(),
-                        ...firebaseData
-                    };
+                    if (!firebaseData.deletedIds || !firebaseData.deletedIds.length || (firebaseData.deletedIds && firebaseData.deletedIds.indexOf(userInfo._id) == -1)) {
+                        const data = {
+                            _id: doc.id,
+                            text: '',
+                            createdAt: new Date().getTime(),
+                            ...firebaseData
+                        };
 
-                    // if (!firebaseData.system) {
-                    //     data.user = {
-                    //         ...firebaseData.user,
-                    //         name: firebaseData.user.username
-                    //     };
-                    // }
+                        // if (!firebaseData.system) {
+                        //     data.user = {
+                        //         ...firebaseData.user,
+                        //         name: firebaseData.user.username
+                        //     };
+                        // }
+                        return data;
+                    }
 
-                    return data;
                 });
-                setMessages(messages1);
+                setMessages(messagesArr);
             });
     }
 
@@ -63,7 +96,7 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const updateMessage = async (text) => {
-
+        setEmptyChat(false)
         firestore()
             .collection('THREADS')
             .doc(thread._id)
@@ -88,7 +121,9 @@ export default function ChatRoom({ route, navigation }) {
                         text,
                         createdAt: new Date().getTime(),
                         serverTime: firestore.FieldValue.serverTimestamp()
-                    }
+                    },
+                    deletedIds: [],
+                    newChat: false
                 },
                 { merge: true }
             );
@@ -253,20 +288,68 @@ export default function ChatRoom({ route, navigation }) {
         );
     }
 
-    clearChat = () => {
-        alert("clearChat")
+    async function asyncForEach(array, callback) {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
     }
 
-    deleteChat = () => {
+    const clearChat = async () => {
+        alert("clearChat")
+        const querySnapshot = await firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .collection('MESSAGES').get();
+
+        await asyncForEach(querySnapshot, async (documentSnapshot) => {
+            await firestore()
+                .collection('THREADS')
+                .doc(thread._id)
+                .collection('MESSAGES')
+                .doc(documentSnapshot.id)
+                .set(
+                    {
+                        deletedIds: [userInfo._id]
+                    },
+                    { merge: true }
+                );
+        });
+        // querySnapshot.forEach(async (documentSnapshot) => {
+        //     // data = documentSnapshot.data();
+        //     // if (data["ids"].indexOf(item.userinfo._id) > -1) {
+        //     //     exists = true;
+
+        //     //     item = {
+        //     //         ...item,
+        //     //         _id: documentSnapshot.id,
+        //     //         name: item.userinfo.username
+        //     //     }
+        //     // }
+        //     await firestore()
+        //         .collection('THREADS')
+        //         .doc(thread._id)
+        //         .collection('MESSAGES')
+        //         .doc(documentSnapshot.id)
+        //         .set(
+        //             {
+        //                 deletedIds: [userInfo._id]
+        //             },
+        //             { merge: true }
+        //         );
+
+        // })
+    }
+
+    const deleteChat = () => {
         alert("deleteChat")
     }
 
-    blockUser = () => {
+    const blockUser = () => {
         alert("blockUser")
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff" }}  >
+        <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 0 }}  >
             <View style={styles.headerComponent}>
                 <Icons
                     name={"keyboard-backspace"}
@@ -276,12 +359,14 @@ export default function ChatRoom({ route, navigation }) {
                     onPress={() => navigation.goBack()}
                 />
                 <View style={{
-                    // alignItems: 'center',
+                    alignItems: "center",
                     // justifyContent: "center",
                     flex: 0.9,
-                    marginLeft: 25
+                    flexDirection: "row",
+                    marginLeft: 25,
+                    justifyContent: "space-between"
                 }}>
-                    <TouchableOpacity style={{ flex: 0.9 }}>
+                    <TouchableOpacity >
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 rounded
@@ -292,16 +377,14 @@ export default function ChatRoom({ route, navigation }) {
                             <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
                         </View>
                     </TouchableOpacity>
-                    <View style={{ flex: 0.1 }}>
-                        <OptionsMenu
-                            customButton={<Icons name={"dots-vertical"}    // color="#fff"
-                                size={27}
-                            // style={{ flex: 0.2 }}
-                            />}
-                            destructiveIndex={1}
-                            options={["Clear Chat", "Delete", "Block"]}
-                            actions={[clearChat, deleteChat, blockUser]} />
-                    </View>
+                    <OptionsMenu
+                        customButton={<Icons name={"dots-vertical"}    // color="#fff"
+                            size={25}
+                        // style={{ flex: 0.2 }}
+                        />}
+                        destructiveIndex={1}
+                        options={["Clear Chat", "Delete", "Block"]}
+                        actions={[clearChat, deleteChat, blockUser]} />
                 </View>
                 {/* <Icons
                     name={"camera"}
@@ -382,7 +465,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         // height: 40,
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingLeft: 20,
         paddingVertical: 10,
         // marginTop: 20,
         borderBottomColor: "#eeeeee",

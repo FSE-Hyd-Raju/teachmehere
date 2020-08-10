@@ -133,9 +133,11 @@ export default function NewChat({ navigation }) {
             }],
             ids: [userInfo._id, item.userinfo._id],
             latestMessage: {
-                text: 'Keep the discussions healthy',
+                text: 'Say Hello..',
                 createdAt: Date.now()
-            }
+            },
+            deletedIds: [item.userinfo._id],
+            newChat: true
         }
         ref.set(obj)
             .then(() => {
@@ -143,7 +145,7 @@ export default function NewChat({ navigation }) {
                 //    alert(JSON.stringify(doc.data()))
                 // })
                 ref.collection('MESSAGES').add({
-                    text: 'Keep the discussions healthy',
+                    text: 'Say Hello..',
                     createdAt: Date.now(),
                     system: true
                 });
@@ -153,6 +155,7 @@ export default function NewChat({ navigation }) {
                     _id: ref.id,
                     name: item.userinfo.username
                 }
+                navigation.popToTop();
                 navigation.navigate('ChatRoom', { thread: item });
             })
 
@@ -167,40 +170,38 @@ export default function NewChat({ navigation }) {
         firestore().collection('THREADS').
             where("ids", "array-contains", userInfo._id).
             get().then(querySnapshot => {
-                for (var i in querySnapshot.docs) {
-                    alert("in")
-                    const data = querySnapshot.docs[i]
-                    // alert(data["ids"][0])
-                    // alert(data["ids"][1])
-                    alert(JSON.stringify(data))
+                // for (var i in querySnapshot.docs) {
+                //     alert("in" + i)
+                //     const data = querySnapshot.docs[i]
+                //     // alert(data["ids"][0])
+                //     // alert(data["ids"][1])
+                //     alert(JSON.stringify({ ...data }))
 
-                    // if (data["ids"].indexOf(item._id) > -1) {
-                    //     alert("in if")
+                //     // if (data["ids"].indexOf(item._id) > -1) {
+                //     //     alert("in if")
 
-                    //     exists = true;
-                    //     item = {
-                    //         ...item,
-                    //         _id: documentSnapshot.id,
-                    //         name: item.username
-                    //     }
-                    //     break;
-                    // }
-                }
-                // querySnapshot.forEach(documentSnapshot => {
-                //     data = documentSnapshot.data();
-                //     alert(JSON.stringify(data["ids"]))
-                //     if (data["ids"].indexOf(item._id) > -1) {
-                //         exists = true;
+                //     //     exists = true;
+                //     //     item = {
+                //     //         ...item,
+                //     //         _id: documentSnapshot.id,
+                //     //         name: item.username
+                //     //     }
+                //     //     break;
+                //     // }
+                // }
+                querySnapshot.forEach(documentSnapshot => {
+                    data = documentSnapshot.data();
+                    if (data["ids"].indexOf(item.userinfo._id) > -1) {
+                        exists = true;
 
-                //         item = {
-                //             ...item,
-                //             _id: documentSnapshot.id,
-                //             name: item.username
-                //         }
-                //     }
-                // })
-                alert(exists)
-                // dispatch(disableLoading());
+                        item = {
+                            ...item,
+                            _id: documentSnapshot.id,
+                            name: item.userinfo.username
+                        }
+                    }
+                })
+                dispatch(disableLoading());
                 if (!exists) {
                     sendMessage(item)
                 } else {

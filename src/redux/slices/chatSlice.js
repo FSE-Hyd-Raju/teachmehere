@@ -77,15 +77,19 @@ export function fetchChats(userInfo) {
                     var res = []
                     if (querySnapshot) {
                         res = querySnapshot.docs.map(documentSnapshot => {
-                            senderDetails = documentSnapshot.data().userDetails.find(o => o.id != userInfo._id);
-                            return {
-                                _id: documentSnapshot.id,
-                                name: (senderDetails && senderDetails.name) ? senderDetails.name : "",
-                                latestMessage: {
-                                    text: ''
-                                },
-                                ...documentSnapshot.data()
-                            };
+                            data = documentSnapshot.data();
+                            senderDetails = data.userDetails.find(o => o.id != userInfo._id);
+                            if ((data.deletedIds && !data.deletedIds.length) || (data.deletedIds && data.deletedIds.indexOf(userInfo._id) == -1)) {
+                                return {
+                                    _id: documentSnapshot.id,
+                                    name: (senderDetails && senderDetails.name) ? senderDetails.name : "",
+                                    latestMessage: {
+                                        text: ''
+                                    },
+                                    ...data
+                                };
+                            }
+
                         });
                     }
                     dispatch(getChatsSuccess(res));
