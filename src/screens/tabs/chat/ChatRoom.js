@@ -14,10 +14,8 @@ export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
-    const [emptyChat, setEmptyChat] = useState(true);
 
     const { thread } = route.params;
-
 
     // const backButtonHandler = () => {
     //     return BackHandler.addEventListener(
@@ -38,21 +36,24 @@ export default function ChatRoom({ route, navigation }) {
 
     useEffect(() => {
         // let backhandler = backButtonHandler()
+        const messagesListener = getMessages();
 
-        const messagesListener = getMessages()
         // Stop listening for updates whenever the component unmounts
         return () => {
             // backhandler.remove();
-            checkToRemoveChat()
             messagesListener();
+            checkToRemoveChat()
         };
     }, []);
 
     const checkToRemoveChat = () => {
-        if (thread.newChat && emptyChat)
+        // alert(thread.newChat)
+        if (thread.newChat && (!messages || !messages.length)) {
             firestore()
                 .collection('THREADS')
                 .doc(thread._id).delete();
+        }
+
     }
 
 
@@ -96,7 +97,7 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const updateMessage = async (text) => {
-        setEmptyChat(false)
+
         firestore()
             .collection('THREADS')
             .doc(thread._id)
