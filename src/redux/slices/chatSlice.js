@@ -76,21 +76,24 @@ export function fetchChats(userInfo) {
                 .onSnapshot(querySnapshot => {
                     var res = []
                     if (querySnapshot) {
-                        res = querySnapshot.docs.map(documentSnapshot => {
+                        for (var i in querySnapshot.docs) {
+                            const documentSnapshot = querySnapshot.docs[i]
+                            // res = querySnapshot.docs.map(documentSnapshot => {
                             data = documentSnapshot.data();
                             senderDetails = data.userDetails.find(o => o.id != userInfo._id);
                             if ((data.deletedIds && !data.deletedIds.length) || (data.deletedIds && data.deletedIds.indexOf(userInfo._id) == -1)) {
-                                return {
+                                res.push({
                                     _id: documentSnapshot.id,
                                     name: (senderDetails && senderDetails.name) ? senderDetails.name : "",
                                     latestMessage: {
                                         text: ''
                                     },
                                     ...data
-                                };
+                                })
                             }
 
-                        });
+                            // });
+                        }
                     }
                     dispatch(getChatsSuccess(res));
                 });
