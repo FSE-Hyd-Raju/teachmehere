@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GiftedChat, Bubble, Send, SystemMessage, Time, Message, Avatar as Ava } from 'react-native-gifted-chat';
-import { ActivityIndicator, View, StyleSheet, Text, BackHandler } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Text, BackHandler, Alert } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
@@ -290,7 +290,7 @@ export default function ChatRoom({ route, navigation }) {
         }
     }
 
-    const deleteChat = async () => {
+    const deleteConfirmed = async () => {
         const threadquerySnapshot = await firestore()
             .collection('THREADS')
             .doc(thread._id).get();
@@ -298,41 +298,61 @@ export default function ChatRoom({ route, navigation }) {
         if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
             await firestore()
                 .collection('THREADS')
-                .doc(thread._id).delete().then(() => navigation.goBack())
-
+                .doc(thread._id).delete();
+            navigation.goBack()
             return;
         }
+        else {
+            const querySnapshot = await firestore()
+                .collection('THREADS')
+                .doc(thread._id)
+                .collection('MESSAGES').get();
 
-        const querySnapshot = await firestore()
-            .collection('THREADS')
-            .doc(thread._id)
-            .collection('MESSAGES').get();
+            for (var i in querySnapshot.docs) {
+                const data = querySnapshot.docs[i]
+                await firestore()
+                    .collection('THREADS')
+                    .doc(thread._id)
+                    .collection('MESSAGES')
+                    .doc(data.id)
+                    .set(
+                        {
+                            deletedIds: [userInfo._id]
+                        },
+                        { merge: true }
+                    );
+            }
 
-        for (var i in querySnapshot.docs) {
-            const data = querySnapshot.docs[i]
             await firestore()
                 .collection('THREADS')
                 .doc(thread._id)
-                .collection('MESSAGES')
-                .doc(data.id)
                 .set(
                     {
                         deletedIds: [userInfo._id]
                     },
                     { merge: true }
                 );
+            navigation.goBack()
         }
 
-        await firestore()
-            .collection('THREADS')
-            .doc(thread._id)
-            .set(
+    }
+
+    const deleteChat = () => {
+        Alert.alert(
+            "Delete Chat",
+            "Do you want to delete the chat?",
+            [
                 {
-                    deletedIds: [userInfo._id]
+                    text: "No",
+                    onPress: () => console.log("No Pressed"),
+                    style: "cancel"
                 },
-                { merge: true }
-            );
-        navigation.goBack()
+                { text: "Yes", onPress: () => deleteConfirmed() }
+            ],
+            { cancelable: false }
+        );
+
+
         // await foreach(querySnapshot,  (documentSnapshot) => {
         //     // await firestore()
         //     //     .collection('THREADS')

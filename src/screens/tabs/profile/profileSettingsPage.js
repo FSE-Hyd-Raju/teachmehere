@@ -167,6 +167,30 @@ const styles = StyleSheet.create({
     settingsContainer: {
         margin: 20
     },
+    accountsText: {
+        // fontSize: 10,
+        letterSpacing: 1,
+        textAlign: "center",
+        marginTop: 10,
+        fontSize: 10
+        // margin: 20
+    },
+    accountContainerBody: {
+        marginTop: 10,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly"
+    },
+    accountContainerTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        letterSpacing: 1,
+        marginBottom: 10
+
+    },
+    accountContainer: {
+        marginTop: 30,
+    },
     surface: {
         margin: 5,
         // margin: 20,
