@@ -7,13 +7,13 @@ import { Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { chatSelector, fetchChats, setChatResults, checkChatExists, enableLoading, disableLoading } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults, checkChatExists, setLoading, disableLoading } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
     const [allUsers, setAllUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const { userInfo } = useSelector(loginSelector)
-    const { chatResults } = useSelector(chatSelector)
+    const { chatResults, loading } = useSelector(chatSelector)
     const dispatch = useDispatch()
 
 
@@ -23,7 +23,7 @@ export default function NewChat({ navigation }) {
     }, []);
 
     const getRequestedCourses = () => {
-        setLoading(true)
+        dispatch(setLoading(true));
         fetch('https://teachmeproject.herokuapp.com/newChatListByid', {
             method: 'POST',
             headers: {
@@ -41,10 +41,11 @@ export default function NewChat({ navigation }) {
                     setAllUsers(userslist)
                 }
 
-                setLoading(false);
+                dispatch(setLoading(false));
+
             }).catch((error) => {
                 console.error(error);
-                setLoading(false);
+                dispatch(setLoading(false));
             });
     }
 
@@ -157,7 +158,10 @@ export default function NewChat({ navigation }) {
                 }
                 navigation.popToTop();
                 navigation.navigate('ChatRoom', { thread: item });
+                dispatch(setLoading(false));
+
             })
+
 
     }
 
@@ -166,7 +170,8 @@ export default function NewChat({ navigation }) {
         // alert("userInfo" + JSON.stringify(userInfo))
         var exists = false
 
-        dispatch(enableLoading());
+        dispatch(setLoading(true));
+
         firestore().collection('THREADS').
             where("ids", "array-contains", userInfo._id).
             get().then(querySnapshot => {
@@ -201,10 +206,10 @@ export default function NewChat({ navigation }) {
                         }
                     }
                 })
-                dispatch(disableLoading());
                 if (!exists) {
                     sendMessage(item)
                 } else {
+                    dispatch(setLoading(false));
                     navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
                 }

@@ -41,11 +41,8 @@ const chatSlice = createSlice({
             state.chatResults = [];
             state.searchChatResults = [];
         },
-        enableLoading: (state) => {
-            state.loading = true;
-        },
-        disableLoading: (state) => {
-            state.loading = false;
+        setLoading: (state, { payload }) => {
+            state.loading = payload;
         }
 
     },
@@ -57,8 +54,7 @@ export const {
     getChatsFailure,
     setChatResults,
     clearData,
-    enableLoading,
-    disableLoading
+    setLoading
 } = chatSlice.actions;
 
 export const chatSelector = state => state.chat;

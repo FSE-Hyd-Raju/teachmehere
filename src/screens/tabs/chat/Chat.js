@@ -27,10 +27,11 @@ export default function Chat({ navigation }) {
     dispatch(clearData())
     unsubscribe && unsubscribe()
     notificunsubscribe && notificunsubscribe();
-    if (userInfo._id)
+    if (userInfo._id) {
       unsubscribe = getChats()
-    notificationListener();
-    notificunsubscribe = appOpenedNotificationListener()
+      notificationListener();
+      notificunsubscribe = appOpenedNotificationListener()
+    }
     // return () => unsubscribe();
 
   }, [userInfo]);
