@@ -346,7 +346,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const deleteChat = () => {
         Alert.alert(
-            "Delete Chat",
+            "",
             "Do you want to delete the chat?",
             [
                 {

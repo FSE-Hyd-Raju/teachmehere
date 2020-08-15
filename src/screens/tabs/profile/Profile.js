@@ -56,7 +56,7 @@ export default function Profile({ navigation }) {
     }
     const logoutAlert = () =>
         Alert.alert(
-            "Logout",
+            "",
             "Do you want to logout?",
             [
                 {
