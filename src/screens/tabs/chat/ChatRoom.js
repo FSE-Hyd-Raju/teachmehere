@@ -107,7 +107,8 @@ export default function ChatRoom({ route, navigation }) {
             .collection('MESSAGES')
             .add({
                 text: text,
-                serverTime: new Date().getTime(),
+                // serverTime: new Date().getTime(),
+                serverTime: firestore.FieldValue.serverTimestamp(),
                 createdAt: new Date().getTime(),
                 user: {
                     _id: userInfo._id,
@@ -124,7 +125,8 @@ export default function ChatRoom({ route, navigation }) {
                     latestMessage: {
                         text: text,
                         createdAt: new Date().getTime(),
-                        serverTime: new Date().getTime()
+                        // serverTime: new Date().getTime(),
+                        serverTime: firestore.FieldValue.serverTimestamp()
                     },
                     deletedIds: [],
                     newChat: false
@@ -298,31 +300,27 @@ export default function ChatRoom({ route, navigation }) {
 
     const deleteConfirmed = async () => {
         dispatch(setLoading(true));
-        const threadquerySnapshot = await firestore()
+
+        const querySnapshot = await firestore()
             .collection('THREADS')
-            .doc(thread._id).get();
+            .doc(thread._id)
+            .collection('MESSAGES').get();
 
-        if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
-            await firestore()
-                .collection('THREADS')
-                .doc(thread._id).delete();
-            navigation.goBack();
-            dispatch(setLoading(false));
-            return;
-        }
-        else {
-            const querySnapshot = await firestore()
-                .collection('THREADS')
-                .doc(thread._id)
-                .collection('MESSAGES').get();
-
-            for (var i in querySnapshot.docs) {
-                const data = querySnapshot.docs[i]
+        for (var i in querySnapshot.docs) {
+            const document = querySnapshot.docs[i]
+            const data = document.data()
+            if (data.deletedIds && data.deletedIds.length && data.deletedIds.indexOf(userInfo._id) == -1) {
                 await firestore()
                     .collection('THREADS')
                     .doc(thread._id)
                     .collection('MESSAGES')
-                    .doc(data.id)
+                    .doc(document.id).delete()
+            } else {
+                await firestore()
+                    .collection('THREADS')
+                    .doc(thread._id)
+                    .collection('MESSAGES')
+                    .doc(document.id)
                     .set(
                         {
                             deletedIds: [userInfo._id]
@@ -330,19 +328,33 @@ export default function ChatRoom({ route, navigation }) {
                         { merge: true }
                     );
             }
-
-            await firestore()
-                .collection('THREADS')
-                .doc(thread._id)
-                .set(
-                    {
-                        deletedIds: [userInfo._id]
-                    },
-                    { merge: true }
-                );
-            navigation.goBack()
-            dispatch(setLoading(false));
         }
+
+        const threadquerySnapshot = await firestore()
+            .collection('THREADS')
+            .doc(thread._id).get();
+
+        console.log(threadquerySnapshot)
+        // if (threadquerySnapshot.deletedIds && threadquerySnapshot.deletedIds.length && threadquerySnapshot.deletedIds.indexOf(userInfo._id) == -1) {
+        //     await firestore()
+        //         .collection('THREADS')
+        //         .doc(thread._id).delete();
+        // }
+        // else {
+        await firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .set(
+                {
+                    deletedIds: [userInfo._id]
+                },
+                { merge: true }
+            );
+        // }
+
+        navigation.goBack();
+        dispatch(setLoading(false));
+        return;
 
     }
 
