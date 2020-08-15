@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { GiftedChat, Bubble, Send, SystemMessage, Time, Message, Avatar as Ava } from 'react-native-gifted-chat';
-import { ActivityIndicator, View, StyleSheet, Text, BackHandler, Alert } from 'react-native';
-import { IconButton, TextInput } from 'react-native-paper';
+import { View, StyleSheet, Text, BackHandler, Alert } from 'react-native';
+import { IconButton, TextInput, ActivityIndicator, Colors } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux';
@@ -105,7 +105,7 @@ export default function ChatRoom({ route, navigation }) {
             .collection('MESSAGES')
             .add({
                 text,
-                serverTime: firestore.FieldValue.serverTimestamp(),
+                serverTime: new Date().getTime(),
                 createdAt: new Date().getTime(),
                 user: {
                     _id: userInfo._id,
@@ -122,7 +122,7 @@ export default function ChatRoom({ route, navigation }) {
                     latestMessage: {
                         text,
                         createdAt: new Date().getTime(),
-                        serverTime: firestore.FieldValue.serverTimestamp()
+                        serverTime: new Date().getTime()
                     },
                     deletedIds: [],
                     newChat: false
@@ -448,7 +448,7 @@ export default function ChatRoom({ route, navigation }) {
                     <OptionsMenu
                         customButton={<Icons name={"dots-vertical"}    // color="#fff"
                             size={25}
-                        // style={{ flex: 0.2 }}
+                            style={{ paddingRight: 15 }}
                         />}
                         destructiveIndex={1}
                         options={["Delete Chat", "Block"]}
@@ -542,4 +542,9 @@ const styles = StyleSheet.create({
         borderBottomColor: "#eeeeee",
         borderBottomWidth: 1
     },
+    loadingBar: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    }
 });

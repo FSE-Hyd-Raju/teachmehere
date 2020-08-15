@@ -209,9 +209,9 @@ export default function NewChat({ navigation }) {
                 if (!exists) {
                     sendMessage(item)
                 } else {
-                    dispatch(setLoading(false));
                     navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
+                    dispatch(setLoading(false));
                 }
             });
 
