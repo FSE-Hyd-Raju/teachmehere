@@ -123,7 +123,8 @@ export default function Chat({ navigation }) {
                     rounded
                     containerStyle={{ margin: 7 }}
                     size={50}
-                    source={require('../../../assets/img/default-mask-avatar.png')}
+                    // source={require('../../../assets/img/default-mask-avatar.png')}
+                    source={item.displaypic ? { uri: item.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
                   />}
                   right={props => <Text style={styles.datetime}>{moment(item.latestMessage.createdAt).fromNow()} </Text>}
                   titleNumberOfLines={1}

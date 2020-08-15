@@ -129,7 +129,8 @@ export default function ChatRoom({ route, navigation }) {
                         // serverTime: firestore.FieldValue.serverTimestamp()
                     },
                     deletedIds: [],
-                    newChat: false
+                    newChat: false,
+                    displaypic: userInfo.displaypic
                 },
                 { merge: true }
             );
@@ -146,8 +147,17 @@ export default function ChatRoom({ route, navigation }) {
         dataobj = {
             ...thread,
             type: "CHAT",
-            name: userInfo.username
+            name: userInfo.username,
         }
+        dataobj.displaypic = ""
+        dataobj.userDetails = dataobj.userDetails.map((elem) => {
+            elem.displaypic = null
+            console.log("elem")
+            console.log(elem)
+            return elem
+        })
+        console.log("dataobj")
+        console.log(dataobj)
         fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
             method: 'POST',
             headers: {
@@ -337,7 +347,7 @@ export default function ChatRoom({ route, navigation }) {
             .collection('THREADS')
             .doc(thread._id).get();
 
-        console.log(threadquerySnapshot.data)
+        // console.log(threadquerySnapshot.data)
         if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.length && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
             await firestore()
                 .collection('THREADS')
@@ -457,7 +467,8 @@ export default function ChatRoom({ route, navigation }) {
                                 rounded
                                 containerStyle={{ margin: 7 }}
                                 size={30}
-                                source={require('../../../assets/img/default-mask-avatar.png')}
+                                // source={require('../../../assets/img/default-mask-avatar.png')}
+                                source={thread.displaypic ? { uri: thread.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
                             />
                             <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
                         </View>

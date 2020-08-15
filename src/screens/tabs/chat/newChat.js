@@ -37,6 +37,8 @@ export default function NewChat({ navigation }) {
             .then((requestedJson) => {
                 if (requestedJson.length) {
                     let userslist = requestedJson.filter((ele, ind) => (ele.status == "ACCEPTED") && (ind === requestedJson.findIndex(elem => elem.userinfo._id === ele.userinfo._id)))
+                    console.log("suchiiiiiiii")
+
                     console.log(userslist)
                     setAllUsers(userslist)
                 }
@@ -127,10 +129,12 @@ export default function NewChat({ navigation }) {
             // id: ref.id,
             userDetails: [{
                 id: userInfo._id,
-                name: userInfo.username
+                name: userInfo.username,
+                displaypic: userInfo.displaypic
             }, {
                 id: item.userinfo._id,
-                name: item.userinfo.username
+                name: item.userinfo.username,
+                displaypic: item.userinfo.displaypic
             }],
             ids: [userInfo._id, item.userinfo._id],
             latestMessage: {
@@ -291,7 +295,9 @@ export default function NewChat({ navigation }) {
                                     rounded
                                     containerStyle={{ margin: 7, marginTop: 15 }}
                                     size={30}
-                                    source={require('../../../assets/img/default-mask-avatar.png')}
+                                    // source={{ uri: item.userinfo.displaypic ? item.userInfo.displaypic : '../../../assets/img/default-mask-avatar.png' }}
+                                    source={item.userinfo.displaypic ? { uri: item.userinfo.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
+                                // source={require('../../../assets/img/default-mask-avatar.png')}
                                 />}
                                 right={props => <Icons
                                     style={{ margin: 7, marginTop: 20 }}

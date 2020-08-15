@@ -81,6 +81,7 @@ export function fetchChats(userInfo) {
                                 res.push({
                                     _id: documentSnapshot.id,
                                     name: (senderDetails && senderDetails.name) ? senderDetails.name : "",
+                                    displaypic: (senderDetails && senderDetails.displaypic) ? senderDetails.displaypic : "",
                                     latestMessage: {
                                         text: ''
                                     },
@@ -91,6 +92,8 @@ export function fetchChats(userInfo) {
                             // });
                         }
                     }
+                    console.log("res0")
+                    // console.log(JSON.stringify(res))
                     dispatch(getChatsSuccess(res));
                 });
         } catch (error) {
