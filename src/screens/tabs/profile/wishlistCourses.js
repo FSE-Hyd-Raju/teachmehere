@@ -113,7 +113,9 @@ const styles = StyleSheet.create({
         marginTop: 40
     },
     container: {
-        margin: 20
+        margin: 20,
+        flex: 1,
+        backgroundColor: "#fff"
     },
     headerTitle: {
         fontSize: 20,
