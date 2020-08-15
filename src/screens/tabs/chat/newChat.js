@@ -182,7 +182,7 @@ export default function NewChat({ navigation }) {
 
                         exists = true;
                         item = {
-                            ...item,
+                            ...data,
                             _id: documentSnapshot.id,
                             name: item.userinfo.username
                         }

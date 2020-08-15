@@ -107,8 +107,8 @@ export default function ChatRoom({ route, navigation }) {
             .collection('MESSAGES')
             .add({
                 text: text,
-                // serverTime: new Date().getTime(),
-                serverTime: firestore.FieldValue.serverTimestamp(),
+                serverTime: new Date().getTime(),
+                // serverTime: firestore.FieldValue.serverTimestamp(),
                 createdAt: new Date().getTime(),
                 user: {
                     _id: userInfo._id,
@@ -125,8 +125,8 @@ export default function ChatRoom({ route, navigation }) {
                     latestMessage: {
                         text: text,
                         createdAt: new Date().getTime(),
-                        // serverTime: new Date().getTime(),
-                        serverTime: firestore.FieldValue.serverTimestamp()
+                        serverTime: new Date().getTime(),
+                        // serverTime: firestore.FieldValue.serverTimestamp()
                     },
                     deletedIds: [],
                     newChat: false
@@ -139,6 +139,9 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const sendNotification = (text) => {
+        console.log("thread")
+        // console.log(thread)
+        // console.log(thread.ids)
         receiverId = thread.ids.filter(ele => ele != userInfo._id);
         dataobj = {
             ...thread,
@@ -334,23 +337,23 @@ export default function ChatRoom({ route, navigation }) {
             .collection('THREADS')
             .doc(thread._id).get();
 
-        console.log(threadquerySnapshot)
-        // if (threadquerySnapshot.deletedIds && threadquerySnapshot.deletedIds.length && threadquerySnapshot.deletedIds.indexOf(userInfo._id) == -1) {
-        //     await firestore()
-        //         .collection('THREADS')
-        //         .doc(thread._id).delete();
-        // }
-        // else {
-        await firestore()
-            .collection('THREADS')
-            .doc(thread._id)
-            .set(
-                {
-                    deletedIds: [userInfo._id]
-                },
-                { merge: true }
-            );
-        // }
+        console.log(threadquerySnapshot.data)
+        if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.length && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
+            await firestore()
+                .collection('THREADS')
+                .doc(thread._id).delete();
+        }
+        else {
+            await firestore()
+                .collection('THREADS')
+                .doc(thread._id)
+                .set(
+                    {
+                        deletedIds: [userInfo._id]
+                    },
+                    { merge: true }
+                );
+        }
 
         navigation.goBack();
         dispatch(setLoading(false));
