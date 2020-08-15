@@ -9,11 +9,15 @@ import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-
+import { chatSelector, setLoading } from '../../../redux/slices/chatSlice';
 export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
+
+    const { loading } = useSelector(chatSelector)
+    const dispatch = useDispatch()
+
 
     const { thread } = route.params;
 
@@ -291,6 +295,7 @@ export default function ChatRoom({ route, navigation }) {
     }
 
     const deleteConfirmed = async () => {
+        dispatch(setLoading(true));
         const threadquerySnapshot = await firestore()
             .collection('THREADS')
             .doc(thread._id).get();
@@ -299,7 +304,8 @@ export default function ChatRoom({ route, navigation }) {
             await firestore()
                 .collection('THREADS')
                 .doc(thread._id).delete();
-            navigation.goBack()
+            navigation.goBack();
+            dispatch(setLoading(false));
             return;
         }
         else {
@@ -333,6 +339,7 @@ export default function ChatRoom({ route, navigation }) {
                     { merge: true }
                 );
             navigation.goBack()
+            dispatch(setLoading(false));
         }
 
     }
@@ -393,6 +400,14 @@ export default function ChatRoom({ route, navigation }) {
         // })
     }
 
+    const loadingComponent = () => {
+        return (
+            <View style={styles.loadingBar}>
+                <ActivityIndicator size={35} animating={true} color={Colors.black} />
+            </View>
+        )
+    }
+
     // const deleteChat = () => {
     //     alert("deleteChat")
     // }
@@ -447,39 +462,42 @@ export default function ChatRoom({ route, navigation }) {
                     onPress={() => handleAddPicture()}
                 /> */}
             </View>
-
-            <GiftedChat
-                messages={messages}
-                onSend={handleSend}
-                user={{ _id: userInfo._id }}
-                placeholder='Type your message here...'
-                alwaysShowSend
-                showUserAvatar={false}
-                scrollToBottom
-                renderBubble={renderBubble}
-                renderMessage={renderMessage}
-                renderAvatar={renderAvatar}
-                // renderLoadEarlier={true}
-                // renderAvatar={null}
-                renderSend={renderSend}
-                renderTime={renderTime}
-                renderMessage={renderMessage}
-                scrollToBottomComponent={scrollToBottomComponent}
-                // renderSystemMessage={renderSystemMessage}
-                showAvatarForEveryMessage={false}
-                renderAvatarOnTop={true}
-            // renderActions={() => (
-            //     <Feather
-            //         style={styles.uploadImage}
-            //         onPress={this.uploadImage}
-            //         name='image'
-            //         size={30}
-            //         color='#000'
-            //     />
-            // )}
-            // bottomOffset={155}
-            // isTyping={true}
-            />
+            {!!loading && loadingComponent()
+            }
+            {!loading &&
+                <GiftedChat
+                    messages={messages}
+                    onSend={handleSend}
+                    user={{ _id: userInfo._id }}
+                    placeholder='Type your message here...'
+                    alwaysShowSend
+                    showUserAvatar={false}
+                    scrollToBottom
+                    renderBubble={renderBubble}
+                    renderMessage={renderMessage}
+                    renderAvatar={renderAvatar}
+                    // renderLoadEarlier={true}
+                    // renderAvatar={null}
+                    renderSend={renderSend}
+                    renderTime={renderTime}
+                    renderMessage={renderMessage}
+                    scrollToBottomComponent={scrollToBottomComponent}
+                    // renderSystemMessage={renderSystemMessage}
+                    showAvatarForEveryMessage={false}
+                    renderAvatarOnTop={true}
+                // renderActions={() => (
+                //     <Feather
+                //         style={styles.uploadImage}
+                //         onPress={this.uploadImage}
+                //         name='image'
+                //         size={30}
+                //         color='#000'
+                //     />
+                // )}
+                // bottomOffset={155}
+                // isTyping={true}
+                />
+            }
         </View>
     );
 }
