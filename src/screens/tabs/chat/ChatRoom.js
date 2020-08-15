@@ -34,6 +34,8 @@ export default function ChatRoom({ route, navigation }) {
     useEffect(() => {
         let backhandler = backButtonHandler()
         const messagesListener = getMessages();
+        // dispatch(setLoading(false));
+
 
         // Stop listening for updates whenever the component unmounts
         return () => {
@@ -67,7 +69,7 @@ export default function ChatRoom({ route, navigation }) {
                     // const messagesArr = querySnapshot.docs.filter(doc => {
                     const firebaseData = doc.data();
 
-                    if (!firebaseData.deletedIds || !firebaseData.deletedIds.length || (firebaseData.deletedIds && firebaseData.deletedIds.indexOf(userInfo._id) == -1)) {
+                    if (!firebaseData.deletedIds || !firebaseData.deletedIds.length || (firebaseData.deletedIds.length && firebaseData.deletedIds.indexOf(userInfo._id) == -1)) {
                         const data = {
                             _id: doc.id,
                             text: '',
@@ -99,12 +101,12 @@ export default function ChatRoom({ route, navigation }) {
 
     const updateMessage = async (text) => {
 
-        firestore()
+        await firestore()
             .collection('THREADS')
             .doc(thread._id)
             .collection('MESSAGES')
             .add({
-                text,
+                text: text,
                 serverTime: new Date().getTime(),
                 createdAt: new Date().getTime(),
                 user: {
@@ -120,7 +122,7 @@ export default function ChatRoom({ route, navigation }) {
             .set(
                 {
                     latestMessage: {
-                        text,
+                        text: text,
                         createdAt: new Date().getTime(),
                         serverTime: new Date().getTime()
                     },

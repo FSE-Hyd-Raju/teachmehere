@@ -7,13 +7,13 @@ import { Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { chatSelector, fetchChats, setChatResults, checkChatExists, setLoading, disableLoading } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults, checkChatExists, disableLoading } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
     const [allUsers, setAllUsers] = useState([]);
-    // const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const { userInfo } = useSelector(loginSelector)
-    const { chatResults, loading } = useSelector(chatSelector)
+    const { chatResults } = useSelector(chatSelector)
     const dispatch = useDispatch()
 
 
@@ -23,7 +23,7 @@ export default function NewChat({ navigation }) {
     }, []);
 
     const getRequestedCourses = () => {
-        dispatch(setLoading(true));
+        setLoading(true);
         fetch('https://teachmeproject.herokuapp.com/newChatListByid', {
             method: 'POST',
             headers: {
@@ -41,11 +41,11 @@ export default function NewChat({ navigation }) {
                     setAllUsers(userslist)
                 }
 
-                dispatch(setLoading(false));
+                setLoading(false);
 
             }).catch((error) => {
                 console.error(error);
-                dispatch(setLoading(false));
+                setLoading(false);
             });
     }
 
@@ -149,17 +149,17 @@ export default function NewChat({ navigation }) {
                     text: 'Say Hello..',
                     createdAt: Date.now(),
                     system: true
-                });
-                item = {
-                    // ...item,
-                    ...obj,
-                    _id: ref.id,
-                    name: item.userinfo.username
-                }
-                navigation.popToTop();
-                navigation.navigate('ChatRoom', { thread: item });
-                dispatch(setLoading(false));
-
+                }).then(() => {
+                    item = {
+                        // ...item,
+                        ...obj,
+                        _id: ref.id,
+                        name: item.userinfo.username
+                    }
+                    navigation.popToTop();
+                    navigation.navigate('ChatRoom', { thread: item });
+                    // setLoading(false);
+                })
             })
 
 
@@ -170,48 +170,43 @@ export default function NewChat({ navigation }) {
         // alert("userInfo" + JSON.stringify(userInfo))
         var exists = false
 
-        dispatch(setLoading(true));
+        setLoading(true);
 
         firestore().collection('THREADS').
             where("ids", "array-contains", userInfo._id).
             get().then(querySnapshot => {
-                // for (var i in querySnapshot.docs) {
-                //     alert("in" + i)
-                //     const data = querySnapshot.docs[i]
-                //     // alert(data["ids"][0])
-                //     // alert(data["ids"][1])
-                //     alert(JSON.stringify({ ...data }))
-
-                //     // if (data["ids"].indexOf(item._id) > -1) {
-                //     //     alert("in if")
-
-                //     //     exists = true;
-                //     //     item = {
-                //     //         ...item,
-                //     //         _id: documentSnapshot.id,
-                //     //         name: item.username
-                //     //     }
-                //     //     break;
-                //     // }
-                // }
-                querySnapshot.forEach(documentSnapshot => {
-                    data = documentSnapshot.data();
+                for (var i in querySnapshot.docs) {
+                    const documentSnapshot = querySnapshot.docs[i]
+                    const data = documentSnapshot.data();
                     if (data["ids"].indexOf(item.userinfo._id) > -1) {
-                        exists = true;
 
+                        exists = true;
                         item = {
                             ...item,
                             _id: documentSnapshot.id,
                             name: item.userinfo.username
                         }
+                        break;
                     }
-                })
+                }
+                // querySnapshot.forEach(documentSnapshot => {
+                //     data = documentSnapshot.data();
+                //     if (data["ids"].indexOf(item.userinfo._id) > -1) {
+                //         exists = true;
+
+                //         item = {
+                //             ...item,
+                //             _id: documentSnapshot.id,
+                //             name: item.userinfo.username
+                //         }
+                //     }
+                // })
                 if (!exists) {
                     sendMessage(item)
                 } else {
                     navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
-                    dispatch(setLoading(false));
+                    // setLoading(false);
                 }
             });
 
