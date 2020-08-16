@@ -144,18 +144,23 @@ export default function ChatRoom({ route, navigation }) {
         // console.log(thread)
         // console.log(thread.ids)
         receiverId = thread.ids.filter(ele => ele != userInfo._id);
-        dataobj = {
+        var dataobj = {
             ...thread,
             type: "CHAT",
             name: userInfo.username,
         }
         dataobj.displaypic = ""
-        dataobj.userDetails = dataobj.userDetails.map((elem) => {
-            elem.displaypic = null
-            console.log("elem")
-            console.log(elem)
-            return elem
+        var temp = []
+        dataobj.userDetails.filter((elem) => {
+            // delete elem["displaypic"]
+            var obj = {
+                ...elem,
+                displaypic: ""
+            }
+            temp.push(obj)
+            return JSON.parse(JSON.stringify(obj))
         })
+        dataobj.userDetails = JSON.parse(JSON.stringify(temp))
         console.log("dataobj")
         console.log(dataobj)
         fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
