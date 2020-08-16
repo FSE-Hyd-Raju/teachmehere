@@ -48,11 +48,11 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.newChat && (!messages || !messages.length)) {
             firestore()
                 .collection('THREADS')
-                .doc(thread._id).delete().then(() => navigation.popToTop())
-        } else {
+                .doc(thread._id).delete().then(() => { if (navigation.canGoBack()) setTimeout(() => { navigation.popToTop() }, 100) })
+        }
+        else if (navigation.canGoBack()) {
             navigation.popToTop()
         }
-
     }
 
 
@@ -476,22 +476,25 @@ export default function ChatRoom({ route, navigation }) {
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 0 }}  >
             <View style={styles.headerComponent}>
-                <Icons
-                    name={"keyboard-backspace"}
-                    // color="#fff"
-                    size={27}
-                    style={{ flex: 0.1 }}
-                    onPress={() => checkToRemoveChat()}
-                />
+                <TouchableOpacity onPress={() => checkToRemoveChat()}>
+                    <Icons
+                        name={"keyboard-backspace"}
+                        // color="#fff"
+                        size={27}
+
+
+                    />
+                </TouchableOpacity>
                 <View style={{
-                    alignItems: "center",
+                    // alignItems: "center",
                     // justifyContent: "center",
                     flex: 0.9,
-                    flexDirection: "row",
-                    marginLeft: 25,
-                    justifyContent: "space-between"
+
+                    // flexDirection: "row",
+                    marginLeft: 20,
+                    // justifyContent: ""
                 }}>
-                    <TouchableOpacity >
+                    <TouchableOpacity>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 rounded
@@ -503,15 +506,16 @@ export default function ChatRoom({ route, navigation }) {
                             <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
                         </View>
                     </TouchableOpacity>
-                    <OptionsMenu
-                        customButton={<Icons name={"dots-vertical"}    // color="#fff"
-                            size={25}
-                            style={{ paddingRight: 15 }}
-                        />}
-                        destructiveIndex={1}
-                        options={["Clear Chat", "Block"]}
-                        actions={[deleteChat, blockUser]} />
+
                 </View>
+                <OptionsMenu
+                    customButton={<Icons name={"dots-vertical"}    // color="#fff"
+                        size={25}
+                    // style={{ paddingRight: 5 }}
+                    />}
+                    destructiveIndex={1}
+                    options={["Clear Chat", "Block"]}
+                    actions={[deleteChat, blockUser]} />
                 {/* <Icons
                     name={"camera"}
                     // color="#fff"

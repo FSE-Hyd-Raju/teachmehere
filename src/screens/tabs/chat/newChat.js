@@ -124,7 +124,7 @@ export default function NewChat({ navigation }) {
     function sendMessage(item) {
         const ref = firestore().collection('THREADS').doc()
 
-        obj = {
+        var messageObj = {
             // id: ref.id,
             userDetails: [{
                 id: userInfo._id,
@@ -143,7 +143,7 @@ export default function NewChat({ navigation }) {
             deletedIds: [item.userinfo._id],
             newChat: true
         }
-        ref.set(obj)
+        ref.set(messageObj)
             .then(() => {
                 // ref.get().then(doc => {
                 //    alert(JSON.stringify(doc.data()))
@@ -153,17 +153,21 @@ export default function NewChat({ navigation }) {
                     createdAt: Date.now(),
                     system: true
                 }).then(() => {
-                    item = {
-                        // ...item,
-                        ...obj,
-                        _id: ref.id,
-                        name: item.userinfo.username
-                    }
-                    // navigation.popToTop();
-                    navigation.navigate('ChatRoom', { thread: item });
-                    // setLoading(false);
+
+
                 })
             })
+        item = {
+            // ...item,
+            ...messageObj,
+            _id: ref.id,
+            name: item.userinfo.username
+        }
+        // navigation.popToTop();
+        // setLoading(false);
+        navigation.navigate('ChatRoom', { thread: item });
+
+
 
 
     }
@@ -256,7 +260,11 @@ export default function NewChat({ navigation }) {
     const loadingComponent = () => {
         return (
             <View style={styles.loadingBar}>
-                <ActivityIndicator size={35} animating={true} color={Colors.black} />
+                {/* <ActivityIndicator size={35} animating={true} color={Colors.black} /> */}
+                <Image
+                    source={require('../../../assets/img/loading_gif.gif')}
+                    size={5}
+                />
             </View>
         )
     }
@@ -265,19 +273,21 @@ export default function NewChat({ navigation }) {
     return (
         <View style={styles.rootContainer}>
             <View style={styles.headerComponent}>
-                <Icons
-                    name={"keyboard-backspace"}
-                    // color="#fff"
-                    size={27}
-                    style={{ flex: 0.2 }}
-                    onPress={() => navigation.goBack()}
-                />
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icons
+                        name={"keyboard-backspace"}
+                        // color="#fff"
+                        size={27}
+                    // style={{ flex: 0.2 }}
+                    />
+                </TouchableOpacity>
                 <View style={{
                     alignItems: 'center',
+                    paddingLeft: 20,
                     justifyContent: "center",
-                    flex: 0.4
+                    // flex: 0.4
                 }}>
-                    <Text style={styles.headerTitle} numberOfLines={1}>New Chat</Text>
+                    <Text style={styles.headerTitle} numberOfLines={1}>Your Connections</Text>
                 </View>
             </View>
             {!newChatLoading && !!newChatList.length &&
