@@ -48,9 +48,9 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.newChat && (!messages || !messages.length)) {
             firestore()
                 .collection('THREADS')
-                .doc(thread._id).delete().then(() => navigation.goBack())
+                .doc(thread._id).delete().then(() => navigation.popToTop())
         } else {
-            navigation.goBack()
+            navigation.popToTop()
         }
 
     }
