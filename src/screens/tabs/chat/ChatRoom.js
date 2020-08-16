@@ -319,34 +319,59 @@ export default function ChatRoom({ route, navigation }) {
     const deleteConfirmed = async () => {
         dispatch(setLoading(true));
 
-        const querySnapshot = await firestore()
+        // const querySnapshot = await firestore()
+        //     .collection('THREADS')
+        //     .doc(thread._id)
+        //     .collection('MESSAGES').get();
+
+        // for (var i in querySnapshot.docs) {
+        //     const document = querySnapshot.docs[i]
+        //     const data = document.data()
+        //     if (data.deletedIds && data.deletedIds.length && data.deletedIds.indexOf(userInfo._id) == -1) {
+        //         firestore()
+        //             .collection('THREADS')
+        //             .doc(thread._id)
+        //             .collection('MESSAGES')
+        //             .doc(document.id).delete()
+        //     } else {
+        //         firestore()
+        //             .collection('THREADS')
+        //             .doc(thread._id)
+        //             .collection('MESSAGES')
+        //             .doc(document.id)
+        //             .set(
+        //                 {
+        //                     deletedIds: [userInfo._id]
+        //                 },
+        //                 { merge: true }
+        //             );
+        //     }
+        // }
+        const collection = firestore()
             .collection('THREADS')
             .doc(thread._id)
-            .collection('MESSAGES').get();
+            .collection('MESSAGES')
 
-        for (var i in querySnapshot.docs) {
-            const document = querySnapshot.docs[i]
-            const data = document.data()
-            if (data.deletedIds && data.deletedIds.length && data.deletedIds.indexOf(userInfo._id) == -1) {
-                await firestore()
-                    .collection('THREADS')
-                    .doc(thread._id)
-                    .collection('MESSAGES')
-                    .doc(document.id).delete()
-            } else {
-                await firestore()
-                    .collection('THREADS')
-                    .doc(thread._id)
-                    .collection('MESSAGES')
-                    .doc(document.id)
-                    .set(
-                        {
-                            deletedIds: [userInfo._id]
-                        },
-                        { merge: true }
-                    );
-            }
+        const newDocumentBody = {
+            deletedIds: [userInfo._id]
         }
+
+        collection.get().then(response => {
+            let batch = firestore().batch()
+            response.docs.forEach((doc) => {
+                const docRef = collection.doc(doc.id)
+                const data = doc.data()
+                if (data.deletedIds && data.deletedIds.length && data.deletedIds.indexOf(userInfo._id) == -1) {
+                    batch.delete(docRef)
+                }
+                else {
+                    batch.update(docRef, newDocumentBody)
+                }
+            })
+            batch.commit().then(() => {
+                console.log('updated all documents insidde')
+            })
+        })
 
         const threadquerySnapshot = await firestore()
             .collection('THREADS')
@@ -370,7 +395,7 @@ export default function ChatRoom({ route, navigation }) {
                 );
         }
 
-        navigation.goBack();
+        // navigation.goBack();
         dispatch(setLoading(false));
         return;
 
@@ -484,7 +509,7 @@ export default function ChatRoom({ route, navigation }) {
                             style={{ paddingRight: 15 }}
                         />}
                         destructiveIndex={1}
-                        options={["Delete Chat", "Block"]}
+                        options={["Clear Chat", "Block"]}
                         actions={[deleteChat, blockUser]} />
                 </View>
                 {/* <Icons

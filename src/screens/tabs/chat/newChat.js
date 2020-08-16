@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Text, Button, Image } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Text, Button, Image, RefreshControl } from 'react-native';
 import { IconButton, Title, List, Divider, ActivityIndicator, Colors } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 
@@ -7,22 +7,24 @@ import { Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux'
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { chatSelector, fetchChats, setChatResults, checkChatExists, disableLoading } from '../../../redux/slices/chatSlice';
+import { chatSelector, fetchChats, setChatResults, checkChatExists, disableLoading, setNewChatList } from '../../../redux/slices/chatSlice';
 
 export default function NewChat({ navigation }) {
-    const [allUsers, setAllUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
+    // const [allUsers, setAllUsers] = useState([]);
+    const [newChatLoading, setLoading] = useState(false);
     const { userInfo } = useSelector(loginSelector)
-    const { chatResults } = useSelector(chatSelector)
+    const { chatResults, newChatList } = useSelector(chatSelector)
     const dispatch = useDispatch()
 
 
     useEffect(() => {
-        if (userInfo._id)
-            getRequestedCourses()
+        console.log("newchat length")
+        console.log(newChatList.length)
+        if (userInfo._id && !newChatList.length)
+            getNewChatList()
     }, []);
 
-    const getRequestedCourses = () => {
+    const getNewChatList = () => {
         setLoading(true);
         fetch('https://teachmeproject.herokuapp.com/newChatListByid', {
             method: 'POST',
@@ -37,10 +39,7 @@ export default function NewChat({ navigation }) {
             .then((requestedJson) => {
                 if (requestedJson.length) {
                     let userslist = requestedJson.filter((ele, ind) => (ele.status == "ACCEPTED") && (ind === requestedJson.findIndex(elem => elem.userinfo._id === ele.userinfo._id)))
-                    console.log("suchiiiiiiii")
-
-                    console.log(userslist)
-                    setAllUsers(userslist)
+                    dispatch(setNewChatList(userslist))
                 }
 
                 setLoading(false);
@@ -160,7 +159,7 @@ export default function NewChat({ navigation }) {
                         _id: ref.id,
                         name: item.userinfo.username
                     }
-                    navigation.popToTop();
+                    // navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
                     // setLoading(false);
                 })
@@ -208,7 +207,7 @@ export default function NewChat({ navigation }) {
                 if (!exists) {
                     sendMessage(item)
                 } else {
-                    navigation.popToTop();
+                    // navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
                     // setLoading(false);
                 }
@@ -281,11 +280,17 @@ export default function NewChat({ navigation }) {
                     <Text style={styles.headerTitle} numberOfLines={1}>New Chat</Text>
                 </View>
             </View>
-            {!loading && !!allUsers.length &&
+            {!newChatLoading && !!newChatList.length &&
                 <FlatList
-                    data={allUsers}
+                    data={newChatList}
                     keyExtractor={item => item._id}
                     ItemSeparatorComponent={() => <Divider />}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={newChatLoading}
+                            onRefresh={getNewChatList}
+                        />
+                    }
 
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => checkIfChatExists(item)}>
@@ -324,10 +329,10 @@ export default function NewChat({ navigation }) {
                     )}
                 />
             }
-            {!!loading && loadingComponent()
+            {!!newChatLoading && loadingComponent()
             }
 
-            {!loading && !allUsers.length && <View
+            {!newChatLoading && !newChatList.length && <View
                 style={{
                     justifyContent: 'center',
                     alignItems: 'center'
