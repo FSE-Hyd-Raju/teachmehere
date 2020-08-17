@@ -162,6 +162,22 @@ export default function ChatRoom({ route, navigation }) {
             msgObj.deletedIds = firestore.FieldValue.arrayRemove(userInfo._id)
         }
 
+        var updateObj = {
+            latestMessage: {
+                text: text,
+                createdAt: new Date().getTime(),
+                serverTime: new Date().getTime(),
+                // serverTime: firestore.FieldValue.serverTimestamp()
+            },
+            deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
+            newChat: false,
+            // displaypic: userInfo.displaypic
+        }
+
+        if (thread.newChat) {
+            updateObj.deletedIds = firestore.FieldValue.arrayRemove(thread.senderDetailsId)
+        }
+
         await firestore()
             .collection('THREADS')
             .doc(thread._id)
@@ -172,17 +188,7 @@ export default function ChatRoom({ route, navigation }) {
             .collection('THREADS')
             .doc(thread._id)
             .set(
-                {
-                    latestMessage: {
-                        text: text,
-                        createdAt: new Date().getTime(),
-                        serverTime: new Date().getTime(),
-                        // serverTime: firestore.FieldValue.serverTimestamp()
-                    },
-                    deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
-                    newChat: false,
-                    // displaypic: userInfo.displaypic
-                },
+                updateObj,
                 { merge: true }
             );
         if (!gotBlocked)
@@ -447,19 +453,20 @@ export default function ChatRoom({ route, navigation }) {
     }
 
     const deleteChat = () => {
-        Alert.alert(
-            "",
-            "Do you want to delete the chat?",
-            [
-                {
-                    text: "No",
-                    onPress: () => console.log("No Pressed"),
-                    style: "cancel"
-                },
-                { text: "Yes", onPress: () => deleteConfirmed() }
-            ],
-            { cancelable: false }
-        );
+        if (!thread.newChat)
+            Alert.alert(
+                "",
+                "Do you want to delete the chat?",
+                [
+                    {
+                        text: "No",
+                        onPress: () => console.log("No Pressed"),
+                        style: "cancel"
+                    },
+                    { text: "Yes", onPress: () => deleteConfirmed() }
+                ],
+                { cancelable: false }
+            );
 
 
         // await foreach(querySnapshot,  (documentSnapshot) => {
