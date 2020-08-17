@@ -161,7 +161,9 @@ export default function NewChat({ navigation }) {
             // ...item,
             ...messageObj,
             _id: ref.id,
-            name: item.userinfo.username
+            name: item.userinfo.username,
+            displaypic: item.userinfo.displaypic,
+            senderDetailsId: (senderDetails && senderDetails._id) ? senderDetails._id : "",
         }
         // navigation.popToTop();
         // setLoading(false);

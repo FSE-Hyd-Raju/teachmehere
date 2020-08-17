@@ -14,6 +14,8 @@ export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
+    const [didBlock, setDidBlock] = useState(false);
+    const [gotBlocked, setGotBlocked] = useState(false);
 
     const { loading } = useSelector(chatSelector)
     const dispatch = useDispatch()
@@ -32,8 +34,17 @@ export default function ChatRoom({ route, navigation }) {
     }
 
     useEffect(() => {
+        if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
+            setGotBlocked(true)
+        }
+        if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(thread.senderDetailsId) > -1)) {
+            setDidBlock(true)
+        }
+
         let backhandler = backButtonHandler()
         const messagesListener = getMessages();
+        const threadListener = listenForThread();
+
         // dispatch(setLoading(false));
 
 
@@ -41,6 +52,7 @@ export default function ChatRoom({ route, navigation }) {
         return () => {
             backhandler.remove();
             messagesListener();
+            threadListener();
         };
     }, []);
 
@@ -92,30 +104,69 @@ export default function ChatRoom({ route, navigation }) {
             });
     }
 
+    listenForThread = () => {
+        return firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .onSnapshot(querySnapshot => {
+                for (var i in querySnapshot.docs) {
+                    const data = querySnapshot.docs[i].data();
+                    if (!data.blockedIds && !data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
+                        setGotBlocked(true);
+                    }
+                }
+            });
+    }
+
     const handleSend = (messages) => {
         const text = messages[0].text;
-        updateMessage(text)
+        if (didBlock) {
+            Alert.alert(
+                "",
+                "Unblock to send message",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("No Pressed"),
+                        style: "cancel"
+                    },
+                    {
+                        text: "Unblock", onPress: () => {
+                            blockUser()
+                            updateMessage(text)
+                        }
+                    }
+                ],
+                { cancelable: false }
+            );
+        } else
+            updateMessage(text)
         // alert(JSON.stringify(thread.ids))
     }
 
 
     const updateMessage = async (text) => {
 
+        var msgObj = {
+            text: text,
+            serverTime: new Date().getTime(),
+            // serverTime: firestore.FieldValue.serverTimestamp(),
+            createdAt: new Date().getTime(),
+            user: {
+                _id: userInfo._id,
+                email: userInfo.email,
+                name: userInfo.username
+            },
+        }
+        if (gotBlocked) {
+            msgObj.deletedIds = firestore.FieldValue.arrayRemove(userInfo._id)
+        }
+
         await firestore()
             .collection('THREADS')
             .doc(thread._id)
             .collection('MESSAGES')
-            .add({
-                text: text,
-                serverTime: new Date().getTime(),
-                // serverTime: firestore.FieldValue.serverTimestamp(),
-                createdAt: new Date().getTime(),
-                user: {
-                    _id: userInfo._id,
-                    email: userInfo.email,
-                    name: userInfo.username
-                }
-            });
+            .add(msgObj);
 
         await firestore()
             .collection('THREADS')
@@ -128,14 +179,14 @@ export default function ChatRoom({ route, navigation }) {
                         serverTime: new Date().getTime(),
                         // serverTime: firestore.FieldValue.serverTimestamp()
                     },
-                    deletedIds: [],
+                    deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
                     newChat: false,
-                    displaypic: userInfo.displaypic
+                    // displaypic: userInfo.displaypic
                 },
                 { merge: true }
             );
-
-        sendNotification(text)
+        if (!gotBlocked)
+            sendNotification(text)
     }
 
 
@@ -310,12 +361,6 @@ export default function ChatRoom({ route, navigation }) {
         );
     }
 
-    async function asyncForEach(array, callback) {
-        for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array);
-        }
-    }
-
     const deleteConfirmed = async () => {
         dispatch(setLoading(true));
 
@@ -373,27 +418,27 @@ export default function ChatRoom({ route, navigation }) {
             })
         })
 
-        const threadquerySnapshot = await firestore()
-            .collection('THREADS')
-            .doc(thread._id).get();
+        // const threadquerySnapshot = await firestore()
+        //     .collection('THREADS')
+        //     .doc(thread._id).get();
 
-        // console.log(threadquerySnapshot.data)
-        if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.length && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
-            await firestore()
-                .collection('THREADS')
-                .doc(thread._id).delete();
-        }
-        else {
-            await firestore()
-                .collection('THREADS')
-                .doc(thread._id)
-                .set(
-                    {
-                        deletedIds: [userInfo._id]
-                    },
-                    { merge: true }
-                );
-        }
+        // // console.log(threadquerySnapshot.data)
+        // if (threadquerySnapshot.data && threadquerySnapshot.data.deletedIds && threadquerySnapshot.data.deletedIds.length && threadquerySnapshot.data.deletedIds.indexOf(userInfo._id) == -1) {
+        //     await firestore()
+        //         .collection('THREADS')
+        //         .doc(thread._id).delete();
+        // }
+        // else {
+        await firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .set(
+                {
+                    deletedIds: firestore.FieldValue.arrayUnion(userInfo._id)
+                },
+                { merge: true }
+            );
+        // }
 
         // navigation.goBack();
         dispatch(setLoading(false));
@@ -469,8 +514,36 @@ export default function ChatRoom({ route, navigation }) {
     //     alert("deleteChat")
     // }
 
+    const blockUserConfirmed = async () => {
+        await firestore()
+            .collection('THREADS')
+            .doc(thread._id)
+            .set(
+                {
+                    blockedIds: !didBlock ? firestore.FieldValue.arrayUnion(thread.senderDetailsId) : firestore.FieldValue.arrayRemove(thread.senderDetailsId),
+                },
+                { merge: true }
+            );
+
+        setDidBlock(!didBlock)
+    }
+
     const blockUser = () => {
-        alert("blockUser")
+        Alert.alert(
+            "block " + thread.name + " ?",
+            "we won't let them know you blocked them",
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("No Pressed"),
+                    style: "cancel"
+                },
+                { text: "Yes", onPress: () => blockUserConfirmed() }
+            ],
+            { cancelable: false }
+        );
+
+
     }
 
     return (
@@ -514,7 +587,7 @@ export default function ChatRoom({ route, navigation }) {
                     // style={{ paddingRight: 5 }}
                     />}
                     destructiveIndex={1}
-                    options={["Clear Chat", "Block"]}
+                    options={["Delete Chat", didBlock ? "Block" : "Unblock"]}
                     actions={[deleteChat, blockUser]} />
                 {/* <Icons
                     name={"camera"}

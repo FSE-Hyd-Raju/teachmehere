@@ -200,6 +200,11 @@ android {
 }
 
 dependencies {
+    compile 'com.facebook.fresco:fresco:1.+'
+
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     //noinspection GradleDynamicVersion

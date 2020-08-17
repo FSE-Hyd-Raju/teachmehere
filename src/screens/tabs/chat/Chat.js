@@ -118,7 +118,7 @@ export default function Chat({ navigation }) {
               >
                 <List.Item
                   title={item.name}
-                  description={item.latestMessage.text}
+                  description={item.didBlock ? "" : item.latestMessage.text}
                   left={props => <Avatar
                     rounded
                     containerStyle={{ margin: 7 }}

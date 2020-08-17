@@ -83,6 +83,7 @@ export function fetchChats(userInfo) {
                             // res = querySnapshot.docs.map(documentSnapshot => {
                             data = documentSnapshot.data();
                             senderDetails = data.userDetails.find(o => o.id != userInfo._id);
+                            didBlock = data.blockedIds && data.blockedIds.indexOf(senderDetails._id) > -1
                             if ((data.deletedIds && !data.deletedIds.length) || (data.deletedIds && data.deletedIds.indexOf(userInfo._id) == -1)) {
                                 res.push({
                                     _id: documentSnapshot.id,
@@ -91,7 +92,9 @@ export function fetchChats(userInfo) {
                                     latestMessage: {
                                         text: ''
                                     },
-                                    ...data
+                                    senderDetailsId: (senderDetails && senderDetails._id) ? senderDetails._id : "",
+                                    ...data,
+                                    didBlock: didBlock
                                 })
                             }
 
