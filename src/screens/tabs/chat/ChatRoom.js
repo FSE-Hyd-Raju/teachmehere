@@ -132,7 +132,7 @@ export default function ChatRoom({ route, navigation }) {
                     },
                     {
                         text: "Unblock", onPress: () => {
-                            blockUser()
+                            blockUserConfirmed()
                             updateMessage(text)
                         }
                     }
@@ -515,6 +515,8 @@ export default function ChatRoom({ route, navigation }) {
     // }
 
     const blockUserConfirmed = async () => {
+        console.log("didBlock")
+        console.log(thread.senderDetailsId)
         await firestore()
             .collection('THREADS')
             .doc(thread._id)
@@ -587,7 +589,7 @@ export default function ChatRoom({ route, navigation }) {
                     // style={{ paddingRight: 5 }}
                     />}
                     destructiveIndex={1}
-                    options={["Delete Chat", didBlock ? "Block" : "Unblock"]}
+                    options={["Delete Chat", didBlock ? "Unblock" : "Block"]}
                     actions={[deleteChat, blockUser]} />
                 {/* <Icons
                     name={"camera"}

@@ -157,17 +157,18 @@ export default function NewChat({ navigation }) {
 
                 })
             })
-        item = {
+
+        var itemObj = {
             // ...item,
             ...messageObj,
             _id: ref.id,
             name: item.userinfo.username,
             displaypic: item.userinfo.displaypic,
-            senderDetailsId: (senderDetails && senderDetails._id) ? senderDetails._id : "",
+            senderDetailsId: item.userinfo._id
         }
         // navigation.popToTop();
         // setLoading(false);
-        navigation.navigate('ChatRoom', { thread: item });
+        navigation.navigate('ChatRoom', { thread: itemObj });
 
 
 
