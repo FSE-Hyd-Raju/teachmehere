@@ -548,6 +548,23 @@ export default function ChatRoom({ route, navigation }) {
 
     }
 
+    const unblockUser = () => {
+        Alert.alert(
+            "Unblock " + thread.name + " ?",
+            "User will be able to send messages",
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("No Pressed"),
+                    style: "cancel"
+                },
+                { text: "Yes", onPress: () => blockUserConfirmed() }
+            ],
+            { cancelable: false }
+        );
+
+
+    }
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 0 }}  >
             <View style={styles.headerComponent}>
@@ -590,7 +607,7 @@ export default function ChatRoom({ route, navigation }) {
                     />}
                     destructiveIndex={1}
                     options={["Delete Chat", didBlock ? "Unblock" : "Block"]}
-                    actions={[deleteChat, blockUser]} />
+                    actions={[deleteChat, didBlock ? unblockUser : blockUser]} />
                 {/* <Icons
                     name={"camera"}
                     // color="#fff"
