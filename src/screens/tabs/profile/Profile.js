@@ -173,79 +173,95 @@ export default function Profile({ navigation }) {
         return (
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View>
-                    {settingsIconContainer()}
-                    <View style={styles.upperContainer}>
-                        {userImageContainer()}
-                        {userDescContainer()}
-                        {userStatsContainer()}
+                    <View style={{ backgroundColor: "rgba(243, 246, 252, 0.7)", paddingTop: 30, paddingBottom: 60 }}>
+                        {settingsIconContainer()}
+                        <View style={styles.upperContainer}>
+                            {userImageContainer()}
+                            {userDescContainer()}
+
+                        </View>
                     </View>
-                    <View style={styles.lowerContainer}>
-                        {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
+                    <View style={{
+                        padding: 15,
+                        width: '100%',
+                        borderTopRightRadius: 45,
+                        borderTopLeftRadius: 45,
+                        elevation: 3,
+                        marginTop: -40,
+                        backgroundColor: 'white',
+                        // borderColor: "#f3f6fc",
+                        // borderWidth: 1
+                    }}>
+                        {userStatsContainer()}
+
+                        <View style={styles.lowerContainer}>
+                            {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
                         {userPagesContainer("Posted Courses", "plus-circle-outline", 'PostedCourses')}
                         {userPagesContainer("Wishlist Courses", "heart-outline", 'WishlistCourses')} */}
-                        {/* {userPagesContainer(
+                            {/* {userPagesContainer(
                             'Login',
                             'send-circle-outline',
                             'RequestedCourses',
                         )} */}
 
-                        <View style={styles.accountContainer}>
-                            <TouchableOpacity>
-                                <ListItem
-                                    title={"Change Profile"}
-                                    leftIcon={
-                                        <Icons
-                                            name={"account-outline"}
-                                            color="white"
-                                            size={25}
-                                            style={{
-                                                fontSize: 20,
-                                                backgroundColor: "#3B6AA0",
-                                                borderRadius: 21,
-                                                padding: 5
-                                            }}
-                                        />
-                                    }
+                            <View style={styles.accountContainer}>
+                                <TouchableOpacity>
+                                    <ListItem
+                                        title={"Change Profile"}
+                                        leftIcon={
+                                            <Icons
+                                                name={"account-arrow-right-outline"}
+                                                color="#0e515c"
+                                                size={25}
+                                                style={{
+                                                    // fontSize: 20,
+                                                    // backgroundColor: "#3B6AA0",
+                                                    // borderRadius: 21,
+                                                    // padding: 5
+                                                }}
+                                            />
+                                        }
 
-                                    // pad={}
-                                    titleStyle={{ letterSpacing: 1 }}
-                                    // containerStyle={{ backgroundColor: 'unset' }}
-                                    chevron={<Icons
-                                        name={"chevron-right"}
-                                        color="rgb(102, 94, 94)"
-                                        size={30}
-                                    />}
-                                    onPress={() => navigation.navigate('ChangeProfile')}
+                                        // pad={}
+                                        titleStyle={{ letterSpacing: 1 }}
+                                        // containerStyle={{ backgroundColor: 'unset' }}
+                                        chevron={<Icons
+                                            name={"chevron-right"}
+                                            color="rgb(102, 94, 94)"
+                                            size={30}
+                                        />}
+                                        onPress={() => navigation.navigate('ChangeProfile')}
 
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <ListItem onPress={logoutAlert}
-                                    title={"logout"}
-                                    leftIcon={
-                                        <Icons
-                                            name={"logout"}
-                                            color="white"
-                                            size={25}
-                                            style={{
-                                                fontSize: 20,
-                                                backgroundColor: "#7575ff",
-                                                borderRadius: 21,
-                                                padding: 5
-                                            }}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <ListItem onPress={logoutAlert}
+                                        title={"logout"}
+                                        leftIcon={
+                                            <Icons
+                                                name={"logout"}
+                                                color="#0e515c"
+                                                size={25}
+                                                style={{
+                                                    // fontSize: 20,
+                                                    // backgroundColor: "#3B6AA0",
+                                                    // borderRadius: 21,
+                                                    // padding: 5
+                                                }}
+                                            />}
+
+                                        // pad={30}
+                                        titleStyle={{ letterSpacing: 1 }}
+                                        // containerStyle={{ backgroundColor: 'unset' }}
+                                        chevron={<Icons
+                                            name={"chevron-right"}
+                                            color="rgb(102, 94, 94)"
+                                            size={30}
                                         />}
 
-                                    // pad={30}
-                                    titleStyle={{ letterSpacing: 1 }}
-                                    // containerStyle={{ backgroundColor: 'unset' }}
-                                    chevron={<Icons
-                                        name={"chevron-right"}
-                                        color="rgb(102, 94, 94)"
-                                        size={30}
-                                    />}
-
-                                />
-                            </TouchableOpacity>
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -283,7 +299,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
+        // borderWidth: 1,
         borderColor: "rgb(225, 225, 225)",
     },
     accountsText: {
@@ -337,10 +353,10 @@ const styles = StyleSheet.create({
     },
     userDesc: {
         borderRadius: 20,
-        borderColor: "rgb(225, 225, 225)",
-        borderWidth: 1,
+        borderColor: "#dbdbdb",
         // borderWidth: 1,
-        // backgroundColor: 'rgba(255, 213, 87, 0.63)',
+        // borderWidth: 1,
+        backgroundColor: 'rgba(255, 213, 87, 0.63)',
         // backgroundColor: "#ffd557",
         // marginHorizontal: 40,
         height: 75,
@@ -350,6 +366,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         letterSpacing: 1,
         lineHeight: 20,
+        // backgroundColor: "white"
     },
     userDescContainer: {
         marginTop: 20,
@@ -378,7 +395,7 @@ const styles = StyleSheet.create({
         // marginBottom: 10
     },
     container: {
-        paddingTop: 25,
+        // paddingTop: 25,
         flex: 1,
         backgroundColor: "#fff",
 
