@@ -7,6 +7,7 @@ import signupReducer from './signupSlice';
 import forgotPasswordReducer from './forgotPasswordSlice';
 import chatReducer from './chatSlice';
 import changeProfileReducer from './changeProfileSlice';
+import notificationReducer from './notificationSlice';
 
 
 const rootReducer = combineReducers({
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   signup: signupReducer,
   forgotPassword: forgotPasswordReducer,
   chat: chatReducer,
-  changeProfile: changeProfileReducer
+  changeProfile: changeProfileReducer,
+  notification: notificationReducer
 });
 
 export default rootReducer;

@@ -13,6 +13,8 @@ import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const categories = require('../post/categories.json');
 
 import { random_rgba } from '../../../utils/random_rgba';
@@ -83,9 +85,18 @@ const Home = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.logo}>
-        <Image
-          source={require('../../../assets/img/logo.png')}
-          style={{ height: 60, width: 150 }}
+        <View style={{ flex: 0.9, alignItems: "center" }}>
+          <Image
+            source={require('../../../assets/img/logo.png')}
+            style={{ height: 60, width: 150, flex: 0.8 }}
+          />
+        </View>
+        <Icons
+          style={{ marginTop: 25 }}
+          name={"bell-outline"}
+          // color="#fff"
+          size={27}
+          onPress={() => props.navigation.navigate('Notification')}
         />
       </View>
       <Carousel
@@ -143,6 +154,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-evenly"
   },
   carouselContainer: {
     marginTop: 25,

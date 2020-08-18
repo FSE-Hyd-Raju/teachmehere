@@ -109,12 +109,12 @@ export default function ChatRoom({ route, navigation }) {
             .collection('THREADS')
             .doc(thread._id)
             .onSnapshot(querySnapshot => {
-                for (var i in querySnapshot.docs) {
-                    const data = querySnapshot.docs[i].data();
-                    if (!data.blockedIds && !data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
-                        setGotBlocked(true);
-                    }
+                // for (var i in querySnapshot.docs) {
+                const data = querySnapshot.data;
+                if (!data.blockedIds && !data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
+                    setGotBlocked(true);
                 }
+                // }
             });
     }
 
