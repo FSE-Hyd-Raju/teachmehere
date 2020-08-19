@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { notificationSelector, setNotificationsList } from '../../../redux/slices/notificationSlice';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input } from 'react-native-elements';
+import { Input, ButtonGroup } from 'react-native-elements';
 
 export default function NotificationPage({ navigation }) {
 
@@ -14,6 +14,8 @@ export default function NotificationPage({ navigation }) {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch()
     const { notificationsList } = useSelector(notificationSelector)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const buttons = ["Requests", "Others"]
 
     useEffect(() => {
         if (!notificationsList.length)
@@ -21,7 +23,7 @@ export default function NotificationPage({ navigation }) {
     }, []);
 
 
-    getNotifications = () => {
+    const getNotifications = () => {
         setLoading(true);
         firestore()
             .collection('NOTIFICATIONS')
@@ -47,7 +49,7 @@ export default function NotificationPage({ navigation }) {
             });
     }
 
-    changestatus = async (item, status) => {
+    const changestatus = async (item, status) => {
         setLoading(true);
         await firestore()
             .collection('NOTIFICATIONS')
@@ -62,11 +64,11 @@ export default function NotificationPage({ navigation }) {
             }, (error) => {
                 console.error(error);
                 setLoading(false);
-                alert("something went wrong")
+                cosole.log("something went wrong")
             })
     }
 
-    updateRequestedCourse = (item, status) => {
+    const updateRequestedCourse = (item, status) => {
         fetch('https://teachmeproject.herokuapp.com/updateStatus', {
             method: 'POST',
             headers: {
@@ -78,18 +80,17 @@ export default function NotificationPage({ navigation }) {
                 "courseid": item.courseid,
                 "status": status
             })
-
         }).then((response) => response.json())
             .then((responseJson) => {
                 sendNotification(item, status);
             }).catch((error) => {
                 console.error(error);
                 setLoading(false);
-                alert("something went wrong")
+                cosole.log("something went wrong")
             });
     }
 
-    sendNotification = (item, status) => {
+    const sendNotification = (item, status) => {
 
         notifyobj = {
             senderName: userInfo.username,
@@ -131,12 +132,12 @@ export default function NotificationPage({ navigation }) {
                 }).catch((error) => {
                     setLoading(false);
                     console.error(error);
-                    alert("something went wrong")
+                    cosole.log("something went wrong")
                 });
         }, (error) => {
             setLoading(false);
             console.error(error);
-            alert("something went wrong")
+            cosole.log("something went wrong")
         });
     }
 
@@ -144,6 +145,38 @@ export default function NotificationPage({ navigation }) {
         return (
             <View style={styles.loadingBar}>
                 <ActivityIndicator size={35} animating={true} color={Colors.black} />
+            </View>
+        )
+    }
+
+    const requestsNotifications = (item) => {
+        return (
+            <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
+                <Icons style={{ fontSize: 20, padding: 15 }} name="bell-outline" />
+                <View>
+                    <Text style={{ fontSize: 20, letterSpacing: 1, textTransform: "capitalize" }}>{item.senderName} </Text>
+                    <Text style={{ fontSize: 13, paddingVertical: 2 }}>{item.message} </Text>
+                    <View style={styles.iconContainer}>
+                        <Button disabled={item.status == "ACCEPTED"} icon="check-outline" mode="outlined" onPress={() => changestatus(item, "ACCEPTED")} color={"black"}>
+                            Accept
+                            </Button>
+                        <Button disabled={item.status == "REJECTED"} icon="close-outline" mode="outlined" onPress={() => changestatus(item, "REJECTED")} color={"black"}>
+                            Reject
+                            </Button>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
+    const othersNotifications = (item) => {
+        return (
+            <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
+                <Icons style={{ fontSize: 20, padding: 15 }} name="bell-outline" />
+                <View>
+                    <Text style={{ fontSize: 20, letterSpacing: 1, textTransform: "capitalize" }}>{item.senderName} </Text>
+                    <Text style={{ fontSize: 13, paddingVertical: 2 }}>{item.message} </Text>
+                </View>
             </View>
         )
     }
@@ -168,51 +201,43 @@ export default function NotificationPage({ navigation }) {
                     <Text style={styles.headerTitle} numberOfLines={1}>Notifications</Text>
                 </View>
             </View>
-            {!loading && !!notificationsList.length &&
+            <ButtonGroup
+                onPress={index => setSelectedIndex(index)}
+                selectedIndex={selectedIndex}
+                buttons={buttons}
+            />
+            {!loading && !!notificationsList.length && selectedIndex == 0 &&
                 <FlatList
                     data={notificationsList}
                     keyExtractor={item => item._id}
-                    ItemSeparatorComponent={() => <Divider />}
                     refreshControl={
                         <RefreshControl
                             refreshing={loading}
                             onRefresh={getNotifications}
                         />
                     }
-                    renderItem={({ item }) => (
-                        <View>
-                            {item.type != "REQUEST" && <List.Item
-                                title={item.senderName}
-                                description={item.message}
-                                left={props => <List.Icon  {...props} style={{ fontSize: 30 }} icon="bell" />}
-                                // titleNumberOfLines={1}
-                                titleStyle={styles.listTitle}
-                                descriptionStyle={styles.listDescription}
-                            // descriptionNumberOfLines={1}
-                            />
-                            }
-                            {item.type == "REQUEST" &&
-                                <List.Accordion
-                                    title={item.senderName}
-                                    description={item.message}
-                                    left={props => <List.Icon  {...props} style={{ fontSize: 30 }} icon="bell" />}
-                                >
-                                    <View style={styles.iconContainer}>
-                                        <Button disabled={item.status == "ACCEPTED"} icon="check-outline" mode="outlined" onPress={() => changestatus(item, "ACCEPTED")}>
-                                            Accept
-                                    </Button>
-                                        <Button disabled={item.status == "REJECTED"} icon="close-outline" mode="outlined" onPress={() => changestatus(item, "REJECTED")}>
-                                            Reject
-                                    </Button>
-                                    </View>
-
-                                </List.Accordion>
-                            }
-                        </View>
-
-                    )}
+                    renderItem={({ item }) => {
+                        return item.type == "REQUEST" && requestsNotifications(item)
+                    }}
                 />
             }
+
+            {!loading && !!notificationsList.length && selectedIndex == 1 &&
+                <FlatList
+                    data={notificationsList}
+                    keyExtractor={item => item._id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={getNotifications}
+                        />
+                    }
+                    renderItem={({ item }) => {
+                        return item.type != "REQUEST" && othersNotifications(item)
+                    }}
+                />
+            }
+
             {!!loading && loadingComponent()}
 
             {!loading && !notificationsList.length &&
@@ -262,8 +287,9 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         flexDirection: "row",
-        justifyContent: "space-evenly",
-        width: 300
+        // justifyContent: "space-evenly",
+        width: 300,
+        marginTop: 10
     },
     headerTitle: {
         fontSize: 20,
@@ -276,4 +302,9 @@ const styles = StyleSheet.create({
         height: 80,
         alignItems: 'center',
     },
+    loadingBar: {
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1
+    }
 });
