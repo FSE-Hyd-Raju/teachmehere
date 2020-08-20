@@ -376,7 +376,8 @@ const styles = StyleSheet.create({
     loadingBar: {
         justifyContent: "center",
         alignItems: "center",
-        flex: 1
+        flex: 1,
+        marginTop: 50,
     },
     backgroundImage: {
         // width: 360,
