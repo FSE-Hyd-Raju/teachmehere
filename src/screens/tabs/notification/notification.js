@@ -287,7 +287,7 @@ export default function NotificationPage({ navigation }) {
                         // width={Dimensions.get('window').width}
                         //     resizeMode={"center"}
                         style={styles.backgroundImage}
-                        source={require('../../../assets/img/notification.png')}
+                        source={require('../../../assets/img/notification1.png')}
                     />
                     <Text style={{
                         justifyContent: 'center',
@@ -344,5 +344,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         flex: 1
-    }
+    },
+    backgroundImage: {
+        // width: 360,
+        // height: 275,
+        // flex: 1,
+        marginTop: 50,
+        width: 200,
+        height: 200, //362 is actual height of image
+    },
 });
