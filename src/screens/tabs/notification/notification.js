@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, FlatList, TouchableOpacity, Text, Image, RefreshControl, TextInput } from 'react-native';
-import { IconButton, List, Divider, Button, ActivityIndicator, Colors } from 'react-native-paper';
+import { IconButton, List, Divider, Button, ActivityIndicator, Colors, FAB, Chip } from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import { useDispatch, useSelector } from 'react-redux'
 import { notificationSelector, setNotificationsList } from '../../../redux/slices/notificationSlice';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Input, ButtonGroup } from 'react-native-elements';
+import { Input, ButtonGroup, Avatar } from 'react-native-elements';
 
 export default function NotificationPage({ navigation }) {
 
@@ -152,18 +152,40 @@ export default function NotificationPage({ navigation }) {
     const requestsNotifications = (item) => {
         return (
             <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
-                <Icons style={{ fontSize: 20, padding: 15 }} name="bell-outline" />
-                <View>
-                    <Text style={{ fontSize: 20, letterSpacing: 1, textTransform: "capitalize" }}>{item.senderName} </Text>
-                    <Text style={{ fontSize: 13, paddingVertical: 2 }}>{item.message} </Text>
-                    <View style={styles.iconContainer}>
-                        <Button disabled={item.status == "ACCEPTED"} icon="check-outline" mode="outlined" onPress={() => changestatus(item, "ACCEPTED")} color={"black"}>
-                            Accept
-                            </Button>
-                        <Button disabled={item.status == "REJECTED"} icon="close-outline" mode="outlined" onPress={() => changestatus(item, "REJECTED")} color={"black"}>
-                            Reject
-                            </Button>
-                    </View>
+                <Avatar
+                    rounded
+                    containerStyle={{ margin: 7 }}
+                    size={45}
+                    source={require('../../../assets/img/default-mask-avatar.png')}
+                />
+                <View style={{ flex: 0.7, justifyContent: "center", paddingLeft: 10 }}>
+                    <Text style={{ fontSize: 17, letterSpacing: 1, textTransform: "capitalize" }} numberOfLines={2}>{item.senderName} </Text>
+                    <Text style={{ fontSize: 13, paddingVertical: 2 }} numberOfLines={2}>{item.message} </Text>
+                    {(item.status == "REJECTED" || item.status == "ACCEPTED") && <Chip icon="information" mode="flat" disabled style={{ width: 100, fontSize: "5" }} textStyle={{ fontSize: 10 }}>{item.status}</Chip>}
+                </View>
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flex: 0.2,
+                    justifyContent: "center"
+                }}>
+
+                    <FAB
+                        style={[{ margin: 10 }, item.status != "REJECTED" && { backgroundColor: "white" }]}
+                        small
+                        color={item.status != "REJECTED" ? "red" : "rgb(192, 154, 154)"}
+                        icon="close"
+                        onPress={() => changestatus(item, "REJECTED")}
+                        disabled={item.status == "REJECTED"}
+                    />
+                    <FAB
+                        style={[{ margin: 10 }, item.status != "ACCEPTED" && { backgroundColor: "white" }]}
+                        color={item.status != "ACCEPTED" ? "green" : "rgb(140, 184, 140)"}
+                        small
+                        icon="check"
+                        onPress={() => changestatus(item, "ACCEPTED")}
+                        disabled={item.status == "ACCEPTED"}
+                    />
                 </View>
             </View>
         )
@@ -172,11 +194,17 @@ export default function NotificationPage({ navigation }) {
     const othersNotifications = (item) => {
         return (
             <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
-                <Icons style={{ fontSize: 20, padding: 15 }} name="bell-outline" />
-                <View>
-                    <Text style={{ fontSize: 20, letterSpacing: 1, textTransform: "capitalize" }}>{item.senderName} </Text>
-                    <Text style={{ fontSize: 13, paddingVertical: 2 }}>{item.message} </Text>
+                <Avatar
+                    rounded
+                    containerStyle={{ margin: 7 }}
+                    size={45}
+                    source={require('../../../assets/img/default-mask-avatar.png')}
+                />
+                <View style={{ flex: 0.9, justifyContent: "center", paddingLeft: 10 }}>
+                    <Text style={{ fontSize: 17, letterSpacing: 1, textTransform: "capitalize" }} numberOfLines={2}>{item.senderName} </Text>
+                    <Text style={{ fontSize: 13, paddingVertical: 2 }} numberOfLines={2}>{item.message} </Text>
                 </View>
+                <Icons style={{ fontSize: 20, padding: 15 }} name="bell-outline" />
             </View>
         )
     }
@@ -201,11 +229,20 @@ export default function NotificationPage({ navigation }) {
                     <Text style={styles.headerTitle} numberOfLines={1}>Notifications</Text>
                 </View>
             </View>
-            <ButtonGroup
-                onPress={index => setSelectedIndex(index)}
-                selectedIndex={selectedIndex}
-                buttons={buttons}
-            />
+            <View style={{
+                flexDirection: "row",
+                // width: 300,
+                overflow: "scroll",
+                // marginTop: 10
+            }}>
+                <Button mode="outlined" onPress={() => setSelectedIndex(0)} labelStyle={selectedIndex == 0 && { fontWeight: "normal" }} color={selectedIndex == 0 ? "black" : "black"} style={[{ margin: 10, borderTopStartRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 0 && { backgroundColor: "white", elevation: 3 }]} >
+                    Requests
+        </Button>
+                <Button mode="outlined" onPress={() => setSelectedIndex(1)} labelStyle={selectedIndex == 1 && { fontWeight: "normal" }} color={selectedIndex == 1 ? "black" : "black"} style={[{ margin: 10, borderTopEndRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 1 && { backgroundColor: "white", elevation: 3 }]}>
+                    Updates
+        </Button>
+            </View>
+
             {!loading && !!notificationsList.length && selectedIndex == 0 &&
                 <FlatList
                     data={notificationsList}
@@ -287,9 +324,10 @@ const styles = StyleSheet.create({
     },
     iconContainer: {
         flexDirection: "row",
+        alignItems: "center",
         // justifyContent: "space-evenly",
-        width: 300,
-        marginTop: 10
+        // width: 300,
+        // marginTop: 10
     },
     headerTitle: {
         fontSize: 20,
@@ -299,7 +337,7 @@ const styles = StyleSheet.create({
     },
     headerComponent: {
         flexDirection: "row",
-        height: 80,
+        paddingVertical: 20,
         alignItems: 'center',
     },
     loadingBar: {
