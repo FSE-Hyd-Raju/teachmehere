@@ -15,13 +15,17 @@ export default function NotificationPage({ navigation }) {
     const dispatch = useDispatch()
     const { notificationsList } = useSelector(notificationSelector)
     const [selectedIndex, setSelectedIndex] = React.useState(0)
-    const buttons = ["Requests", "Others"]
+
+    const [requestNotificationsList, setRequestNotificationsList] = React.useState([])
+    const [infoNotificationsList, setInfoNotificationsList] = React.useState([])
 
     useEffect(() => {
         if (!notificationsList.length)
             getNotifications()
-    }, []);
+        setInfoNotificationsList(notificationsList.filter(ele => ele.type != "REQUEST"))
+        setRequestNotificationsList(notificationsList.filter(ele => ele.type == "REQUEST"))
 
+    }, [notificationsList]);
 
     const getNotifications = () => {
         setLoading(true);
@@ -149,6 +153,28 @@ export default function NotificationPage({ navigation }) {
         )
     }
 
+    const requestNotificationsTab = () => {
+        return (
+            <View>
+                {!!requestNotificationsList.length && <FlatList
+                    data={requestNotificationsList}
+                    keyExtractor={item => item._id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={getNotifications}
+                        />
+                    }
+                    renderItem={({ item }) => {
+                        return item.type == "REQUEST" && requestsNotifications(item)
+                    }}
+                />}
+
+                {!requestNotificationsList.length && noDataComponent("requests")}
+            </View>
+        )
+    }
+
     const requestsNotifications = (item) => {
         return (
             <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
@@ -191,7 +217,28 @@ export default function NotificationPage({ navigation }) {
         )
     }
 
-    const othersNotifications = (item) => {
+    const updateNotificationsTab = () => {
+        return (
+            <View>
+                {!!infoNotificationsList.length && <FlatList
+                    data={infoNotificationsList}
+                    keyExtractor={item => item._id}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={getNotifications}
+                        />
+                    }
+                    renderItem={({ item }) => {
+                        return item.type != "REQUEST" && updateNotifications(item)
+                    }}
+                />}
+                {!infoNotificationsList.length && noDataComponent("notifications")}
+            </View>
+        )
+    }
+
+    const updateNotifications = (item) => {
         return (
             <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingVertical: 20, borderColor: "rgb(230, 230, 230)" }}>
                 <Avatar
@@ -209,97 +256,83 @@ export default function NotificationPage({ navigation }) {
         )
     }
 
-    return (
-        <View style={styles.container}>
+    const buttonsTabsComponent = () => {
+        return (
+            <View style={{
+                flexDirection: "row",
+                overflow: "scroll",
+            }}>
+                <Button mode="outlined" onPress={() => setSelectedIndex(0)} color="black" style={[{ margin: 10, borderTopStartRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 0 && { backgroundColor: "white", elevation: 3 }]} >
+                    Requests
+      </Button>
+                <Button mode="outlined" onPress={() => setSelectedIndex(1)} color="black" style={[{ margin: 10, borderTopEndRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 1 && { backgroundColor: "white", elevation: 3 }]}>
+                    Updates
+      </Button>
+            </View>
+        )
+    }
+
+    const headerComponent = () => {
+        return (
             <View style={styles.headerComponent}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icons
                         name={"keyboard-backspace"}
-                        // color="#fff"
                         size={27}
-                    // style={{ flex: 0.2 }}
                     />
                 </TouchableOpacity>
                 <View style={{
                     alignItems: 'center',
                     paddingLeft: 20,
                     justifyContent: "center",
-                    // flex: 0.4
                 }}>
                     <Text style={styles.headerTitle} numberOfLines={1}>Notifications</Text>
                 </View>
             </View>
-            <View style={{
-                flexDirection: "row",
-                // width: 300,
-                overflow: "scroll",
-                // marginTop: 10
-            }}>
-                <Button mode="outlined" onPress={() => setSelectedIndex(0)} labelStyle={selectedIndex == 0 && { fontWeight: "normal" }} color={selectedIndex == 0 ? "black" : "black"} style={[{ margin: 10, borderTopStartRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 0 && { backgroundColor: "white", elevation: 3 }]} >
-                    Requests
-        </Button>
-                <Button mode="outlined" onPress={() => setSelectedIndex(1)} labelStyle={selectedIndex == 1 && { fontWeight: "normal" }} color={selectedIndex == 1 ? "black" : "black"} style={[{ margin: 10, borderTopEndRadius: 20, flex: 0.5, backgroundColor: "rgba(225, 225, 225, 0.38)" }, selectedIndex == 1 && { backgroundColor: "white", elevation: 3 }]}>
-                    Updates
-        </Button>
+        )
+    }
+
+    const bodyComponent = () => {
+        return (
+            <View>
+                {buttonsTabsComponent()}
+                {!loading && selectedIndex == 0 && requestNotificationsTab()}
+                {!loading && selectedIndex == 1 && updateNotificationsTab()}
+                {!!loading && loadingComponent()}
             </View>
+        )
+    }
 
-            {!loading && !!notificationsList.length && selectedIndex == 0 &&
-                <FlatList
-                    data={notificationsList}
-                    keyExtractor={item => item._id}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={loading}
-                            onRefresh={getNotifications}
-                        />
-                    }
-                    renderItem={({ item }) => {
-                        return item.type == "REQUEST" && requestsNotifications(item)
-                    }}
+    const noDataComponent = (text) => {
+        return (
+            <View
+                style={{
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                <Image
+                    // width={Dimensions.get('window').width}
+                    //     resizeMode={"center"}
+                    style={styles.backgroundImage}
+                    source={require('../../../assets/img/notification1.png')}
                 />
-            }
+                <Text style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: "center",
+                    fontSize: 20,
+                    color: "#105883",
+                }}>
+                    You have no {text} !
+            </Text>
+            </View>
+        )
+    }
 
-            {!loading && !!notificationsList.length && selectedIndex == 1 &&
-                <FlatList
-                    data={notificationsList}
-                    keyExtractor={item => item._id}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={loading}
-                            onRefresh={getNotifications}
-                        />
-                    }
-                    renderItem={({ item }) => {
-                        return item.type != "REQUEST" && othersNotifications(item)
-                    }}
-                />
-            }
-
-            {!!loading && loadingComponent()}
-
-            {!loading && !notificationsList.length &&
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                    <Image
-                        // width={Dimensions.get('window').width}
-                        //     resizeMode={"center"}
-                        style={styles.backgroundImage}
-                        source={require('../../../assets/img/notification1.png')}
-                    />
-                    <Text style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        textAlign: "center",
-                        fontSize: 20,
-                        color: "#105883",
-                    }}>
-                        You have no notifications!
-                  </Text>
-                </View>
-            }
+    return (
+        <View style={styles.container}>
+            {headerComponent()}
+            {bodyComponent()}
         </View>
     );
 }
