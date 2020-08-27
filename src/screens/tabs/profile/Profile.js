@@ -32,18 +32,18 @@ import RequestedCoursesPage from './requestedCourses';
 import WishlistCoursesPage from './wishlistCourses';
 import PostedCoursesPage from './postedCourses';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadUserInfo, loginSelector, logOutUser } from '../../../redux/slices/loginSlice';
-import { profileSelector, setReqFavPostedCount } from '../../../redux/slices/profileSlice';
+import { loadUserInfo, loginSelector, logOutUser, setReqFavPostedCount } from '../../../redux/slices/loginSlice';
+// import { profileSelector, setReqFavPostedCount } from '../../../redux/slices/profileSlice';
 
 export default function Profile({ navigation }) {
     const dispatch = useDispatch();
-    const { loading, userInfo } = useSelector(loginSelector);
+    const { loading, userInfo, reqFavPostedCount } = useSelector(loginSelector);
     // const { reqFavPostedCount } = useSelector(profileSelector);
     const [showSettingsPage, setShowSettingsPage] = React.useState(false);
 
     useEffect(() => {
-        // if (!reqFavPostedCount._id)
-        getReqFavpostedCounts()
+        if (!reqFavPostedCount._id)
+            getReqFavpostedCounts()
     }, []);
 
     const getReqFavpostedCounts = () => {
@@ -145,7 +145,7 @@ export default function Profile({ navigation }) {
 
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
                         <Surface style={styles.surface}>
-                            <Text style={styles.statValue}>10</Text>
+                            <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
                             <Text style={styles.statText}>Requested {'\n'}courses</Text>
                         </Surface>
                     </TouchableOpacity>
@@ -155,7 +155,7 @@ export default function Profile({ navigation }) {
                     <Text style={styles.statText}>Posted {'\n'}courses</Text> */}
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
-                            <Text style={styles.statValue}>3</Text>
+                            <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
                             <Text style={styles.statText}>Posted {'\n'}courses</Text>
                         </Surface>
                     </TouchableOpacity>
@@ -165,7 +165,7 @@ export default function Profile({ navigation }) {
                     <Text style={styles.statText}>Wishlist {'\n'}courses</Text> */}
                     <TouchableOpacity onPress={() => navigation.navigate('WishlistCourses')}>
                         <Surface style={styles.surface}>
-                            <Text style={styles.statValue}>8</Text>
+                            <Text style={styles.statValue}>{reqFavPostedCount.myfavoritescount}</Text>
                             <Text style={styles.statText}>Wishlist {'\n'}courses</Text>
                         </Surface>
                     </TouchableOpacity>

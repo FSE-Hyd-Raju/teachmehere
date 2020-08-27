@@ -10,7 +10,6 @@ const profileSlice = createSlice({
     initialState,
     reducers: {
         setReqFavPostedCount: (state, { payload }) => {
-            alert(payload)
             state.reqFavPostedCount = payload;
         }
     }

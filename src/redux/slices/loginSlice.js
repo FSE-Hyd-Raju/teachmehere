@@ -13,6 +13,7 @@ export const initialState = {
   loginEmailError: '',
   loginError: '',
   devicetoken: '',
+  reqFavPostedCount: { coursedetailscount: 0, requestedcoursescount: 0, myfavoritescount: 0 }
 };
 
 const loginSlice = createSlice({
@@ -63,6 +64,9 @@ const loginSlice = createSlice({
       state.loginError = '';
       state.loading = false;
     },
+    setReqFavPostedCount: (state, { payload }) => {
+      state.reqFavPostedCount = payload;
+    }
   },
 });
 
@@ -76,7 +80,8 @@ export const {
   passwordIncorrect,
   EmailIncorrect,
   loadUserInfo,
-  logoutSuccess
+  logoutSuccess,
+  setReqFavPostedCount
 } = loginSlice.actions;
 
 export const loginSelector = state => state.login;
