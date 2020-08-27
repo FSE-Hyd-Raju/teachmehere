@@ -33,14 +33,37 @@ import WishlistCoursesPage from './wishlistCourses';
 import PostedCoursesPage from './postedCourses';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadUserInfo, loginSelector, logOutUser } from '../../../redux/slices/loginSlice';
-
+import { profileSelector, setReqFavPostedCount } from '../../../redux/slices/profileSlice';
 
 export default function Profile({ navigation }) {
     const dispatch = useDispatch();
     const { loading, userInfo } = useSelector(loginSelector);
+    // const { reqFavPostedCount } = useSelector(profileSelector);
     const [showSettingsPage, setShowSettingsPage] = React.useState(false);
 
-    useEffect(() => { }, []);
+    useEffect(() => {
+        // if (!reqFavPostedCount._id)
+        getReqFavpostedCounts()
+    }, []);
+
+    const getReqFavpostedCounts = () => {
+        fetch('https://teachmeproject.herokuapp.com/getReqFavPostedCounts', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "uid": userInfo._id,
+            })
+        }).then((response) => response.json())
+            .then((responseJson) => {
+                if (responseJson.length)
+                    dispatch(setReqFavPostedCount(responseJson[0]));
+            }).catch((error) => {
+                console.error(error);
+            });
+    }
 
     const logout = () => {
         dispatch(

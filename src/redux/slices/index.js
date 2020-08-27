@@ -8,7 +8,7 @@ import forgotPasswordReducer from './forgotPasswordSlice';
 import chatReducer from './chatSlice';
 import changeProfileReducer from './changeProfileSlice';
 import notificationReducer from './notificationSlice';
-
+import profileReducer from './profileSlice';
 
 const rootReducer = combineReducers({
   post: postReducer,
@@ -18,7 +18,8 @@ const rootReducer = combineReducers({
   forgotPassword: forgotPasswordReducer,
   chat: chatReducer,
   changeProfile: changeProfileReducer,
-  notification: notificationReducer
+  notification: notificationReducer,
+  profileReducer: profileReducer
 });
 
 export default rootReducer;
