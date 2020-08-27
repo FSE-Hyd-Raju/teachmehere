@@ -9,7 +9,7 @@ import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-import { chatSelector, setLoading } from '../../../redux/slices/chatSlice';
+import { chatSelector, setLoading, setCurrentOpenedChat } from '../../../redux/slices/chatSlice';
 export default function ChatRoom({ route, navigation }) {
 
     const { userInfo } = useSelector(loginSelector)
@@ -34,6 +34,7 @@ export default function ChatRoom({ route, navigation }) {
     }
 
     useEffect(() => {
+        dispatch(setCurrentOpenedChat(thread))
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
             setGotBlocked(true)
         }
@@ -53,6 +54,7 @@ export default function ChatRoom({ route, navigation }) {
             backhandler.remove();
             messagesListener();
             threadListener();
+            // dispatch(setCurrentOpenedChat({}))
         };
     }, []);
 
@@ -110,8 +112,9 @@ export default function ChatRoom({ route, navigation }) {
             .doc(thread._id)
             .onSnapshot(querySnapshot => {
                 // for (var i in querySnapshot.docs) {
-                const data = querySnapshot.data;
-                if (!data.blockedIds && !data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
+                const data = querySnapshot.data();
+                // alert(JSON.stringify(data))
+                if (data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
                     setGotBlocked(true);
                 }
                 // }

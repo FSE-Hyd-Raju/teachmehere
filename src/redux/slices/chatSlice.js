@@ -10,7 +10,8 @@ export const initialState = {
     searchChatResults: [],
     loading: false,
     hasErrors: false,
-    newChatList: []
+    newChatList: [],
+    currentOpenedChat: {}
 };
 
 const chatSlice = createSlice({
@@ -47,9 +48,10 @@ const chatSlice = createSlice({
         },
         setNewChatList: (state, { payload }) => {
             state.newChatList = payload
+        },
+        setCurrentOpenedChat: (state, { payload }) => {
+            state.currentOpenedChat = payload
         }
-
-
     },
 });
 
@@ -60,7 +62,8 @@ export const {
     setChatResults,
     clearData,
     setLoading,
-    setNewChatList
+    setNewChatList,
+    setCurrentOpenedChat
 } = chatSlice.actions;
 
 export const chatSelector = state => state.chat;
