@@ -214,7 +214,16 @@ export default function signupPage({ navigation }) {
                     )
                     }
                 </Formik >
-
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 10,
+                    }}>
+                    <Text>Already have an account?</Text>
+                    <Button title="Signin" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
+                </View>
             </View>
         )
 
@@ -222,84 +231,93 @@ export default function signupPage({ navigation }) {
 
     const screen2 = () => {
         return (
-            <Formik
-                initialValues={{ otp: '', password: '' }}
-                onSubmit={values => dispatch(onSignupOtpPressed(
-                    {
-                        otp: values.otp,
-                        password: values.password,
-                        email: showEmail,
-                        onSuccess: (data) => {
-                            dispatch(loadUserInfo(data))
-                            setshowDescriptionScreen(true)
-                            // navigation.navigate('Profile');
+            <View>
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 100 }}>Signin</Text>
+                    <Text style={{ color: 'gray', fontSize: 15 }} >Fill the OTP and Password</Text>
+                </View>
+                <Formik
+                    initialValues={{ otp: '', password: '' }}
+                    onSubmit={values => dispatch(onSignupOtpPressed(
+                        {
+                            otp: values.otp,
+                            password: values.password,
+                            email: showEmail,
+                            onSuccess: (data) => {
+                                dispatch(loadUserInfo(data))
+                                setshowDescriptionScreen(true)
+                                // navigation.navigate('Profile');
+                            }
                         }
+
+                    ))}
+
+                    // new line
+                    validationSchema={
+                        yup.object().shape({
+                            otp: yup
+                                .number()
+                                .required(),
+                            password: yup
+                                .string()
+                                .min(5)
+                                .required(),
+                        })
+                    } >
+                    {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
+                        <Fragment>
+                            <View style={styles.inputComponentStyle}>
+                                <Input
+                                    style={{ paddingLeft: 20 }}
+                                    placeholder="OTP"
+                                    leftIcon={
+                                        <IconMaterialIcons
+                                            name='key'
+                                            size={20}
+                                        />}
+                                    errorMessage={signupOtpError}
+
+                                    value={values.otp}
+                                    onBlur={() => setFieldTouched('otp')}
+                                    onChangeText={(e) => {
+                                        handleChange("otp")(e);
+                                        dispatch(clearErrors())
+                                    }}
+                                />
+                                {touched.otp && errors.otp &&
+                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.otp}</Text>
+                                }
+                                <Input
+                                    placeholder="Password"
+                                    secureTextEntry={hidePassword}
+                                    leftIcon={
+                                        <IconMaterialIcons
+                                            name='lock'
+                                            size={20}
+                                        />}
+                                    rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
+                                    onChangeText={(e) => {
+                                        handleChange("password")(e);
+                                        dispatch(clearErrors())
+                                    }}
+                                    onBlur={() => setFieldTouched('password')}
+                                    errorMessage={signupPasswordError}
+                                />
+                                {touched.password && errors.password &&
+                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                                }
+
+                                <Button title="Submit" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
+                                <PageSpinner visible={loading} />
+                            </View>
+                        </Fragment>
+                    )
                     }
-
-                ))}
-
-                // new line
-                validationSchema={
-                    yup.object().shape({
-                        otp: yup
-                            .number()
-                            .required(),
-                        password: yup
-                            .string()
-                            .min(5)
-                            .required(),
-                    })
-                } >
-                {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
-                    <Fragment>
-                        <View style={styles.inputComponentStyle}>
-                            <Input
-                                style={{ paddingLeft: 20 }}
-                                placeholder="OTP"
-                                leftIcon={
-                                    <IconMaterialIcons
-                                        name='key'
-                                        size={20}
-                                    />}
-                                errorMessage={signupOtpError}
-
-                                value={values.otp}
-                                onBlur={() => setFieldTouched('otp')}
-                                onChangeText={(e) => {
-                                    handleChange("otp")(e);
-                                    dispatch(clearErrors())
-                                }}
-                            />
-                            {touched.otp && errors.otp &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.otp}</Text>
-                            }
-                            <Input
-                                placeholder="Password"
-                                secureTextEntry={hidePassword}
-                                leftIcon={
-                                    <IconMaterialIcons
-                                        name='lock'
-                                        size={20}
-                                    />}
-                                rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
-                                onChangeText={(e) => {
-                                    handleChange("password")(e);
-                                    dispatch(clearErrors())
-                                }}
-                                onBlur={() => setFieldTouched('password')}
-                                errorMessage={signupPasswordError}
-                            />
-                            {touched.password && errors.password &&
-                                <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-                            }
-
-                            <Button title="Submit" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
-                            <PageSpinner visible={loading} />
-                        </View>
-                    </Fragment>
-                )
-                }
-            </Formik >
+                </Formik >
+            </View>
         )
 
     }
@@ -345,8 +363,12 @@ export default function signupPage({ navigation }) {
                             username: userInfo.username,
                             onSuccess: (data) => {
                                 dispatch(loadUserInfo(data))
+                                navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Profile' }],
+                                });
 
-                                navigation.navigate('Profile');
+
                             },
                         }),
                     )
@@ -420,15 +442,10 @@ export default function signupPage({ navigation }) {
     const skipButtonComponent = () => {
         return (
             <View style={{ alignItems: 'flex-end' }}>
-                {/* <Icon
-                    // raised
-                    size={27}
-                    style={{ paddingLeft: 2 }}
-                    name='arrow-left'
-                    type='feather'
-                    color='#1E90FF'
-                    onPress={() => navigation.navigate('Profile')} /> */}
-                <Button title="skip" type='clear' onPress={() => navigation.navigate('Profile')} />
+                <Button title="skip" type='clear' onPress={() => navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Profile' }],
+                })} />
 
             </View>
         )
@@ -480,12 +497,12 @@ export default function signupPage({ navigation }) {
                         justifyContent: "center",
                         alignItems: "center"
                     }}>
-                        <Text style={{ fontSize: 30 }}>Add your details</Text>
-                        {/* <Text style={{ color: 'gray', fontSize: 15 }} >Fill the details & create your account</Text> */}
+                        <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 80 }}>Add your details</Text>
+                        {/* <Text style={{ color: 'gray', fontSize: 15 }} >Add the image and description</Text> */}
                     </View>
 
                     {userImageContainer()}
-                    <View style={{ marginTop: 30 }}>
+                    <View>
                         {descriptionComponent()}
                     </View>
                     {skipButtonComponent()}
@@ -503,16 +520,6 @@ export default function signupPage({ navigation }) {
                 {!showDescriptionScreen && <View>
                     {!showOtpScreen ? screen1() : null}
                     {showOtpScreen ? screen2() : null}
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: 10,
-                        }}>
-                        <Text>Already have an account?</Text>
-                        <Button title="Signin" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
-                    </View>
                 </View>}
                 {!!showDescriptionScreen && screen3()}
 
