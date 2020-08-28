@@ -150,11 +150,13 @@ export function onChangeProfilePressed(param) {
 
         try {
             console.log("insdie try")
+            console.log(param)
             const response = await axios.post(changeProfileUrl, {
                 devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
                 username: param.username,
                 _id: param.id,
-                description: param.description
+                description: param.description,
+                displaypic: param.displaypic
             });
             console.log(response.data)
             if (response) {
@@ -166,7 +168,7 @@ export function onChangeProfilePressed(param) {
                 else {
                     dispatch(changeProfileSuccess(response.data[0]));
                     storeAsyncData('userInfo', response.data[0]);
-                    param.onSuccess();
+                    param.onSuccess(response.data[0]);
                 }
 
             }

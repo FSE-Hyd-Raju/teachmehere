@@ -127,7 +127,10 @@ export default function ChangeProfilePage({ navigation }) {
                             id: userInfo._id,
                             username: values.username,
                             description: values.description,
-                            onSuccess: () => {
+                            displaypic: userInfo.displaypic,
+                            onSuccess: (data) => {
+                                dispatch(loadUserInfo(data))
+
                                 navigation.navigate('Profile');
                             },
                         }),

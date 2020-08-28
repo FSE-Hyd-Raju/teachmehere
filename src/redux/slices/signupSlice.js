@@ -34,7 +34,7 @@ const signupSlice = createSlice({
             state.signupUsernameError = '';
             state.signupPhonenumberError = '';
             state.signupPasswordError = '';
-            state.signupOtpError = ''
+            state.signupOtpError = '';
         },
         signupEmailChanged: (state, { payload }) => {
             state.signupEmailError = '';
@@ -191,7 +191,8 @@ export function onSignupOtpPressed(param) {
                 }
                 else {
                     dispatch(signupSuccess(response.data[0]));
-                    param.onSuccess();
+                    // storeAsyncData('userInfo', response.data[0]);
+                    param.onSuccess(response.data[0]);
                 }
 
             }
