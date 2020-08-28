@@ -209,7 +209,7 @@ export default function Profile({ navigation }) {
                         width: '100%',
                         borderTopRightRadius: 45,
                         borderTopLeftRadius: 45,
-                        elevation: 3,
+                        elevation: 5,
                         marginTop: -40,
                         backgroundColor: 'white',
                         // borderColor: "#f3f6fc",
@@ -294,15 +294,7 @@ export default function Profile({ navigation }) {
 
     return (
         <View style={styles.container}>
-            {!showSettingsPage ? (
-                profilepagecomponent()
-            ) : (
-                    <ProfileSettingsPage onBack={() => setShowSettingsPage(false)} />
-                )
-                // <RequestedCoursesPage onBack={() => setShowSettingsPage(false)} />
-                // <WishlistCoursesPage onBack={() => setShowSettingsPage(false)} />
-                // <PostedCoursesPage onBack={() => setShowSettingsPage(false)} />
-            }
+            {profilepagecomponent()}
         </View>
     );
 }
