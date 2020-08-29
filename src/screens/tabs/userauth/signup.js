@@ -4,53 +4,27 @@ import { Input, Button, Icon, Avatar } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    clearErrors,
-    signupFailure,
-    onSignupOtpPressed,
-    onSignupPressed, signupSelector
-} from '../../../redux/slices/signupSlice'
+import { clearErrors, signupFailure, onSignupOtpPressed, onSignupPressed, signupSelector } from '../../../redux/slices/signupSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 //import ImgToBase64 from 'react-native-image-base64';
-
-
-
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import ImagePicker from 'react-native-image-picker';
-
-import {
-    changeProfileSelector,
-    clearProfileErrors,
-    changeProfileDescriptionChanged,
-    onChangeImagePressed, onChangeProfilePressed
-} from '../../../redux/slices/changeProfileSlice';
+import { changeProfileSelector, clearProfileErrors, changeProfileDescriptionChanged, onChangeImagePressed, onChangeProfilePressed } from '../../../redux/slices/changeProfileSlice';
 import { loadUserInfo, loginSelector } from '../../../redux/slices/loginSlice'
 
 
 export default function signupPage({ navigation }) {
+
     const dispatch = useDispatch()
     const { userInfo } = useSelector(loginSelector)
-    const {
-        loading,
-        signupPasswordError,
-        signupEmailError,
-        signupPhonenumberError,
-        signupUsernameError,
-        signupOtpError } = useSelector(signupSelector)
-
-    const {
-        changeProfileDescription,
-        DescriptionError
-    } = useSelector(changeProfileSelector);
-
-
+    const { loading, signupPasswordError, signupEmailError, signupPhonenumberError, signupUsernameError, signupOtpError } = useSelector(signupSelector)
+    const { changeProfileDescription, DescriptionError } = useSelector(changeProfileSelector);
     const [hidePassword, sethidePassword] = React.useState(true);
     const [showOtpScreen, setshowOtpScreen] = React.useState(false);
     const [showEmail, setshowEmail] = React.useState("");
     const [sourceImage, setSource] = React.useState({});
     const [showDescriptionScreen, setshowDescriptionScreen] = React.useState(false);
-
     const [eyeicon, seteyeicon] = React.useState("eye");
     const onSigninPress = () => navigation.navigate('Login');
 
@@ -110,7 +84,6 @@ export default function signupPage({ navigation }) {
             </View>
         )
     }
-
 
     const screen1 = () => {
         return (
@@ -207,7 +180,7 @@ export default function signupPage({ navigation }) {
                                     <Text style={{ fontSize: 10, color: 'red' }}>{errors.phonenumber}</Text>
                                 }
 
-                                <Button title="Signup" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
+                                <Button title="Sign up" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
                                 <PageSpinner visible={loading} />
                             </View>
                         </Fragment>
@@ -222,7 +195,7 @@ export default function signupPage({ navigation }) {
                         marginTop: 10,
                     }}>
                     <Text>Already have an account?</Text>
-                    <Button title="Signin" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
+                    <Button title="Sign in" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
                 </View>
             </View>
         )
@@ -424,6 +397,7 @@ export default function signupPage({ navigation }) {
             </Formik>
         );
     };
+
     const onSkipPressed = () => {
         dispatch(
             onChangeProfilePressed({
@@ -439,6 +413,7 @@ export default function signupPage({ navigation }) {
             }),
         )
     }
+
     const skipButtonComponent = () => {
         return (
             <View style={{ alignItems: 'flex-end' }}>
@@ -489,6 +464,7 @@ export default function signupPage({ navigation }) {
             </View >
         )
     }
+
     const screen3 = () => {
         return (
             <View style={styles.ProfileContainer}>
@@ -522,11 +498,8 @@ export default function signupPage({ navigation }) {
                     {showOtpScreen ? screen2() : null}
                 </View>}
                 {!!showDescriptionScreen && screen3()}
-
-
             </ScrollView >
         </View>
-
     );
 }
 
@@ -553,7 +526,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 30,
         backgroundColor: "rgb(255, 255, 255)",
-
     },
     loginButton: {
         alignSelf: 'center',

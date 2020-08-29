@@ -1,43 +1,21 @@
-import React, { Component, Fragment } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Text,
-  Image,
-  Dimensions,
-} from 'react-native';
+import React, { Fragment } from 'react';
+import { View, StyleSheet, ScrollView, Text, Image, Dimensions, } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  loginSelector,
-  clearErrors,
-  loginPasswordChanged,
-  onLoginPressed,
-} from '../../../redux/slices/loginSlice';
+import { loginSelector, clearErrors, onLoginPressed } from '../../../redux/slices/loginSlice';
 import PageSpinner from '../../../components/common/PageSpinner';
-
 import * as yup from 'yup';
 import { Formik } from 'formik';
 
 export default function LoginPage({ navigation }) {
-  const dispatch = useDispatch();
-  const {
-    loading,
-    loginResponse,
-    loginPassword,
-    loginPasswordError,
-    loginEmail,
-    loginEmailError,
-  } = useSelector(loginSelector);
 
+  const dispatch = useDispatch();
+  const { loading, loginPasswordError, loginEmailError } = useSelector(loginSelector);
   const [hidePassword, sethidePassword] = React.useState(true);
   const [eyeicon, seteyeicon] = React.useState('eye');
 
-  const onForgotPress = () => navigation.navigate('ForgotPassword');
-  const onSignupPress = () => navigation.navigate('Signup');
 
   const toggleEyeIcon = () => {
     if (eyeicon === 'eye') {
@@ -48,17 +26,22 @@ export default function LoginPage({ navigation }) {
       sethidePassword(true);
     }
   };
+
+
   const headerComponent = () => {
     return (
       <View style={styles.headerComponent}>
-        {/* <Text style={styles.headerComponentText}>Welcome Back!</Text> */}
+        <Text style={styles.headerComponentText}>Welcome Back!</Text>
         <Image
           style={styles.backgroundImage}
+          resizeMode={'stretch'}
           source={require('../../../assets/img/login.png')}
         />
       </View>
     );
   };
+
+
   const inputComponent = () => {
     return (
       <Formik
@@ -77,7 +60,6 @@ export default function LoginPage({ navigation }) {
             }),
           )
         }
-        // new line
         validationSchema={yup.object().shape({
           email: yup
             .string()
@@ -108,6 +90,8 @@ export default function LoginPage({ navigation }) {
                     handleChange('email')(e);
                     dispatch(clearErrors());
                   }}
+                  containerStyle={{ width: 310 }}
+                  inputStyle={{ fontSize: 16 }}
                   onBlur={() => setFieldTouched('email')}
                 />
                 {touched.email && errors.email && (
@@ -127,8 +111,10 @@ export default function LoginPage({ navigation }) {
                       onPress={toggleEyeIcon}
                     />
                   }
+                  inputStyle={{ fontSize: 16 }}
                   errorMessage={loginPasswordError}
                   value={values.password}
+                  containerStyle={{ width: 310 }}
                   onChangeText={e => {
                     handleChange('password')(e);
                     dispatch(clearErrors());
@@ -142,7 +128,7 @@ export default function LoginPage({ navigation }) {
                 )}
               </View>
               <Button
-                title="Signin"
+                title="Sign in"
                 disabled={!isValid}
                 type="solid"
                 containerStyle={styles.loginButton}
@@ -153,19 +139,12 @@ export default function LoginPage({ navigation }) {
       </Formik>
     );
   };
+
+
   const buttonComponent = () => {
     return (
       <View>
-        <Button title="Forgot password?" type="clear" containerStyle={styles.forgotButton} onPress={onForgotPress} />
-        {/* <AppButton
-          onlyText
-          style={styles.forgotButton}
-          marginTop="50"
-          marginVertical
-          color="#00008B"
-          onPress={onForgotPress}>
-          Forgot password?
-        </AppButton> */}
+        <Button title="Forgot password?" type="clear" containerStyle={styles.forgotButton} onPress={() => navigation.navigate('ForgotPassword')} />
         <View
           style={{
             flexDirection: 'row',
@@ -174,15 +153,7 @@ export default function LoginPage({ navigation }) {
             marginTop: 10,
           }}>
           <Text>Don't have an account?</Text>
-          <Button title="Register" type="clear" containerStyle={styles.register} onPress={onSignupPress} />
-
-          {/* <AppButton
-            onlyText
-            style={styles.register}
-            color="#00008B"
-            onPress={onSignupPress}>
-            Register
-          </AppButton> */}
+          <Button title="Register" type="clear" containerStyle={styles.register} onPress={() => navigation.navigate('Signup')} />
         </View>
       </View>
     );
@@ -201,7 +172,7 @@ export default function LoginPage({ navigation }) {
 }
 
 const win = Dimensions.get('window');
-const ratio = win.width / 3600;
+// const ratio = win.height / 3600;
 
 const styles = StyleSheet.create({
   headerComponent: {
@@ -209,7 +180,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerComponentText: {
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     fontSize: 25,
     letterSpacing: 1,
     marginBottom: 20,
@@ -218,11 +189,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
+    // width: 250,
+    // paddingHorizontal: 8
   },
   backgroundImage: {
-    marginTop: 5,
-    width: win.width,
-    height: 2700 * ratio, //362 is actual height of image
+    // marginTop: 5,
+    width: win.width / 1.2,
+    height: win.height / 3,
     marginBottom: 30,
   },
   MainContainer: {
@@ -233,16 +206,16 @@ const styles = StyleSheet.create({
   loginButton: {
     alignSelf: 'center',
     marginVertical: Theme.spacing.small,
-    width: '50%',
+    width: 150,
     borderRadius: 20,
   },
   forgotButton: {
-    paddingVertical: Theme.spacing.tiny,
+    // paddingVertical: Theme.spacing.tiny,
     // paddingRight: Theme.spacing.small,
     marginLeft: 2,
   },
   register: {
-    paddingVertical: Theme.spacing.tiny,
+    // paddingVertical: Theme.spacing.tiny,
     // paddingRight: Theme.spacing.small,
     marginLeft: 7,
   },

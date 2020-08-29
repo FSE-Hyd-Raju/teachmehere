@@ -1,35 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   TouchableOpacity,
-  FlatList,
-  BackHandler,
-  TouchableWithoutFeedback,
-  Keyboard,
   Dimensions,
   ScrollView,
 } from 'react-native';
-import {
-  Searchbar,
-  ActivityIndicator,
-  Colors,
-  Title,
-  Caption,
-  Paragraph,
-  List,
-  Surface,
-} from 'react-native-paper';
-import { Icon, Header, Avatar, ListItem, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 
 export default function GuestPage({ navigation }) {
-  const [showSettingsPage, setShowSettingsPage] = React.useState(false);
-
-  useEffect(() => {}, []);
 
   const settingsIconContainer = () => {
     return (
@@ -40,12 +22,24 @@ export default function GuestPage({ navigation }) {
             name={'settings'}
             color="rgb(102, 94, 94)"
             size={25}
-            // onPress={() => console.log("yep")}
           />
         </TouchableOpacity>
       </View>
     );
   };
+
+  const imageContainer = () => {
+    return (
+      <View
+        style={styles.centerAligned}>
+        <Image
+          resizeMode={"stretch"}
+          style={styles.backgroundImage}
+          source={require('../../../assets/img/guest.png')}
+        />
+      </View>
+    )
+  }
 
   const textContainer = () => {
     return (
@@ -91,23 +85,9 @@ export default function GuestPage({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            marginTop: 20,
-          }}>
+        <View>
           {settingsIconContainer()}
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              // width={Dimensions.get('window').width}
-              //     resizeMode={"center"}
-              style={styles.backgroundImage}
-              source={require('../../../assets/img/guest.png')}
-            />
-          </View>
+          {imageContainer()}
           {textContainer()}
           {buttonContainer()}
         </View>
@@ -116,15 +96,16 @@ export default function GuestPage({ navigation }) {
   );
 }
 
-const win = Dimensions.get('window');
-const ratio = win.width / 4000;
+// const win = Dimensions.get('window');
+// const ratio = win.width / 4000;
 
 const styles = StyleSheet.create({
   settingsIconContainer: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    marginVertical: 0,
+    marginTop: 35,
     marginRight: 30,
+    elevation: 10
   },
   text: {
     color: 'gray',
@@ -146,11 +127,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   backgroundImage: {
-    // width: 360,
-    // height: 275,
+    width: 360,
+    height: 275,
+    marginTop: -20,
     // flex: 1,
-    width: win.width,
-    height: 3000 * ratio, //362 is actual height of image
+    // width: win.width,
+    // height: 3000 * ratio, //362 is actual height of image
+  },
+  centerAligned: {
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   container: {
     flex: 1,
