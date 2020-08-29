@@ -12,7 +12,7 @@ import { Formik } from 'formik'
 import ImagePicker from 'react-native-image-picker';
 import { changeProfileSelector, clearProfileErrors, changeProfileDescriptionChanged, onChangeImagePressed, onChangeProfilePressed } from '../../../redux/slices/changeProfileSlice';
 import { loadUserInfo, loginSelector } from '../../../redux/slices/loginSlice'
-
+import OTPTextView from 'react-native-otp-textinput';
 
 export default function signupPage({ navigation }) {
 
@@ -27,6 +27,9 @@ export default function signupPage({ navigation }) {
     const [showDescriptionScreen, setshowDescriptionScreen] = React.useState(false);
     const [eyeicon, seteyeicon] = React.useState("eye");
     const onSigninPress = () => navigation.navigate('Login');
+    const [passwordEntered, setPasswordEntered] = React.useState("");
+    const [emailEntered, setEmailEntered] = React.useState("");
+    const [resendtimer, setResendtimer] = React.useState(5);
 
     const toggleEyeIcon = () => {
         if (eyeicon === "eye") {
@@ -38,6 +41,18 @@ export default function signupPage({ navigation }) {
             sethidePassword(true)
         }
     };
+
+    useEffect(() => {
+        let interval = null;
+        if (showOtpScreen && resendtimer !== 0) {
+            interval = setInterval(() => {
+                setResendtimer(resendtimer => resendtimer - 1);
+            }, 1000);
+        } else if (!resendtimer) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [showOtpScreen, resendtimer]);
 
     // useEffect(() => {
     //     ImgToBase64.getBase64String('file://' + '/src/assets/img/default-mask-avatar.png')
@@ -76,10 +91,12 @@ export default function signupPage({ navigation }) {
                 {showOtpScreen ? backButtonComponent() : null}
                 <View style={{
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    marginTop: 30,
+                    marginBottom: 50
                 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 100 }}>Sign up</Text>
-                    <Text style={{ color: 'gray', fontSize: 15 }} >Fill the details & create your account</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 30, marginBottom: 15 }}>Sign up</Text>
+                    <Text style={{ color: 'gray', fontSize: 15, textAlign: "center" }} >OTP will be sent to your email</Text>
                 </View>
             </View>
         )
@@ -90,19 +107,24 @@ export default function signupPage({ navigation }) {
             <View>
                 {headerComponent()}
                 <Formik
-                    initialValues={{ email: '', username: '', phonenumber: '' }}
-                    onSubmit={values => dispatch(onSignupPressed(
-                        {
-                            email: values.email,
-                            username: values.username,
-                            phonenumber: values.phonenumber,
-                            onSuccess: () => {
-                                setshowOtpScreen(true)
-                                setshowEmail(values.email)
+                    initialValues={{ email: '', username: '', phonenumber: '', password: '' }}
+                    onSubmit={values => {
+                        setPasswordEntered(values.password)
+                        setEmailEntered(values.email)
+                        dispatch(onSignupPressed(
+                            {
+                                email: values.email,
+                                username: values.username,
+                                phonenumber: values.phonenumber,
+                                onSuccess: () => {
+                                    setshowOtpScreen(true)
+                                    setshowEmail(values.email)
+                                }
                             }
-                        }
 
-                    ))}
+                        ))
+                    }
+                    }
 
                     // new line
                     validationSchema={
@@ -115,6 +137,10 @@ export default function signupPage({ navigation }) {
                                 .number()
                                 .required(),
                             username: yup
+                                .string()
+                                .min(5)
+                                .required(),
+                            password: yup
                                 .string()
                                 .min(5)
                                 .required(),
@@ -131,7 +157,9 @@ export default function signupPage({ navigation }) {
                                             name='user'
                                             size={20}
                                         />}
-
+                                    containerStyle={{ width: 310 }}
+                                    leftIconContainerStyle={{ paddingRight: 15 }}
+                                    inputStyle={{ fontSize: 16 }}
                                     errorMessage={signupUsernameError}
                                     value={values.username}
                                     onChangeText={(e) => {
@@ -154,6 +182,9 @@ export default function signupPage({ navigation }) {
                                         handleChange("email")(e);
                                         dispatch(clearErrors())
                                     }}
+                                    containerStyle={{ width: 310 }}
+                                    leftIconContainerStyle={{ paddingRight: 15 }}
+                                    inputStyle={{ fontSize: 16 }}
                                     onBlur={() => setFieldTouched('email')}
                                 />
                                 {touched.email && errors.email &&
@@ -174,14 +205,38 @@ export default function signupPage({ navigation }) {
                                         handleChange("phonenumber")(e);
                                         dispatch(clearErrors())
                                     }}
+                                    containerStyle={{ width: 310 }}
+                                    leftIconContainerStyle={{ paddingRight: 15 }}
+                                    inputStyle={{ fontSize: 16 }}
                                     onBlur={() => setFieldTouched('phonenumber')}
                                 />
                                 {touched.phonenumber && errors.phonenumber &&
                                     <Text style={{ fontSize: 10, color: 'red' }}>{errors.phonenumber}</Text>
                                 }
+                                <Input
+                                    placeholder="Password"
+                                    secureTextEntry={hidePassword}
+                                    leftIcon={
+                                        <IconMaterialIcons
+                                            name='lock'
+                                            size={20}
+                                        />}
+                                    rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
+                                    onChangeText={(e) => {
+                                        handleChange("password")(e);
+                                        dispatch(clearErrors())
+                                    }}
+                                    containerStyle={{ width: 310 }}
+                                    inputStyle={{ fontSize: 16 }}
+                                    leftIconContainerStyle={{ paddingRight: 15 }}
+                                    onBlur={() => setFieldTouched('password')}
+                                    errorMessage={signupPasswordError}
+                                />
+                                {touched.password && errors.password &&
+                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
+                                }
 
                                 <Button title="Sign up" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
-                                <PageSpinner visible={loading} />
                             </View>
                         </Fragment>
                     )
@@ -195,7 +250,7 @@ export default function signupPage({ navigation }) {
                         marginTop: 10,
                     }}>
                     <Text>Already have an account?</Text>
-                    <Button title="Sign in" type="clear" containerStyle={styles.signin} onPress={onSigninPress} />
+                    <Button title="Sign in" type="clear" containerStyle={styles.signin} onPress={(onSigninPress)} />
                 </View>
             </View>
         )
@@ -203,21 +258,57 @@ export default function signupPage({ navigation }) {
     }
 
     const screen2 = () => {
+        var input1 = "";
+
+        // useEffect(() => {
+        //     // cancelInterval && clearInterval(cancelInterval)
+        //     // var cancelInterval = setInterval(function () {
+        //     //     // alert(resendtimer)
+        //     //     setResendtimer(resendtimer - 1)
+        //     //     if (!resendtimer) clearInterval(cancelInterval)
+        //     // }, 1000)
+        //     const timer=setTimeout(() => {
+        //         setResendtimer(calculateTimeLeft());
+        //       }, 1000);
+        //       // Clear timeout if the component is unmounted
+        //       return () => clearTimeout(timer);
+        // })
         return (
             <View>
                 <View style={{
                     justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: 20,
+                    marginBottom: 35
+
+                }}>
+                    <Text style={{ fontSize: 20, color: "grey" }}>Veirfy Account</Text>
+                </View>
+                <View style={{
+                    justifyContent: "center",
                     alignItems: "center"
                 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 30, marginTop: 100 }}>Signin</Text>
-                    <Text style={{ color: 'gray', fontSize: 15 }} >Fill the OTP and Password</Text>
+                    <Image
+                        style={styles.backgroundImage}
+                        resizeMode={'stretch'}
+                        source={require('../../../assets/img/otpscreen.png')}
+                    />
                 </View>
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: 20,
+                    marginBottom: 35
+                }}>
+                    <Text style={{ color: 'gray', fontSize: 15, textAlign: "center" }} >Please enter the OTP sent to your email {emailEntered}</Text>
+                </View>
+
                 <Formik
-                    initialValues={{ otp: '', password: '' }}
+                    initialValues={{ otp: '' }}
                     onSubmit={values => dispatch(onSignupOtpPressed(
                         {
                             otp: values.otp,
-                            password: values.password,
+                            password: passwordEntered,
                             email: showEmail,
                             onSuccess: (data) => {
                                 dispatch(loadUserInfo(data))
@@ -233,17 +324,27 @@ export default function signupPage({ navigation }) {
                         yup.object().shape({
                             otp: yup
                                 .number()
-                                .required(),
-                            password: yup
-                                .string()
-                                .min(5)
-                                .required(),
+                                .required()
                         })
                     } >
                     {({ values, handleChange, errors, setFieldTouched, touched, isValid, handleSubmit }) => (
                         <Fragment>
                             <View style={styles.inputComponentStyle}>
-                                <Input
+                                <View style={{ margin: 10, marginBottom: 30 }}>
+                                    {/* <Text style={{ marginLeft: -25 }}>OTP</Text> */}
+                                    <OTPTextView
+                                        ref={(e) => (input1 = e)}
+                                        tintColor="black"
+                                        handleTextChange={(e) => {
+                                            handleChange("otp")(e);
+                                            dispatch(clearErrors())
+                                        }}
+                                        textInputStyle={{ borderBottomWidth: 2 }}
+                                        inputCount={4}
+                                        keyboardType="numeric"
+                                    />
+                                </View>
+                                {/* <Input
                                     style={{ paddingLeft: 20 }}
                                     placeholder="OTP"
                                     leftIcon={
@@ -252,39 +353,31 @@ export default function signupPage({ navigation }) {
                                             size={20}
                                         />}
                                     errorMessage={signupOtpError}
-
+                                    containerStyle={{ width: 310 }}
+                                    leftIconContainerStyle={{ paddingRight: 15 }}
+                                    inputStyle={{ fontSize: 16 }}
                                     value={values.otp}
                                     onBlur={() => setFieldTouched('otp')}
                                     onChangeText={(e) => {
                                         handleChange("otp")(e);
                                         dispatch(clearErrors())
                                     }}
-                                />
-                                {touched.otp && errors.otp &&
-                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.otp}</Text>
+                                /> */}
+                                {!!signupOtpError &&
+                                    <Text style={{ fontSize: 13, color: 'red' }}>{signupOtpError}</Text>
                                 }
-                                <Input
-                                    placeholder="Password"
-                                    secureTextEntry={hidePassword}
-                                    leftIcon={
-                                        <IconMaterialIcons
-                                            name='lock'
-                                            size={20}
-                                        />}
-                                    rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />}
-                                    onChangeText={(e) => {
-                                        handleChange("password")(e);
-                                        dispatch(clearErrors())
-                                    }}
-                                    onBlur={() => setFieldTouched('password')}
-                                    errorMessage={signupPasswordError}
-                                />
-                                {touched.password && errors.password &&
-                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.password}</Text>
-                                }
-
-                                <Button title="Submit" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
-                                <PageSpinner visible={loading} />
+                                <Button title="Verify" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginBottom: 10,
+                                    }}>
+                                    <Text>If you didn't receive a code!</Text>
+                                    {!resendtimer && <Button title="Resend" type="clear" containerStyle={styles.register} onPress={() => console.log("resend")} />}
+                                    {!!resendtimer && <Button title={resendtimer + " secs"} type="clear" containerStyle={styles.register} disabled />}
+                                </View>
                             </View>
                         </Fragment>
                     )
@@ -483,7 +576,6 @@ export default function signupPage({ navigation }) {
                     </View>
                     {skipButtonComponent()}
 
-                    <PageSpinner visible={loading} />
                 </ScrollView>
             </View>
         );
@@ -498,11 +590,14 @@ export default function signupPage({ navigation }) {
                     {showOtpScreen ? screen2() : null}
                 </View>}
                 {!!showDescriptionScreen && screen3()}
+                <PageSpinner visible={loading} />
             </ScrollView >
         </View>
     );
 }
 
+
+const win = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
@@ -518,8 +613,7 @@ const styles = StyleSheet.create({
     inputComponentStyle: {
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
-        marginTop: 30
+        // marginTop: 30
     },
     MainContainer: {
         // Setting up View inside content in Vertically center.
@@ -542,5 +636,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(255, 255, 255)',
         padding: 30,
         paddingTop: 10
+    },
+    backgroundImage: {
+        // marginTop: 5,
+        width: 200,
+        height: 200,
+        // marginBottom: 30,
     },
 });
