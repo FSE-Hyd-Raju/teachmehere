@@ -144,16 +144,9 @@ export default function signupDescPage({ navigation }) {
             <View style={styles.userImageContainer}>
                 <Avatar
                     rounded
-                    // showEditButton
                     size={150}
                     title=''
-                    // containerStyle={{ margin: 10 }}
                     containerStyle={{ borderColor: "lightgrey", borderWidth: 1, padding: 10 }}
-                    // editButton={{
-                    //     name: 'arrow-left', type: 'feather'
-                    // }}
-                    // style={{ width: 200, height: 200 }}
-                    // source={{ uri: sourceImage.uri }}
                     source={sourceImage.uri ? { uri: sourceImage.uri } : require('../../../assets/img/default-mask-avatar.png')}
 
                 />
@@ -170,10 +163,6 @@ export default function signupDescPage({ navigation }) {
                         type='material'
                         color='black'
                         onPress={() => chooseFile()} />
-                    {/* <ActivityIndicator
-                        style={styles.activityIndicator}
-                        animating={loading}
-                    /> */}
                 </View>
 
                 {/* <View style={{

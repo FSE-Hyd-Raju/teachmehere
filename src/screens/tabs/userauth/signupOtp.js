@@ -12,7 +12,7 @@ import OTPTextView from 'react-native-otp-textinput';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Snackbar } from 'react-native-paper';
-
+import { storeAsyncData } from '../../../components/common/asyncStorage';
 
 
 export default function signupOtpPage({ navigation }) {
@@ -90,6 +90,7 @@ export default function signupOtpPage({ navigation }) {
                     email: signupFormObj.Email,
                     onSuccess: (data) => {
                         dispatch(loadUserInfo(data))
+                        storeAsyncData('userInfo', data);
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'SignupDescPage' }],

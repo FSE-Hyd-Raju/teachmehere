@@ -130,12 +130,12 @@ export function onSignupPressed(param) {
         console.log(param.username)
         console.log(param.phonenumber)
         dispatch(signupStarted());
-        devietokenValue = JSON.stringify(getState().login.devicetoken);
+        devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             console.log("insdie try")
             const response = await axios.post(validateNewUserUrl, {
-                devicetoken: devietokenValue,
+                devicetoken: devicetokenValue,
                 username: param.username,
                 email: param.email,
                 phonenumber: param.phonenumber
@@ -177,11 +177,11 @@ export function onSignupOtpPressed(param) {
     return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(signupStarted());
-        devietokenValue = JSON.stringify(getState().login.devicetoken);
+        devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(validateOtpUrl, {
-                devicetoken: devietokenValue,
+                devicetoken: devicetokenValue,
                 email: param.email,
                 otp: param.otp,
                 password: param.password,
@@ -194,15 +194,15 @@ export function onSignupOtpPressed(param) {
                     }
                     if (response.data["field"] == 'password') {
                         dispatch(passwordIncorrect(response.data["error"]));
+                    } else {
+                        dispatch(setLoading(false))
                     }
-
                 }
                 else {
                     dispatch(signupSuccess(response.data[0]));
                     // storeAsyncData('userInfo', response.data[0]);
                     param.onSuccess(response.data[0]);
                 }
-
             }
             else {
                 dispatch(signupFailure());

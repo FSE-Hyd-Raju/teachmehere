@@ -1,33 +1,27 @@
-import React, { Component, Fragment } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image, Dimensions } from 'react-native';
-import { Input, Button, Icon } from 'react-native-elements';
+import React, { Fragment } from 'react';
+import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { Input, Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux'
-import {
-    clearErrors,
-    resetPasswordFailure,
-    onforgotPasswordPressed,
-    onOtpPressed, forgotPasswordSelector
-} from '../../../redux/slices/forgotPasswordSlice'
+import { clearErrors, onOtpPressed, forgotPasswordSelector } from '../../../redux/slices/forgotPasswordSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import * as yup from 'yup'
 import { Formik } from 'formik';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { storeAsyncData } from '../../../components/common/asyncStorage';
+import { loadUserInfo } from '../../../redux/slices/loginSlice'
+
 
 export default function forgotPasswordOtpPage({ navigation }) {
     const dispatch = useDispatch()
     const {
         loading,
-        loginEmailError,
         loginOtpError,
         loginPasswordError, forgotPasswordFormObj } = useSelector(forgotPasswordSelector)
 
     const [hidePassword, sethidePassword] = React.useState(true);
-    const [showOtpScreen, setshowOtpScreen] = React.useState(true);
-    const [showEmail, setshowEmail] = React.useState("");
-
     const [eyeicon, seteyeicon] = React.useState("eye");
 
     const toggleEyeIcon = () => {
@@ -96,6 +90,8 @@ export default function forgotPasswordOtpPage({ navigation }) {
                     password: values.Password,
                     email: forgotPasswordFormObj.Email,
                     onSuccess: () => {
+                        dispatch(loadUserInfo(data))
+                        storeAsyncData('userInfo', data);
                         navigation.reset({
                             index: 0,
                             routes: [{ name: 'Profile' }],

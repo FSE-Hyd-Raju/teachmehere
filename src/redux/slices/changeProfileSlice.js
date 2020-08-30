@@ -145,14 +145,15 @@ export default changeProfileSlice.reducer;
 
 export function onChangeProfilePressed(param) {
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         dispatch(changeProfileStarted());
+        devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             console.log("insdie try")
             console.log(param)
             const response = await axios.post(changeProfileUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devicetokenValue,
                 username: param.username,
                 _id: param.id,
                 description: param.description,
@@ -184,12 +185,13 @@ export function onChangeProfilePressed(param) {
 export function onChangePasswordPressed(param) {
     console.log("insideonlogin")
 
-    return async (dispatch, state) => {
+    return async (dispatch, getState) => {
         dispatch(changePasswordStarted());
+        devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(changePasswordUrl, {
-                devicetoken: "ctOFt562a0I:APA91bF4WphQBqewerR2p9_pwYxzOXZPT5zH2iWM1L-suCgBRRWop9uqoUJsGfjS2kgWT3bRSxTzPUrpHeK4d_v4PrsC_HCN8KTMS_Uhf5-7FMw7RmJjuSzEkvS0HRzkD8-_EjyXdywu",
+                devicetoken: devicetokenValue,
                 _id: param.id,
                 oldpassword: param.oldpassword,
                 password: param.newpassword,
