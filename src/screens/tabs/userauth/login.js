@@ -45,8 +45,8 @@ export default function LoginPage({ navigation }) {
     const onSigninClicked = (values) => {
       dispatch(
         onLoginPressed({
-          email: values.email,
-          password: values.password,
+          email: values.Email,
+          password: values.Password,
           onSuccess: () => {
             navigation.reset({
               index: 0,
@@ -58,14 +58,14 @@ export default function LoginPage({ navigation }) {
     }
     return (
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ Email: '', Password: '' }}
         onSubmit={values => onSigninClicked(values)}
         validationSchema={yup.object().shape({
-          email: yup
+          Email: yup
             .string()
             .email()
             .required(),
-          password: yup
+          Password: yup
             .string()
             .min(5)
             .required(),
@@ -85,19 +85,19 @@ export default function LoginPage({ navigation }) {
                   placeholder="Email"
                   leftIcon={{ type: 'Feather', name: 'mail', size: 20 }}
                   errorMessage={loginEmailError}
-                  value={values.email}
+                  value={values.Email}
                   onChangeText={e => {
-                    handleChange('email')(e);
+                    handleChange('Email')(e);
                     dispatch(clearErrors());
                   }}
                   containerStyle={{ width: 310 }}
                   inputStyle={{ fontSize: 16 }}
                   leftIconContainerStyle={{ paddingRight: 15 }}
-                  onBlur={() => setFieldTouched('email')}
+                  onBlur={() => setFieldTouched('Email')}
                 />
-                {touched.email && errors.email && (
+                {touched.Email && errors.Email && (
                   <Text style={{ fontSize: 13, color: 'red' }}>
-                    {errors.email}
+                    {errors.Email}
                   </Text>
                 )}
                 <Input
@@ -114,18 +114,18 @@ export default function LoginPage({ navigation }) {
                   }
                   inputStyle={{ fontSize: 16 }}
                   errorMessage={loginPasswordError}
-                  value={values.password}
+                  value={values.Password}
                   containerStyle={{ width: 310 }}
                   leftIconContainerStyle={{ paddingRight: 15 }}
                   onChangeText={e => {
-                    handleChange('password')(e);
+                    handleChange('Password')(e);
                     dispatch(clearErrors());
                   }}
-                  onBlur={() => setFieldTouched('password')}
+                  onBlur={() => setFieldTouched('Password')}
                 />
-                {touched.password && errors.password && (
+                {touched.Password && errors.Password && (
                   <Text style={{ fontSize: 13, color: 'red' }}>
-                    {errors.password}
+                    {errors.Password}
                   </Text>
                 )}
               </View>
