@@ -106,6 +106,7 @@ export default function signupOtpPage({ navigation }) {
             email: signupFormObj.Email,
             success: () => {
                 setVisibleSnackbar(true)
+                setResendtimer(5)
             }
         }))
     }
