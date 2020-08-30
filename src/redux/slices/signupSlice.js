@@ -16,7 +16,8 @@ export const initialState = {
     signupUsername: '',
     signupUsernameError: '',
     signupOtp: '',
-    signupOtpError: ''
+    signupOtpError: '',
+    signupFormObj: {}
 
 };
 
@@ -90,6 +91,9 @@ const signupSlice = createSlice({
         otpIncorrect: (state, { payload }) => {
             state.signupOtpError = payload
             state.loading = false;
+        },
+        setSignupFormObj: (state, { payload }) => {
+            state.signupFormObj = payload
         }
     },
 });
@@ -107,7 +111,8 @@ export const {
     EmailIncorrect,
     usernameIncorrect,
     PhonenumberIncorrect,
-    otpIncorrect
+    otpIncorrect,
+    setSignupFormObj
 } = signupSlice.actions;
 
 export const signupSelector = state => state.signup;

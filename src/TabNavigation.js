@@ -18,7 +18,6 @@ import PostedCoursesPage from './screens/tabs/profile/postedCourses';
 import ChangeProfilePage from './screens/tabs/profile/changeProfile';
 import GuestPage from './screens/tabs/profile/guestPage';
 import LoginPage from './screens/tabs/userauth/login';
-import signupPage from './screens/tabs/userauth/signup';
 import SkillListView from './components/common/SkillListView';
 import SkillGridView from './components/common/SkillGridView';
 import forgotPassword from './screens/tabs/userauth/forgotPassword';
@@ -36,6 +35,10 @@ import {
 import messaging from '@react-native-firebase/messaging';
 import SkillDetail from './components/SkillDetail';
 import NotificationPage from './screens/tabs/notification/notification';
+import signupFormPage from './screens/tabs/userauth/singupForm';
+import signupOtpPage from './screens/tabs/userauth/signupOtp';
+import signupDescPage from './screens/tabs/userauth/signupDesc';
+
 
 const TabNavigation = props => {
   const dispatch = useDispatch();
@@ -108,7 +111,9 @@ const TabNavigation = props => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="GuestPage" component={GuestPage} />
         <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="Signup" component={signupPage} />
+        <Stack.Screen name="Signup" component={signupFormPage} />
+        <ProfileStack.Screen name="SignupOtp" component={signupOtpPage} />
+        <ProfileStack.Screen name="SignupDescPage" component={signupDescPage} />
         <Stack.Screen name="ForgotPassword" component={forgotPassword} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
         <Stack.Screen
