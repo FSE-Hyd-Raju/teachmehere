@@ -42,6 +42,7 @@
     "react-native-numeric-input": "^1.8.3",
     "react-native-offline": "^4.3.2",
     "react-native-options-menu": "^2.0.2",
+    "react-native-otp-textinput": "0.0.7",
     "react-native-paper": "^3.11.0",
     "react-native-push-notification": "^3.5.2",
     "react-native-reanimated": "^1.9.0",

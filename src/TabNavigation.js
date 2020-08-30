@@ -112,8 +112,8 @@ const TabNavigation = props => {
         <Stack.Screen name="GuestPage" component={GuestPage} />
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Signup" component={signupFormPage} />
-        <ProfileStack.Screen name="SignupOtp" component={signupOtpPage} />
-        <ProfileStack.Screen name="SignupDescPage" component={signupDescPage} />
+        <Stack.Screen name="SignupOtp" component={signupOtpPage} />
+        <Stack.Screen name="SignupDescPage" component={signupDescPage} />
         <Stack.Screen name="ForgotPassword" component={forgotPassword} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
         <Stack.Screen

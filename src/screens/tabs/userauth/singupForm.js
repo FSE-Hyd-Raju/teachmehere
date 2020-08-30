@@ -8,6 +8,8 @@ import { clearErrors, onSignupPressed, signupSelector, setSignupFormObj } from '
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import PageSpinner from '../../../components/common/PageSpinner';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function signupFormPage({ navigation }) {
     const dispatch = useDispatch()
@@ -29,12 +31,20 @@ export default function signupFormPage({ navigation }) {
     const headerComponent = () => {
         return (
             <View>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icons
+                        name={"keyboard-backspace"}
+                        size={27}
+                        color={"grey"}
+                    />
+                </TouchableOpacity>
                 <View style={{
                     justifyContent: "center",
                     alignItems: "center",
                     marginTop: 30,
                     marginBottom: 50
                 }}>
+
                     <Text style={{ fontWeight: 'bold', fontSize: 30, marginBottom: 15 }}>Sign up</Text>
                     <Text style={{ color: 'gray', fontSize: 15, textAlign: "center" }} >OTP will be sent to your email</Text>
                 </View>
