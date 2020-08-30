@@ -15,8 +15,8 @@ export default function signupDescPage({ navigation }) {
 
     const dispatch = useDispatch()
     const { userInfo } = useSelector(loginSelector)
-    const { loading } = useSelector(signupSelector)
-    const { DescriptionError } = useSelector(changeProfileSelector);
+    // const {  } = useSelector(signupSelector)
+    const { DescriptionError, loading } = useSelector(changeProfileSelector);
     const [sourceImage, setSource] = React.useState({});
 
     const chooseFile = async () => {

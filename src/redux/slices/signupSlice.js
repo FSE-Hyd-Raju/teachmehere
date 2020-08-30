@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { validateNewUserUrl, validateOtpUrl } from '../urls';
-import { replace } from 'formik';
+import { validateNewUserUrl, validateOtpUrl, resendOtpUrl } from '../urls';
 
 export const initialState = {
     loading: false,
@@ -94,6 +93,9 @@ const signupSlice = createSlice({
         },
         setSignupFormObj: (state, { payload }) => {
             state.signupFormObj = payload
+        },
+        setLoading: (state, { payload }) => {
+            state.loading = payload
         }
     },
 });
@@ -112,7 +114,8 @@ export const {
     usernameIncorrect,
     PhonenumberIncorrect,
     otpIncorrect,
-    setSignupFormObj
+    setSignupFormObj,
+    setLoading
 } = signupSlice.actions;
 
 export const signupSelector = state => state.signup;
@@ -209,4 +212,27 @@ export function onSignupOtpPressed(param) {
         }
     };
 }
+
+export function OtpResend(param) {
+    return async dispatch => {
+        dispatch(setLoading(true))
+        try {
+            axios.post(resendOtpUrl, {
+                email: param.email
+            })
+                .then((responseJson) => {
+                    dispatch(setLoading(false))
+                    param.success(responseJson)
+                }).catch((error) => {
+                    console.log(error)
+                    dispatch(otpIncorrect("OTP sending failed, Please try again later!"));
+                });
+        } catch (error) {
+            console.log(error)
+            dispatch(otpIncorrect("OTP sending failed, Please try again later!"));
+        }
+    };
+}
+
+
 

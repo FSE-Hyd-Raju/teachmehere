@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
 import { Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import { useDispatch, useSelector } from 'react-redux'
-import { clearErrors, onSignupOtpPressed, signupSelector } from '../../../redux/slices/signupSlice'
+import { clearErrors, onSignupOtpPressed, signupSelector, OtpResend } from '../../../redux/slices/signupSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import * as yup from 'yup'
 import { Formik } from 'formik'
@@ -11,6 +11,7 @@ import { loadUserInfo } from '../../../redux/slices/loginSlice'
 import OTPTextView from 'react-native-otp-textinput';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Snackbar } from 'react-native-paper';
 
 
 
@@ -18,6 +19,7 @@ export default function signupOtpPage({ navigation }) {
     const dispatch = useDispatch()
     const { loading, signupOtpError, signupFormObj } = useSelector(signupSelector)
     const [resendtimer, setResendtimer] = React.useState(5);
+    const [visibleSnackbar, setVisibleSnackbar] = React.useState(false);
 
     useEffect(() => {
         let interval = null;
@@ -99,6 +101,15 @@ export default function signupOtpPage({ navigation }) {
             ))
     }
 
+    const resendOTP = () => {
+        dispatch(OtpResend({
+            email: signupFormObj.Email,
+            success: () => {
+                setVisibleSnackbar(true)
+            }
+        }))
+    }
+
     const footerComponent = () => {
         return (
             <View
@@ -109,7 +120,7 @@ export default function signupOtpPage({ navigation }) {
                     marginBottom: 10,
                 }}>
                 <Text>If you didn't receive a code!</Text>
-                {!resendtimer && <Button title="Resend" type="clear" containerStyle={styles.register} onPress={() => console.log("resend")} />}
+                {!resendtimer && <Button title="Resend" type="clear" containerStyle={styles.register} onPress={() => resendOTP()} />}
                 {!!resendtimer && <Button title={resendtimer + " secs"} type="clear" containerStyle={styles.register} disabled />}
             </View>
         )
@@ -159,7 +170,7 @@ export default function signupOtpPage({ navigation }) {
     return (
         <View style={styles.MainContainer}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View>
+                <View style={{ padding: 30 }}>
                     {headerComponent()}
                     {imageContainer()}
                     {inputContainer()}
@@ -167,6 +178,21 @@ export default function signupOtpPage({ navigation }) {
                 </View>
                 <PageSpinner visible={loading} />
             </ScrollView >
+            <Snackbar
+                visible={visibleSnackbar}
+                onDismiss={() => setVisibleSnackbar(false)}
+                duration={2000}
+                action={{
+                    label: 'Dismiss',
+                    onPress: () => {
+                        setVisibleSnackbar(false)
+                    },
+                }}
+                style={{ backgroundColor: "white" }}
+                wrapperStyle={{ backgroundColor: "white" }}
+            >
+                <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>   OTP sent succesfully</Text>
+            </Snackbar>
         </View>
     )
 }
@@ -178,7 +204,7 @@ const styles = StyleSheet.create({
     },
     MainContainer: {
         flex: 1,
-        padding: 30,
+        // padding: 30,
         backgroundColor: "rgb(255, 255, 255)",
     },
     loginButton: {

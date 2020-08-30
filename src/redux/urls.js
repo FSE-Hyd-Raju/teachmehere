@@ -11,3 +11,4 @@ export const validateOtpUrl = `${SERVER_URL}/registerUserDetails`;
 export const forgotPasswordUrl = `${SERVER_URL}/forgotPassword`;
 export const changeProfileUrl = `${SERVER_URL}/updateUserDetailsWithId`;
 export const changePasswordUrl = `${SERVER_URL}/updateUserPassword`;
+export const resendOtpUrl = `${SERVER_URL}/forgotPassword`;

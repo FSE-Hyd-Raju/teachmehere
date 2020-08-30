@@ -20,7 +20,7 @@ export default function NotificationPage({ navigation }) {
     const [infoNotificationsList, setInfoNotificationsList] = React.useState([])
 
     useEffect(() => {
-        if (!notificationsList.length)
+        if (!notificationsList.length && userInfo && userInfo._id)
             getNotifications()
         setInfoNotificationsList(notificationsList.filter(ele => ele.type != "REQUEST"))
         setRequestNotificationsList(notificationsList.filter(ele => ele.type == "REQUEST"))
