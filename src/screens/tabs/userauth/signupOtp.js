@@ -170,7 +170,7 @@ export default function signupOtpPage({ navigation }) {
 
     return (
         <View style={styles.MainContainer}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
                 <View style={{ padding: 30 }}>
                     {headerComponent()}
                     {imageContainer()}

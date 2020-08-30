@@ -203,7 +203,7 @@ export default function signupDescPage({ navigation }) {
 
     return (
         <View style={styles.MainContainer}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
                 <View>
                     {headerComponent()}
                     {userImageContainer()}

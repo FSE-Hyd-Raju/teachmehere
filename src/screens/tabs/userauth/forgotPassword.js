@@ -215,7 +215,7 @@ export default function forgotPasswordPage({ navigation }) {
 
     return (
         <View style={styles.MainContainer}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
                 {headerComponent()}
                 {!showOtpScreen ? screen1() : null}
                 {showOtpScreen ? screen2() : null}

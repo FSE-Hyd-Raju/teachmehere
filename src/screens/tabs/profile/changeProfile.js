@@ -351,7 +351,7 @@ export default function ChangeProfilePage({ navigation }) {
                     rounded
                     showEditButton
                     size={200}
-                    title='Grace'
+                    title=''
                     containerStyle={{ margin: 10 }}
                     editButton={{
                         name: 'arrow-left', type: 'feather'

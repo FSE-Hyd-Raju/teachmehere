@@ -27,11 +27,10 @@ export default function LoginPage({ navigation }) {
     }
   };
 
-
   const headerComponent = () => {
     return (
       <View style={styles.headerComponent}>
-        <Text style={styles.headerComponentText}>Welcome Back!</Text>
+        {/* <Text style={styles.headerComponentText}>Welcome Back!</Text> */}
         <Image
           style={styles.backgroundImage}
           resizeMode={'stretch'}
@@ -41,25 +40,26 @@ export default function LoginPage({ navigation }) {
     );
   };
 
-
   const inputComponent = () => {
+
+    const onSigninClicked = (values) => {
+      dispatch(
+        onLoginPressed({
+          email: values.email,
+          password: values.password,
+          onSuccess: () => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Profile' }],
+            });
+          },
+        }),
+      )
+    }
     return (
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={values =>
-          dispatch(
-            onLoginPressed({
-              email: values.email,
-              password: values.password,
-              onSuccess: () => {
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'Profile' }],
-                });
-              },
-            }),
-          )
-        }
+        onSubmit={values => onSigninClicked(values)}
         validationSchema={yup.object().shape({
           email: yup
             .string()
@@ -92,6 +92,7 @@ export default function LoginPage({ navigation }) {
                   }}
                   containerStyle={{ width: 310 }}
                   inputStyle={{ fontSize: 16 }}
+                  leftIconContainerStyle={{ paddingRight: 15 }}
                   onBlur={() => setFieldTouched('email')}
                 />
                 {touched.email && errors.email && (
@@ -115,6 +116,7 @@ export default function LoginPage({ navigation }) {
                   errorMessage={loginPasswordError}
                   value={values.password}
                   containerStyle={{ width: 310 }}
+                  leftIconContainerStyle={{ paddingRight: 15 }}
                   onChangeText={e => {
                     handleChange('password')(e);
                     dispatch(clearErrors());
@@ -140,7 +142,6 @@ export default function LoginPage({ navigation }) {
     );
   };
 
-
   const buttonComponent = () => {
     return (
       <View>
@@ -161,7 +162,7 @@ export default function LoginPage({ navigation }) {
 
   return (
     <View style={styles.MainContainer}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
         {headerComponent()}
         {inputComponent()}
         {buttonComponent()}
@@ -171,16 +172,12 @@ export default function LoginPage({ navigation }) {
   );
 }
 
-const win = Dimensions.get('window');
-// const ratio = win.height / 3600;
-
 const styles = StyleSheet.create({
   headerComponent: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerComponentText: {
-    // fontWeight: 'bold',
     fontSize: 25,
     letterSpacing: 1,
     marginBottom: 20,
@@ -189,13 +186,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    // width: 250,
-    // paddingHorizontal: 8
   },
   backgroundImage: {
-    // marginTop: 5,
-    width: win.width / 1.2,
-    height: win.height / 3,
+    width: 320,
+    height: 260,
     marginBottom: 30,
   },
   MainContainer: {
@@ -210,13 +204,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   forgotButton: {
-    // paddingVertical: Theme.spacing.tiny,
-    // paddingRight: Theme.spacing.small,
     marginLeft: 2,
   },
   register: {
-    // paddingVertical: Theme.spacing.tiny,
-    // paddingRight: Theme.spacing.small,
     marginLeft: 7,
   },
 });
