@@ -79,15 +79,14 @@ export default function forgotPasswordOtpPage({ navigation }) {
                 <View style={{
                     justifyContent: "center",
                     alignItems: "center",
-                    marginTop: 20,
-                    marginBottom: 35
+                    marginTop: 10,
+                    marginBottom: 10
                 }}>
-                    <Text style={{ color: 'gray', fontSize: 15, textAlign: "center", letterSpacing: 0, marginHorizontal: 10 }} >Please enter the OTP sent to your email {forgotPasswordFormObj.Email} and the new password</Text>
+                    <Text style={{ color: 'gray', fontSize: 15, textAlign: "center", letterSpacing: 0 }} >Please enter the OTP sent to your email {forgotPasswordFormObj.Email}</Text>
                 </View>
             </View>
         )
     }
-
 
     const inputContainer = () => {
         const submitClicked = (values) => {
