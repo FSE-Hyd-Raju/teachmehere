@@ -7,7 +7,7 @@ import { signupSelector } from '../../../redux/slices/signupSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import * as yup from 'yup'
 import { Formik } from 'formik'
-// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import { changeProfileSelector, clearProfileErrors, onChangeProfilePressed } from '../../../redux/slices/changeProfileSlice';
 import { loadUserInfo, loginSelector } from '../../../redux/slices/loginSlice'
 
