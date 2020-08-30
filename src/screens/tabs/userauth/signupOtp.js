@@ -155,10 +155,10 @@ export default function signupOtpPage({ navigation }) {
                                 />
                             </View>
                             {!!signupOtpError &&
-                                <Text style={{ fontSize: 14, color: 'red', textAlign: "center", marginTop: -15 }}>{signupOtpError}</Text>
+                                <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>{signupOtpError}</Text>
                             }
                             {touched.OTP && errors.OTP &&
-                                <Text style={{ fontSize: 14, color: 'red', textAlign: "center", marginTop: -15 }}>{errors.OTP}</Text>
+                                <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>{errors.OTP}</Text>
                             }
                             <Button title="Verify" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
                         </View>
@@ -168,17 +168,8 @@ export default function signupOtpPage({ navigation }) {
         )
     }
 
-    return (
-        <View style={styles.MainContainer}>
-            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
-                <View style={{ padding: 30 }}>
-                    {headerComponent()}
-                    {imageContainer()}
-                    {inputContainer()}
-                    {footerComponent()}
-                </View>
-                <PageSpinner visible={loading} />
-            </ScrollView >
+    const snackComponent = () => {
+        return (
             <Snackbar
                 visible={visibleSnackbar}
                 onDismiss={() => setVisibleSnackbar(false)}
@@ -194,6 +185,21 @@ export default function signupOtpPage({ navigation }) {
             >
                 <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>   OTP sent succesfully</Text>
             </Snackbar>
+        )
+    }
+
+    return (
+        <View style={styles.MainContainer}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
+                <View style={{ padding: 30 }}>
+                    {headerComponent()}
+                    {imageContainer()}
+                    {inputContainer()}
+                    {footerComponent()}
+                </View>
+                <PageSpinner visible={loading} />
+            </ScrollView >
+            {snackComponent()}
         </View>
     )
 }

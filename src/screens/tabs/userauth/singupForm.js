@@ -77,7 +77,7 @@ export default function signupFormPage({ navigation }) {
                 />
 
                 {props.touched && props.errors &&
-                    <Text style={{ fontSize: 14, color: 'red', textAlign: "center", marginTop: -15 }}>{props.errors}</Text>
+                    <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>{props.errors}</Text>
                 }
             </View>
         )

@@ -12,8 +12,8 @@ export const initialState = {
     loginEmailError: '',
     loginOtp: '',
     loginOtpError: '',
-    loginError: ''
-
+    loginError: '',
+    forgotPasswordFormObj: {}
 };
 
 const forgotPasswordSlice = createSlice({
@@ -69,6 +69,9 @@ const forgotPasswordSlice = createSlice({
         otpIncorrect: (state, { payload }) => {
             state.loginOtpError = payload
             state.loading = false;
+        },
+        setForgotPasswordFormObj: (state, { payload }) => {
+            state.forgotPasswordFormObj = payload
         }
     },
 });
@@ -83,10 +86,11 @@ export const {
     resetPasswordFailure,
     passwordIncorrect,
     EmailIncorrect,
-    otpIncorrect
+    otpIncorrect,
+    setForgotPasswordFormObj
 } = forgotPasswordSlice.actions;
 
-export const resetPasswordSelector = state => state.forgotPassword;
+export const forgotPasswordSelector = state => state.forgotPassword;
 
 export default forgotPasswordSlice.reducer;
 

@@ -96,7 +96,7 @@ export default function LoginPage({ navigation }) {
                   onBlur={() => setFieldTouched('Email')}
                 />
                 {touched.Email && errors.Email && (
-                  <Text style={{ fontSize: 13, color: 'red' }}>
+                  <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>
                     {errors.Email}
                   </Text>
                 )}
@@ -124,7 +124,7 @@ export default function LoginPage({ navigation }) {
                   onBlur={() => setFieldTouched('Password')}
                 />
                 {touched.Password && errors.Password && (
-                  <Text style={{ fontSize: 13, color: 'red' }}>
+                  <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>
                     {errors.Password}
                   </Text>
                 )}

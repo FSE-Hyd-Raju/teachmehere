@@ -21,6 +21,7 @@ import LoginPage from './screens/tabs/userauth/login';
 import SkillListView from './components/common/SkillListView';
 import SkillGridView from './components/common/SkillGridView';
 import forgotPassword from './screens/tabs/userauth/forgotPassword';
+import forgotPasswordOtpPage from './screens/tabs/userauth/forgotPasswordOtp';
 import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -115,6 +116,7 @@ const TabNavigation = props => {
         <Stack.Screen name="SignupOtp" component={signupOtpPage} />
         <Stack.Screen name="SignupDescPage" component={signupDescPage} />
         <Stack.Screen name="ForgotPassword" component={forgotPassword} />
+        <Stack.Screen name="ForgotPasswordOTP" component={forgotPasswordOtpPage} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
         <Stack.Screen
           name="RequestedCourses"

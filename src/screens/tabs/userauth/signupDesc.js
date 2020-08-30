@@ -104,7 +104,7 @@ export default function signupDescPage({ navigation }) {
                                 // onBlur={() => setFieldTouched('description')}
                                 />
                                 {touched.description && errors.description &&
-                                    <Text style={{ fontSize: 10, color: 'red' }}>{errors.description}</Text>
+                                    <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>{errors.description}</Text>
                                 }
                             </View>
                             <Button
