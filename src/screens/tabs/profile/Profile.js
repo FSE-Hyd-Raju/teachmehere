@@ -1,45 +1,24 @@
 import React, { useEffect, useRef } from 'react';
-import {
-    StyleSheet,
-    Image,
-    Text,
-    View,
-    TouchableOpacity,
-    FlatList,
-    BackHandler,
-    TouchableWithoutFeedback,
-    Keyboard,
-    Dimensions,
-    ScrollView,
-    Alert
-} from 'react-native';
-import {
-    Searchbar,
-    ActivityIndicator,
-    Colors,
-    Button,
-    Title,
-    Caption,
-    Paragraph,
-    List,
-    Surface,
-} from 'react-native-paper';
-import { Icon, Header, Avatar, ListItem } from 'react-native-elements';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Surface } from 'react-native-paper';
+import { Avatar, ListItem } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProfileSettingsPage from './profileSettingsPage';
-import RequestedCoursesPage from './requestedCourses';
-import WishlistCoursesPage from './wishlistCourses';
-import PostedCoursesPage from './postedCourses';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadUserInfo, loginSelector, logOutUser, setReqFavPostedCount } from '../../../redux/slices/loginSlice';
+import { onChangeImagePressed, changeProfileSelector } from '../../../redux/slices/changeProfileSlice';
 // import { profileSelector, setReqFavPostedCount } from '../../../redux/slices/profileSlice';
+import ImagePicker from 'react-native-image-picker';
+import { Snackbar } from 'react-native-paper';
+import PageSpinner from '../../../components/common/PageSpinner';
+
 
 export default function Profile({ navigation }) {
     const dispatch = useDispatch();
-    const { loading, userInfo, reqFavPostedCount } = useSelector(loginSelector);
+    const { userInfo, reqFavPostedCount, devicetoken } = useSelector(loginSelector);
+    const { loading } = useSelector(changeProfileSelector);
     // const { reqFavPostedCount } = useSelector(profileSelector);
-    const [showSettingsPage, setShowSettingsPage] = React.useState(false);
+    const [visibleSnackbar, setVisibleSnackbar] = React.useState(false);
 
     useEffect(() => {
         if (!reqFavPostedCount._id)
@@ -77,6 +56,7 @@ export default function Profile({ navigation }) {
             }))
 
     }
+
     const logoutAlert = () =>
         Alert.alert(
             "",
@@ -93,7 +73,6 @@ export default function Profile({ navigation }) {
         );
 
 
-
     const settingsIconContainer = () => {
         return (
             <View style={styles.settingsIconContainer}>
@@ -103,22 +82,76 @@ export default function Profile({ navigation }) {
                         name={'settings'}
                         color="rgb(102, 94, 94)"
                         size={25}
-                    // onPress={() => console.log("yep")}
                     />
                 </TouchableOpacity>
             </View>
         );
     };
 
+    const snackComponent = () => {
+        return (
+            <Snackbar
+                visible={visibleSnackbar}
+                onDismiss={() => setVisibleSnackbar(false)}
+                duration={200000}
+                style={{ backgroundColor: "white" }}
+                wrapperStyle={{ backgroundColor: "white" }}
+            >
+                <Text style={{ color: "black", fontSize: 16 }}>Profile pic updated succesfully</Text>
+            </Snackbar>
+        )
+    }
+
+    const chooseFile = async () => {
+        var options = {
+            title: 'Select Image',
+            customButtons: [
+                { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+            ],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.showImagePicker(options, response => {
+            console.log('Response = ', response);
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                let source = { uri: 'data:image/jpeg;base64,' + response.data };
+                dispatch(
+                    onChangeImagePressed({
+                        userId: userInfo._id,
+                        displaypic: source.uri,
+                        devicetoken: devicetoken,
+                        // showToast: this.showToast,
+                        onSuccess: (data) => {
+                            dispatch(loadUserInfo(data))
+                            setVisibleSnackbar(true)
+                        },
+                    })
+                )
+            }
+        });
+    };
+
     const userImageContainer = () => {
         return (
             <View style={styles.userImageContainer}>
                 <Avatar
-                    size="xlarge"
-                    chevron
-                    activeOpacity={0.7}
+                    size={155}
+                    showAccessory={true}
+                    onAccessoryPress={() => chooseFile()}
+                    accessory={{
+                        color: "black", backgroundColor: "white", borderRadius: 30, size: 30, name: "edit", type: "entypo",
+                        style: { backgroundColor: "white" }, iconStyle: { fontSize: 20 }
+                    }}
                     rounded
-                    source={{ uri: userInfo.displaypic ? userInfo.displaypic : 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg' }}
+                    source={userInfo.displaypic ? { uri: userInfo.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
                 />
                 <Text style={styles.userName}>{userInfo.username}</Text>
                 <Text style={styles.userEmail}>{userInfo.email}</Text>
@@ -130,19 +163,28 @@ export default function Profile({ navigation }) {
         return (
             <View style={styles.userDescContainer}>
                 <Text numberOfLines={2} style={styles.userDesc}>
-                    Software developer and co-founder of TAGIdeas{' '}
+                    {userInfo.description}
                 </Text>
             </View>
         );
     };
 
+    const headerComponent = () => {
+        return (
+            <View style={{ backgroundColor: "rgba(243, 246, 252, 0.7)", paddingTop: 30, paddingBottom: 60 }}>
+                {settingsIconContainer()}
+                <View style={styles.upperContainer}>
+                    {userImageContainer()}
+                    {userDescContainer()}
+                </View>
+            </View>
+        )
+    }
+
     const userStatsContainer = () => {
         return (
             <View style={styles.userStatsContainer}>
                 <View style={[styles.stat, { width: '30%' }]}>
-                    {/* <Text style={styles.statValue}>10</Text>
-                    <Text style={styles.statText}>Requested {'\n'}courses</Text> */}
-
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
@@ -151,8 +193,6 @@ export default function Profile({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.stat, { width: '30%' }}>
-                    {/* <Text style={styles.statValue}>3</Text>
-                    <Text style={styles.statText}>Posted {'\n'}courses</Text> */}
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
@@ -161,8 +201,6 @@ export default function Profile({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.stat, { width: '30%' }}>
-                    {/* <Text style={styles.statValue}>8</Text>
-                    <Text style={styles.statText}>Wishlist {'\n'}courses</Text> */}
                     <TouchableOpacity onPress={() => navigation.navigate('WishlistCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.myfavoritescount}</Text>
@@ -174,36 +212,37 @@ export default function Profile({ navigation }) {
         );
     };
 
-    const userPagesContainer = (title, icon, route) => {
+    const footerContainer = () => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate(route)}>
-                <ListItem
-                    title={title}
-                    leftIcon={<Icons name={icon} color="rgb(102, 94, 94)" size={25} />}
-                    pad={30}
-                    titleStyle={{ letterSpacing: 1 }}
-                    containerStyle={{ backgroundColor: 'unset' }}
-                    chevron={
-                        <Icons name={'chevron-right'} color="rgb(102, 94, 94)" size={25} />
-                    }
-                // onPress={() => navigation.navigate(route)}
-                />
-            </TouchableOpacity>
-        );
-    };
+            <View style={styles.lowerContainer}>
+                <View style={styles.accountContainer}>
+                    <TouchableOpacity>
+                        <ListItem
+                            title={"Change Profile"}
+                            leftIcon={<Icons name={"account-arrow-right-outline"} color="#0e515c" size={25} />}
+                            titleStyle={{ letterSpacing: 1 }}
+                            chevron={<Icons name={"chevron-right"} color="rgb(102, 94, 94)" size={30} />}
+                            onPress={() => navigation.navigate('ChangeProfile')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <ListItem onPress={logoutAlert}
+                            title={"logout"}
+                            leftIcon={<Icons name={"logout"} color="#0e515c" size={25} />}
+                            titleStyle={{ letterSpacing: 1 }}
+                            chevron={<Icons name={"chevron-right"} color="rgb(102, 94, 94)" size={30} />}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
 
-    const profilepagecomponent = () => {
-        return (
+    return (
+        <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View>
-                    <View style={{ backgroundColor: "rgba(243, 246, 252, 0.7)", paddingTop: 30, paddingBottom: 60 }}>
-                        {settingsIconContainer()}
-                        <View style={styles.upperContainer}>
-                            {userImageContainer()}
-                            {userDescContainer()}
-
-                        </View>
-                    </View>
+                    {headerComponent()}
                     <View style={{
                         padding: 15,
                         width: '100%',
@@ -212,89 +251,14 @@ export default function Profile({ navigation }) {
                         elevation: 5,
                         marginTop: -40,
                         backgroundColor: 'white',
-                        // borderColor: "#f3f6fc",
-                        // borderWidth: 1
                     }}>
                         {userStatsContainer()}
-
-                        <View style={styles.lowerContainer}>
-                            {/* {userPagesContainer("Requested Courses", "send-circle-outline", 'RequestedCourses')}
-                        {userPagesContainer("Posted Courses", "plus-circle-outline", 'PostedCourses')}
-                        {userPagesContainer("Wishlist Courses", "heart-outline", 'WishlistCourses')} */}
-                            {/* {userPagesContainer(
-                            'Login',
-                            'send-circle-outline',
-                            'RequestedCourses',
-                        )} */}
-
-                            <View style={styles.accountContainer}>
-                                <TouchableOpacity>
-                                    <ListItem
-                                        title={"Change Profile"}
-                                        leftIcon={
-                                            <Icons
-                                                name={"account-arrow-right-outline"}
-                                                color="#0e515c"
-                                                size={25}
-                                                style={{
-                                                    // fontSize: 20,
-                                                    // backgroundColor: "#3B6AA0",
-                                                    // borderRadius: 21,
-                                                    // padding: 5
-                                                }}
-                                            />
-                                        }
-
-                                        // pad={}
-                                        titleStyle={{ letterSpacing: 1 }}
-                                        // containerStyle={{ backgroundColor: 'unset' }}
-                                        chevron={<Icons
-                                            name={"chevron-right"}
-                                            color="rgb(102, 94, 94)"
-                                            size={30}
-                                        />}
-                                        onPress={() => navigation.navigate('ChangeProfile')}
-
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <ListItem onPress={logoutAlert}
-                                        title={"logout"}
-                                        leftIcon={
-                                            <Icons
-                                                name={"logout"}
-                                                color="#0e515c"
-                                                size={25}
-                                                style={{
-                                                    // fontSize: 20,
-                                                    // backgroundColor: "#3B6AA0",
-                                                    // borderRadius: 21,
-                                                    // padding: 5
-                                                }}
-                                            />}
-
-                                        // pad={30}
-                                        titleStyle={{ letterSpacing: 1 }}
-                                        // containerStyle={{ backgroundColor: 'unset' }}
-                                        chevron={<Icons
-                                            name={"chevron-right"}
-                                            color="rgb(102, 94, 94)"
-                                            size={30}
-                                        />}
-
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        {footerContainer()}
                     </View>
                 </View>
+                <PageSpinner visible={loading} />
             </ScrollView>
-        );
-    };
-
-    return (
-        <View style={styles.container}>
-            {profilepagecomponent()}
+            {snackComponent()}
         </View>
     );
 }
@@ -303,27 +267,21 @@ const styles = StyleSheet.create({
     lowerContainer: {
         margin: 25,
         justifyContent: 'center',
-
     },
-    // upperContainer: { backgroundColor: "#F8F4EE" },
     surface: {
-        // margin: 3,
         padding: 5,
         height: 80,
         width: 90,
         borderRadius: 20,
         alignItems: 'center',
         justifyContent: 'center',
-        // borderWidth: 1,
         borderColor: "rgb(225, 225, 225)",
     },
     accountsText: {
-        // fontSize: 10,
         letterSpacing: 1,
         textAlign: "center",
         marginTop: 10,
         fontSize: 10
-        // margin: 20
     },
     accountContainerBody: {
         marginTop: 10,
@@ -336,7 +294,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         letterSpacing: 1,
         marginBottom: 10
-
     },
     accountContainer: {
         marginTop: 20,
@@ -353,7 +310,6 @@ const styles = StyleSheet.create({
     stat: {
         alignItems: 'center',
         flexWrap: 'wrap',
-        // flex: 0.3,
         width: '25%',
         paddingLeft: '1%',
     },
@@ -369,11 +325,7 @@ const styles = StyleSheet.create({
     userDesc: {
         borderRadius: 20,
         borderColor: "#dbdbdb",
-        // borderWidth: 1,
-        // borderWidth: 1,
         backgroundColor: 'rgba(255, 213, 87, 0.63)',
-        // backgroundColor: "#ffd557",
-        // marginHorizontal: 40,
         height: 75,
         width: 280,
         textAlign: 'center',
@@ -381,7 +333,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         letterSpacing: 1,
         lineHeight: 20,
-        // backgroundColor: "white"
     },
     userDescContainer: {
         marginTop: 20,
@@ -407,12 +358,9 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         marginVertical: 0,
         marginRight: 30,
-        // marginBottom: 10
     },
     container: {
-        // paddingTop: 25,
         flex: 1,
         backgroundColor: "#fff",
-
     },
 });
