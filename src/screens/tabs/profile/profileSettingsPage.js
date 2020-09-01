@@ -1,182 +1,251 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, TouchableHighlight, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions, ScrollView } from 'react-native';
-import { Searchbar, ActivityIndicator, Colors, Button, Title, Caption, Paragraph, List, Surface } from 'react-native-paper';
-import { Icon, Header, Avatar, ListItem } from 'react-native-elements';
-import IconMaterialIcons from 'react-native-vector-icons/Feather';
+import React, { useEffect } from 'react';
+import { StyleSheet, Image, Text, View, TouchableOpacity, ScrollView, Linking, Share } from 'react-native';
+import { Surface } from 'react-native-paper';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-    logOutUser,
-} from '../../../redux/slices/loginSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import PageSpinner from '../../../components/common/PageSpinner';
+import firestore from '@react-native-firebase/firestore';
 
 
 export default function ProfileSettingsPage({ navigation }) {
     const dispatch = useDispatch();
-    const [showSettingsPage, setShowSettingsPage] = React.useState(true);
-
-    useEffect(() => {
-        // let backhandler = BackHandler.addEventListener(
-        //     'hardwareBackPress',
-        //     function () {
-        //         if (navigation) {
-        //             navigation.goBack()
-        //             return true;
-        //         }
-        //         return false;
-        //     },
-        // );
-        // return () => {
-        //     backhandler.remove();
-        // };
-    }, []);
+    const [loading, setLoading] = React.useState(false);
 
 
-    const settingsPageComponent = () => {
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                title: 'Skill On',
+                message: 'Checkout this  app where you can share skills while earning money or learn from the professionals within your budget.  AppLink :https://play.google.com/store/apps/details?id=com.TAGIdeas.BMB',
+                url: 'https://play.google.com/store/apps/details?id=com.TAGIdeas.BMB'
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
+    const headerComponent = () => {
         return (
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.settingsContainer}>
-                    <View style={styles.headerComponent}>
-                        <Icons
-                            name={"keyboard-backspace"}
-                            // color="#fff"
-                            size={27}
-                            style={{ flex: 0.2 }}
-                            onPress={() => navigation.goBack()}
-                        />
-                        <View style={{
-                            alignItems: 'center',
-                            justifyContent: "center",
-                            flex: 0.6
-                        }}>
-                            <Text style={styles.headerTitle}>Settings</Text>
-                        </View>
-                    </View>
-                    <View style={styles.accountContainer}>
-                        <Text style={styles.accountContainerTitle}>Help And Support</Text>
-                        <View style={styles.accountContainerBody}>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
-                                        name={"file-document-edit-outline"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_feedback_icon1.png')}
-                                        style={{ height: 70, width: 80, }}
-                                    />
-                                    <Text style={styles.accountsText}>Feedback</Text>
-                                </Surface>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
-                                        name={"message-outline"}
-                                        color="rgb(102, 94, 94)"
-                                        size={18}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_chatwithus.png')}
-                                        style={{ height: 71, width: 77, }}
-                                    />
-                                    <Text style={styles.accountsText}>Chat With Us</Text>
-                                </Surface>
-                            </TouchableOpacity>
-
-                        </View>
-                    </View>
-                    <View style={[styles.accountContainer, { marginTop: 10 }]}>
-                        <Text style={styles.accountContainerTitle}>About</Text>
-                        <View style={styles.accountContainerBody}>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
-                                        name={"share-variant"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_share_icon2.png')}
-                                        style={{ height: 60, width: 70, }}
-                                    />
-                                    <Text style={styles.accountsText}>Invite friends</Text>
-                                </Surface>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Image
-                                    // name={"star-circle-outline"}
-                                    // color="rgb(102, 94, 94)"
-                                    // size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_rating_icon.png')}
-                                        style={{ height: 70, width: 80, }}
-                                    />
-                                    <Text style={styles.accountsText}>Rate us</Text>
-                                </Surface>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
-                                        name={"security"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_privacy_icon.png')}
-                                        style={{ height: 70, width: 90, }}
-                                    />
-                                    <Text style={styles.accountsText}>Privacy policy</Text>
-                                </Surface>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Surface style={styles.surface}>
-                                    {/* <Icons
-                                        name={"cellphone-arrow-down"}
-                                        color="rgb(102, 94, 94)"
-                                        size={iconSize}
-                                    /> */}
-                                    <Image
-                                        source={require('../../../assets/img/settings_version_icon1.png')}
-                                        style={{ height: 50, width: 50, }}
-                                    />
-                                    <Text style={styles.accountsText}>Version</Text>
-                                    <Text style={{}}>1.0.0</Text>
-
-                                </Surface>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+            <View style={styles.headerComponent}>
+                <Icons
+                    name={"keyboard-backspace"}
+                    size={27}
+                    style={{ flex: 0.2 }}
+                    onPress={() => navigation.goBack()}
+                />
+                <View style={{
+                    alignItems: 'center',
+                    justifyContent: "center",
+                    flex: 0.6
+                }}>
+                    <Text style={styles.headerTitle}>Settings</Text>
                 </View>
-            </ScrollView>
+            </View>
+        )
+    }
+
+
+
+    const helpAndSupportComponent = () => {
+
+        const getAdminData = () => {
+            setLoading(true);
+            fetch('https://teachmeproject.herokuapp.com/getAdmindata', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then((response) => {
+                if (response.length) {
+                    var item = response[0]
+                    checkIfChatExists(item)
+                } else {
+                    setLoading(false);
+                }
+            }).catch((error) => {
+                console.error(error);
+                setLoading(false);
+            });
+
+        };
+
+        const checkIfChatExists = (item) => {
+            var exists = false
+            firestore().collection('THREADS').
+                where("ids", "array-contains", userInfo._id).
+                get().then(querySnapshot => {
+                    for (var i in querySnapshot.docs) {
+                        const documentSnapshot = querySnapshot.docs[i]
+                        const data = documentSnapshot.data();
+                        if (data["ids"].indexOf(item.userinfo._id) > -1) {
+                            exists = true;
+                            item = {
+                                ...data,
+                                _id: documentSnapshot.id,
+                                name: item.userinfo.username
+                            }
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        sendMessage(item)
+                    } else {
+                        setLoading(false);
+                        navigation.navigate('ChatRoom', { thread: item });
+                    }
+                });
+        }
+
+        function sendMessage(item) {
+            const ref = firestore().collection('THREADS').doc()
+
+            var messageObj = {
+                userDetails: [{
+                    id: userInfo._id,
+                    name: userInfo.username,
+                    displaypic: userInfo.displaypic
+                }, {
+                    id: item.userinfo._id,
+                    name: item.userinfo.username,
+                    displaypic: item.userinfo.displaypic
+                }],
+                ids: [userInfo._id, item.userinfo._id],
+                latestMessage: {
+                    text: 'Hi, Please let us know your concern, We will get back to you as soon as possible.',
+                    createdAt: Date.now()
+                },
+                deletedIds: [item.userinfo._id],
+                newChat: true
+            }
+            ref.set(messageObj)
+                .then(() => {
+                    ref.collection('MESSAGES').add({
+                        text: 'Hi, Please let us know your concern, We will get back to you as soon as possible.',
+                        createdAt: Date.now(),
+                        system: true
+                    }).then(() => {
+                    })
+                })
+
+            var itemObj = {
+                ...messageObj,
+                _id: ref.id,
+                name: item.userinfo.username,
+                displaypic: item.userinfo.displaypic,
+                senderDetailsId: item.userinfo._id
+            }
+            setLoading(false);
+            navigation.navigate('ChatRoom', { thread: itemObj });
+        }
+
+
+        return (
+            <View style={styles.accountContainer}>
+                <Text style={styles.accountContainerTitle}>Help And Support</Text>
+                <View style={styles.accountContainerBody}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Feedback")}>
+                        <Surface style={styles.surface}>
+                            <Image
+                                source={require('../../../assets/img/settings_feedback_icon1.png')}
+                                style={{ height: 70, width: 80, }}
+                            />
+                            <Text style={styles.accountsText}>Feedback</Text>
+                        </Surface>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => getAdminData()}>
+                        <Surface style={styles.surface}>
+                            <Image
+                                source={require('../../../assets/img/settings_chatwithus.png')}
+                                style={{ height: 71, width: 77, }}
+                            />
+                            <Text style={styles.accountsText}>Chat With Us</Text>
+                        </Surface>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+        )
+    }
+
+    const aboutComponent = () => {
+        return (
+            <View style={[styles.accountContainer, { marginTop: 10 }]}>
+                <Text style={styles.accountContainerTitle}>About</Text>
+                <View style={styles.accountContainerBody}>
+                    <TouchableOpacity onPress={() => onShare()}>
+                        <Surface style={styles.surface}>
+                            <Image
+                                source={require('../../../assets/img/share.png')}
+                                style={{ height: 60, width: 70, }}
+                            />
+                            <Text style={styles.accountsText}>Invite friends</Text>
+                        </Surface>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://play.google.com/store/apps/details?id=com.TAGIdeas.BMB')}>
+                        <Surface style={styles.surface}>
+                            <Image
+                                source={require('../../../assets/img/settings_rating_icon.png')}
+                                style={{ height: 70, width: 80, }}
+                            />
+                            <Text style={styles.accountsText}>Rate us</Text>
+                        </Surface>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => Linking.openURL('https://buymybook.flycricket.io/privacy.html')}>
+                        <Surface style={styles.surface}>
+                            <Image
+                                source={require('../../../assets/img/settings_privacy_icon.png')}
+                                style={{ height: 70, width: 90, }}
+                            />
+                            <Text style={styles.accountsText}>Privacy policy</Text>
+                        </Surface>
+                    </TouchableOpacity>
+                    <Surface style={styles.surface}>
+                        <Image
+                            source={require('../../../assets/img/settings_version_icon1.png')}
+                            style={{ height: 50, width: 50, }}
+                        />
+                        <Text style={styles.accountsText}>Version</Text>
+                        <Text style={{}}>1.0.0</Text>
+                    </Surface>
+                </View>
+            </View>
         )
     }
 
     return (
-        <View style={{
-            flex: 1,
-            backgroundColor: "#fff"
-        }}>
-            {settingsPageComponent()}
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.settingsContainer}>
+                    {headerComponent()}
+                    {helpAndSupportComponent()}
+                    {aboutComponent()}
+                </View>
+            </ScrollView>
+            <PageSpinner visible={loading} />
         </View>
-
     );
 }
-const iconSize = 20;
 
 const styles = StyleSheet.create({
     settingsContainer: {
         margin: 20
     },
     accountsText: {
-        // fontSize: 10,
         letterSpacing: 1,
         textAlign: "center",
         marginTop: 10,
         fontSize: 10
-        // margin: 20
     },
     accountContainerBody: {
         marginTop: 10,
@@ -189,15 +258,12 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         letterSpacing: 1,
         marginBottom: 10
-
     },
     accountContainer: {
         marginTop: 30,
     },
     surface: {
         margin: 5,
-        // margin: 20,
-        // marginTop: 5,
         padding: 18,
         height: 113,
         width: 132,
@@ -206,10 +272,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderWidth: 1,
         borderColor: "rgb(225, 225, 225)",
-        // backgroundColor: "white",
-        // elevation: 2,
-        // boxShadow: "rgba(0, 0, 0, 0.24) 0 0.75 1.5"
-        // backgroundColor: "unset"
     },
     headerTitle: {
         fontSize: 20,
@@ -222,3 +284,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 });
+
+
+ // {
+    //   "_id": "5ee6d37a5b9190aa9113b4b7",
+    //   "uid": "5ed1622d0b0329e1036266f9",
+    //   "courseid": "5f047599e8d21aca7f90cd5e",
+    //   "status": "ACCEPTED",
+    //   "mystatus": "To be learned",
+    //   "courseuid": "5ed1622d0b0329e1036266f9",
+    //   "coursedetails": {
+    //     "_id": "5f047599e8d21aca7f90cd5e",
+    //     "coursename": "testtt"
+    //   },
+    //   "userinfo": {
+    //     "_id": "5ed1622d0b0329e1036266f9",
+    //     "username": "tag",
+    //     "email": "akhilgoud616@gmail.com",
+    //     "devicetoken": "cx2jr5v6TpefwksGNaEZ12:APA91bHXVEUZeMqwHB2dEGeCWMACgzkmoRGya_VpV_2GpzTpaV-3YNclaLJUaUkN4gxaB8s_nrHHW9ij6bt3Lz1ljjER4VwdQNx4riPVx_YYL-4mA4oolqS-T3xkRu4KIAd_0fH7Fim1",
+    //   },
+    //   "type": "RECEIVED"
+    // }

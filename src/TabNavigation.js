@@ -24,21 +24,15 @@ import forgotPassword from './screens/tabs/userauth/forgotPassword';
 import forgotPasswordOtpPage from './screens/tabs/userauth/forgotPasswordOtp';
 import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  loginSelector,
-  loadUserInfo,
-  setDeviceToken,
-} from './redux/slices/loginSlice';
-import {
-  getRecentSearches,
-  fetchTopCategories,
-} from './redux/slices/searchSlice';
+import { loginSelector, loadUserInfo, setDeviceToken } from './redux/slices/loginSlice';
+import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
 import messaging from '@react-native-firebase/messaging';
 import SkillDetail from './components/SkillDetail';
 import NotificationPage from './screens/tabs/notification/notification';
 import signupFormPage from './screens/tabs/userauth/singupForm';
 import signupOtpPage from './screens/tabs/userauth/signupOtp';
 import signupDescPage from './screens/tabs/userauth/signupDesc';
+import feedbackPage from './screens/tabs/profile/feedbackPage';
 
 
 const TabNavigation = props => {
@@ -118,13 +112,12 @@ const TabNavigation = props => {
         <Stack.Screen name="ForgotPassword" component={forgotPassword} />
         <Stack.Screen name="ForgotPasswordOTP" component={forgotPasswordOtpPage} />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
-        <Stack.Screen
-          name="RequestedCourses"
-          component={RequestedCoursesPage}
-        />
+        <Stack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
         <Stack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
         <Stack.Screen name="PostedCourses" component={PostedCoursesPage} />
         <Stack.Screen name="ChangeProfile" component={ChangeProfilePage} />
+        <Stack.Screen name="ChatRoom" component={ChatRoom} />
+        <Stack.Screen name="Feedback" component={feedbackPage} />
       </Stack.Navigator>
     );
   }

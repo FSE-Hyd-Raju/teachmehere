@@ -187,7 +187,7 @@ export default function ChangeProfilePage({ navigation }) {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: 20,
+                // marginTop: 20,
                 marginBottom: 10,
             }}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
