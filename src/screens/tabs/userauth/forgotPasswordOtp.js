@@ -40,7 +40,7 @@ export default function forgotPasswordOtpPage({ navigation }) {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: 20,
+                // marginTop: 20,
                 marginBottom: 35,
             }}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>

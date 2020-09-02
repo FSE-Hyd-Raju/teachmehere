@@ -78,7 +78,7 @@ export default function feedbackPage({ navigation }) {
             <View style={{
                 justifyContent: "center",
                 alignItems: "center",
-                marginTop: 20,
+                // marginTop: 20,
                 marginBottom: 50,
             }}>
                 <Text style={{ fontSize: 20, color: "black", letterSpacing: 1, fontWeight: "bold" }}>Submit your feedbackPage</Text>
