@@ -5,11 +5,16 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import PageSpinner from '../../../components/common/PageSpinner';
 import firestore from '@react-native-firebase/firestore';
+import { loginSelector } from '../../../redux/slices/loginSlice'
+import { chatSelector } from '../../../redux/slices/chatSlice';
+import { searchSelector } from '../../../redux/slices/searchSlice';
 
 
 export default function ProfileSettingsPage({ navigation }) {
     const dispatch = useDispatch();
     const [loading, setLoading] = React.useState(false);
+    const { userInfo } = useSelector(loginSelector)
+    const { searchChatResults } = useSelector(chatSelector)
 
 
     const onShare = async () => {
@@ -53,8 +58,6 @@ export default function ProfileSettingsPage({ navigation }) {
         )
     }
 
-
-
     const helpAndSupportComponent = () => {
 
         const getAdminData = () => {
@@ -65,66 +68,81 @@ export default function ProfileSettingsPage({ navigation }) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 }
-            }).then((response) => {
-                if (response.length) {
-                    var item = response[0]
-                    checkIfChatExists(item)
-                } else {
+            }).then((response) => response.json())
+                .then((response) => {
+                    if (response.length) {
+                        var item = response[0]
+                        checkIfChatExists(item)
+                    } else {
+                        setLoading(false);
+                    }
+                }).catch((error) => {
+                    console.error(error);
                     setLoading(false);
-                }
-            }).catch((error) => {
-                console.error(error);
-                setLoading(false);
-            });
+                });
 
         };
 
         const checkIfChatExists = (item) => {
-            var exists = false
-            firestore().collection('THREADS').
-                where("ids", "array-contains", userInfo._id).
-                get().then(querySnapshot => {
-                    for (var i in querySnapshot.docs) {
-                        const documentSnapshot = querySnapshot.docs[i]
-                        const data = documentSnapshot.data();
-                        if (data["ids"].indexOf(item.userinfo._id) > -1) {
-                            exists = true;
-                            item = {
-                                ...data,
-                                _id: documentSnapshot.id,
-                                name: item.userinfo.username
-                            }
-                            break;
-                        }
-                    }
-                    if (!exists) {
-                        sendMessage(item)
-                    } else {
-                        setLoading(false);
-                        navigation.navigate('ChatRoom', { thread: item });
-                    }
-                });
+            var exists = [];
+
+            if (searchChatResults && searchChatResults.length) {
+                exists = searchChatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
+            }
+
+            if (!exists.length) {
+                sendMessage(item)
+            } else {
+                setLoading(false);
+                navigation.navigate('ChatRoom', { thread: item });
+            }
+            // firestore().collection('THREADS').
+            //     where("ids", "array-contains", userInfo._id).
+            //     get().then(querySnapshot => {
+            //         for (var i in querySnapshot.docs) {
+            //             const documentSnapshot = querySnapshot.docs[i]
+            //             const data = documentSnapshot.data();
+            //             alert("data " + JSON.stringify(data))
+
+            //             // if (data["ids"].indexOf(item.userinfo._id) > -1) {
+            //             //     exists = true;
+            //             //     item = {
+            //             //         ...data,
+            //             //         _id: documentSnapshot.id,
+            //             //         name: item.userinfo.username
+            //             //     }
+            //             //     break;
+            //             // }
+            //         }
+            //         alert("in check " + exists)
+            //         if (!exists) {
+            //             alert("in check if " + JSON.stringify(item))
+            //             sendMessage(item)
+            //         } else {
+            //             setLoading(false);
+            //             navigation.navigate('ChatRoom', { thread: item });
+            //         }
+            //     });
         }
 
         function sendMessage(item) {
             const ref = firestore().collection('THREADS').doc()
-
             var messageObj = {
                 userDetails: [{
                     id: userInfo._id,
                     name: userInfo.username,
                     displaypic: userInfo.displaypic
                 }, {
-                    id: item.userinfo._id,
-                    name: item.userinfo.username,
-                    displaypic: item.userinfo.displaypic
+                    id: item._id,
+                    name: item.username,
+                    displaypic: item.displaypic
                 }],
-                ids: [userInfo._id, item.userinfo._id],
+                ids: [userInfo._id, item._id],
                 latestMessage: {
                     text: 'Hi, Please let us know your concern, We will get back to you as soon as possible.',
                     createdAt: Date.now()
                 },
-                deletedIds: [item.userinfo._id],
+                deletedIds: [item._id],
                 newChat: true
             }
             ref.set(messageObj)
@@ -140,9 +158,9 @@ export default function ProfileSettingsPage({ navigation }) {
             var itemObj = {
                 ...messageObj,
                 _id: ref.id,
-                name: item.userinfo.username,
-                displaypic: item.userinfo.displaypic,
-                senderDetailsId: item.userinfo._id
+                name: item.username,
+                displaypic: item.displaypic,
+                senderDetailsId: item._id
             }
             setLoading(false);
             navigation.navigate('ChatRoom', { thread: itemObj });

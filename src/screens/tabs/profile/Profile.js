@@ -163,7 +163,7 @@ export default function Profile({ navigation }) {
         return (
             <View style={styles.userDescContainer}>
                 <Text numberOfLines={2} style={styles.userDesc}>
-                    {userInfo.description}
+                    {userInfo.description ? userInfo.description : "Your description will be shown here!"}
                 </Text>
             </View>
         );
