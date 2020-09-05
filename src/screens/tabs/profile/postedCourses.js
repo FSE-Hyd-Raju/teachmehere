@@ -1,19 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, TouchableHighlight, FlatList, BackHandler, TouchableWithoutFeedback, Keyboard, Dimensions, ScrollView } from 'react-native';
-import { Searchbar, ActivityIndicator, Colors, Button, Title, Caption, Paragraph, List, Surface } from 'react-native-paper';
-import { Icon, Header, Avatar, ListItem } from 'react-native-elements';
-import IconMaterialIcons from 'react-native-vector-icons/Feather';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, TouchableWithoutFeedback, RefreshControl, Image } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CourseCard from '../../../components/common/coursecard';
+import { loginSelector } from '../../../redux/slices/loginSlice';
+import { profileSelector, setPostedSkills } from '../../../redux/slices/profileSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function PostedCoursesPage({ navigation }) {
-    const [showSettingsPage, setShowSettingsPage] = React.useState(true);
+    const { userInfo } = useSelector(loginSelector);
+    const { postedSkills } = useSelector(profileSelector);
     const [loading, setLoading] = React.useState(false);
-    const [courseData, setCourseData] = React.useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        getPostedCourses("5ed1622d0b0329e1036266f9")
+        if (userInfo && userInfo._id && postedSkills && !postedSkills.length)
+            getPostedCourses(userInfo._id)
     }, []);
 
     const getPostedCourses = (uid) => {
@@ -30,8 +33,9 @@ export default function PostedCoursesPage({ navigation }) {
         }).then((response) => response.json())
             .then((responseJson) => {
                 console.log(JSON.stringify(responseJson))
-                if (responseJson && responseJson.length)
-                    setCourseData(responseJson)
+                if (responseJson && responseJson.length) {
+                    dispatch(setPostedSkills(responseJson))
+                }
                 setLoading(false);
             }).catch((error) => {
                 console.error(error);
@@ -42,7 +46,7 @@ export default function PostedCoursesPage({ navigation }) {
     const loadingComponent = () => {
         return (
             <View style={styles.loadingBar}>
-                <ActivityIndicator size={35} animating={true} color={Colors.red800} />
+                <ActivityIndicator size={35} animating={true} color={"black"} />
             </View>
         )
     }
@@ -62,10 +66,16 @@ export default function PostedCoursesPage({ navigation }) {
                 <View style={styles.cardListComponent}>
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        data={courseData}
+                        data={postedSkills}
                         keyExtractor={item => item._id}
                         renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
-                        style={{ marginBottom: 80 }}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                onRefresh={() => getPostedCourses(userInfo._id)}
+                            />
+                        }
+                    // style={{ marginBottom: 80 }}
                     />
                 </View>
             </TouchableWithoutFeedback>
@@ -74,16 +84,31 @@ export default function PostedCoursesPage({ navigation }) {
 
     const noDataFoundComponent = () => {
         return (
-            <View style={{ justifyContent: "center", alignItems: "center", marginTop: 80 }}>
-                <Text style={{ fontSize: 16 }}>
-                    You have not posted any course yet!
-            </Text>
+            <View style={{ alignItems: "center", flex: 1, marginTop: 50 }}>
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <Image
+                        style={styles.backgroundImage}
+                        resizeMode={'stretch'}
+                        source={require('../../../assets/img/chatroom.png')}
+                    />
+                </View>
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: 10,
+                    marginBottom: 10
+                }}>
+                    <Text style={{ color: 'black', fontSize: 15, textAlign: "center", letterSpacing: 1 }} >You have not posted any skills yet! </Text>
+                </View>
             </View>
         )
     }
 
-    return (
-        <View style={styles.container}>
+    const headerComponent = () => {
+        return (
             <View style={styles.headerComponent}>
                 <Icons
                     name={"keyboard-backspace"}
@@ -97,10 +122,16 @@ export default function PostedCoursesPage({ navigation }) {
                     justifyContent: "center",
                     flex: 0.6
                 }}>
-                    <Text style={styles.headerTitle}>Posted Courses</Text>
+                    <Text style={styles.headerTitle}>Posted Skills</Text>
                 </View>
             </View>
-            {loading ? loadingComponent() : courseData.length ? cardListComponent() : noDataFoundComponent()}
+        )
+    }
+
+    return (
+        <View style={styles.container}>
+            {headerComponent()}
+            {loading ? loadingComponent() : postedSkills.length ? cardListComponent() : noDataFoundComponent()}
         </View>
 
     );
@@ -108,11 +139,14 @@ export default function PostedCoursesPage({ navigation }) {
 
 const styles = StyleSheet.create({
     cardListComponent: {
-        paddingTop: 25,
-        marginBottom: 80
+        paddingTop: 15,
+        // paddingBottom: 80
     },
     loadingBar: {
-        marginTop: 40
+        // marginTop: 40
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1
     },
     container: {
         padding: 20,
@@ -128,5 +162,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: 50,
         alignItems: 'center',
+    },
+    backgroundImage: {
+        marginTop: 5,
+        width: 200,
+        height: 200,
+        marginBottom: 10
     },
 });

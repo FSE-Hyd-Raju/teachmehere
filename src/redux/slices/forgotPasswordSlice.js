@@ -100,7 +100,7 @@ export function onforgotPasswordPressed(param) {
     return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(resetPasswordStarted());
-        devicetokenValue = JSON.stringify(getState().login.devicetoken);
+        var devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(forgotPasswordUrl, {
@@ -134,7 +134,7 @@ export function onOtpPressed(param) {
     return async (dispatch, getState) => {
         console.log(param.email)
         dispatch(resetPasswordStarted());
-        devicetokenValue = JSON.stringify(getState().login.devicetoken);
+        var devicetokenValue = JSON.stringify(getState().login.devicetoken);
 
         try {
             const response = await axios.post(validateOtpUrl, {

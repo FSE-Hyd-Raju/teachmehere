@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   changeProfile: changeProfileReducer,
   notification: notificationReducer,
-  profileReducer: profileReducer
+  profile: profileReducer
 });
 
 export default rootReducer;

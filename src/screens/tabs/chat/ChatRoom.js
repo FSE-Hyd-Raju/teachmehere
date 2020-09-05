@@ -114,7 +114,7 @@ export default function ChatRoom({ route, navigation }) {
                 // for (var i in querySnapshot.docs) {
                 const data = querySnapshot.data();
                 // alert(JSON.stringify(data))
-                if (data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
+                if (data && data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
                     setGotBlocked(true);
                 }
                 // }
