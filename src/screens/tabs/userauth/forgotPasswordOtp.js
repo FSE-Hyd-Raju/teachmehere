@@ -12,17 +12,30 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { storeAsyncData } from '../../../components/common/asyncStorage';
 import { loadUserInfo } from '../../../redux/slices/loginSlice'
+import { Snackbar } from 'react-native-paper';
 
 
 export default function forgotPasswordOtpPage({ navigation }) {
     const dispatch = useDispatch()
-    const {
-        loading,
-        loginOtpError,
-        loginPasswordError, forgotPasswordFormObj } = useSelector(forgotPasswordSelector)
+    const { loading, loginOtpError, loginPasswordError, forgotPasswordFormObj } = useSelector(forgotPasswordSelector)
 
     const [hidePassword, sethidePassword] = React.useState(true);
     const [eyeicon, seteyeicon] = React.useState("eye");
+    const [resendtimer, setResendtimer] = React.useState(5);
+    const [visibleSnackbar, setVisibleSnackbar] = React.useState(false);
+
+    useEffect(() => {
+        let interval = null;
+        if (resendtimer !== 0) {
+            interval = setInterval(() => {
+                setResendtimer(resendtimer => resendtimer - 1);
+            }, 1000);
+        } else if (!resendtimer) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [resendtimer]);
+
 
     const toggleEyeIcon = () => {
         if (eyeicon === "eye") {
@@ -79,6 +92,52 @@ export default function forgotPasswordOtpPage({ navigation }) {
                     <Text style={{ color: 'gray', fontSize: 15, textAlign: "center", letterSpacing: 0 }} >Please enter the OTP sent to your email {forgotPasswordFormObj.Email}</Text>
                 </View>
             </View>
+        )
+    }
+
+    const resendOTP = () => {
+        dispatch(OtpResend({
+            email: signupFormObj.Email,
+            success: () => {
+                setVisibleSnackbar(true)
+                setResendtimer(5)
+            }
+        }))
+    }
+
+    const footerComponent = () => {
+        return (
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                }}>
+                <Text>If you didn't receive a code!</Text>
+                {!resendtimer && <Button title="Resend" type="clear" containerStyle={styles.register} onPress={() => resendOTP()} />}
+                {!!resendtimer && <Button title={resendtimer + " secs"} type="clear" containerStyle={styles.register} disabled />}
+            </View>
+        )
+    }
+
+    const snackComponent = () => {
+        return (
+            <Snackbar
+                visible={visibleSnackbar}
+                onDismiss={() => setVisibleSnackbar(false)}
+                duration={2000}
+                action={{
+                    label: 'Dismiss',
+                    onPress: () => {
+                        setVisibleSnackbar(false)
+                    },
+                }}
+                style={{ backgroundColor: "white" }}
+                wrapperStyle={{ backgroundColor: "white" }}
+            >
+                <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>   OTP sent succesfully</Text>
+            </Snackbar>
         )
     }
 
@@ -164,7 +223,6 @@ export default function forgotPasswordOtpPage({ navigation }) {
                                 <Text style={{ fontSize: 12, color: 'red', textAlign: "center", marginTop: -15 }}>{errors.Password}</Text>
                             }
                             <Button title="Submit" disabled={!isValid} type="solid" containerStyle={styles.loginButton} onPress={handleSubmit} />
-                            <PageSpinner visible={loading} />
                         </View>
                     </Fragment>
                 )
@@ -179,7 +237,10 @@ export default function forgotPasswordOtpPage({ navigation }) {
                 {headerComponent()}
                 {imageContainer()}
                 {inputContainer()}
+                {footerComponent()}
+                <PageSpinner visible={loading} />
             </ScrollView >
+            {snackComponent()}
         </View>
     );
 

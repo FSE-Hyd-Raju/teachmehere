@@ -5,8 +5,8 @@ import { Value } from 'react-native-reanimated';
 const REACTIONS = [
     // { label: "Worried", src: require('./assets/worried.png'), bigSrc: require('./assets/worried_big.png') },
     // { label: "Strong", src: require('./assets/ambitious.png'), bigSrc: require('./assets/ambitious_big.png') },
-    { label: "Happy", src: require('../../assets/smile.png'), bigSrc: require('./assets/smile_big.png') },
-    { label: "Sad", src: require('../../assets/sad.png'), bigSrc: require('./assets/sad_big.png') },
+    { label: "Happy", src: require('../../assets/img/smile.png'), bigSrc: require('../../assets/img/smile_big.png') },
+    { label: "Sad", src: require('../../assets/img/sad.png'), bigSrc: require('../../assets/img/sad_big.png') },
 
     // { label: "Surprised", src: require('./assets/awes.png'), bigSrc: require('./assets/awes.png') },
 

@@ -93,7 +93,13 @@ export default function Profile({ navigation }) {
             <Snackbar
                 visible={visibleSnackbar}
                 onDismiss={() => setVisibleSnackbar(false)}
-                duration={200000}
+                duration={2000}
+                action={{
+                    label: 'Dismiss',
+                    onPress: () => {
+                        setVisibleSnackbar(false)
+                    },
+                }}
                 style={{ backgroundColor: "white" }}
                 wrapperStyle={{ backgroundColor: "white" }}
             >

@@ -26,9 +26,9 @@ export default function feedbackPage({ navigation }) {
     const descriptionComponent = () => {
         const onsubmit = (values) => {
             var obj = {
-                userId: userInfo ? userInfo._id : null,
-                userName: userInfo ? userInfo.username : null,
-                feedbackRating: feedbackRating,
+                userid: userInfo ? userInfo._id : null,
+                username: userInfo ? userInfo.username : null,
+                feedbackrating: feedbackRating,
                 description: values.description
             }
             submitFeedback(obj);
