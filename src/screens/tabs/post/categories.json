@@ -1,6 +1,6 @@
 [
     {
-        "id": "sdasd-asd-asd-as-dasd-2323",
+        "id": "it-software",
         "category": "IT & Software",
         "icon": "computer",
         "hidden": false,
@@ -57,16 +57,21 @@
                 "id": "e-commerce",
                 "name": "E-Commerce",
                 "hidden": false
+            },
+            {
+                "id": "others-in-it",
+                "name": "Other",
+                "hidden": false
             }
         ]
     },
     {
-        "id": "sdasd-asd-asd-as-dasd-23123123",
+        "id": "business",
         "category": "Business",
         "icon": "insert-chart",
         "hidden": false,
         "illustration": "https://i.imgur.com/UPrs1EWl.jpg",
-        "helpText": "Learn Now",
+        "helpText": "Explore",
         "helpTextIconName": "play",
         "subCategories": [
             {
@@ -145,31 +150,538 @@
                 "hidden": false
             },
             {
-                "id": "other",
+                "id": "other-in-business",
                 "name": "Other",
                 "hidden": false
             }
         ]
     },
     {
-        "id": "sdasd-asd-asd-as-dasd-23154545",
-        "category": "Photography",
-        "icon": "camera",
+        "id": "finance-and-accounting",
+        "category": "Finance and Accounting",
+        "icon": "account-balance",
         "hidden": false,
         "illustration": "https://i.imgur.com/MABUbpDl.jpg",
         "helpText": "Learn Now",
         "helpTextIconName": "play",
         "subCategories": [
             {
-                "id": "dssadd",
-                "name": "asdasd",
+                "id": "finance",
+                "name": "Finance",
                 "hidden": false
             },
             {
-                "id": "asdasd",
-                "name": "asasd",
+                "id": "accounting",
+                "name": "Accounting",
+                "hidden": false
+            },
+            {
+                "id": "economics",
+                "name": "Economics",
+                "hidden": false
+            },
+            {
+                "id": "money-management-skills",
+                "name": "Money Management",
+                "hidden": false
+            },
+            {
+                "id": "investing-and-trading",
+                "name": "Investing & Trading",
+                "hidden": false
+            },
+            {
+                "id": "taxes",
+                "name": "Taxes",
+                "hidden": false
+            },
+            {
+                "id": "complience",
+                "name": "Complience",
+                "hidden": false
+            },
+            {
+                "id": "cryptocurrency-and-blockchain",
+                "name": "Crypto currency & Block chain",
+                "hidden": false
+            },
+            {
+                "id": "others-in-financing",
+                "name": "Other",
                 "hidden": false
             }
         ]
+    },
+    {
+        "id": "marketing",
+        "category": "Marketing",
+        "icon": "trending-up",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Learn & Invest",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "digital-marketing",
+                "name": "Digital Marketing",
+                "hidden": false
+            },
+            {
+                "id": "social-media-marketing",
+                "name": "Social media marketing",
+                "hidden": false
+            },
+            {
+                "id": "branding",
+                "name": "Branding",
+                "hidden": false
+            },
+            {
+                "id": "marketing-fundamentals",
+                "name": "Marketing Fundamentals",
+                "hidden": false
+            },
+            {
+                "id": "public-relations",
+                "name": "Public Relations",
+                "hidden": false
+            },
+            {
+                "id": "advertising",
+                "name": "Advertising",
+                "hidden": false
+            },
+            {
+                "id": "content-marketing",
+                "name": "Content Marketing",
+                "hidden": false
+            },
+            {
+                "id": "affliate-marketing",
+                "name": "Affliate Marketing",
+                "hidden": false
+            },
+            {
+                "id": "product-marketing",
+                "name": "Product Marketing",
+                "hidden": false
+            },
+            {
+                "id": "others-in-marketing",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "health-and-fitness",
+        "category": "Health & Fitness",
+        "icon": "accessibility",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Learn to be Fit",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "fitness",
+                "name": "Fitness",
+                "hidden": false
+            },
+            {
+                "id": "general-health",
+                "name": "General Health",
+                "hidden": false
+            },
+            {
+                "id": "sports",
+                "name": "Sports",
+                "hidden": false
+            },
+            {
+                "id": "nutrition",
+                "name": "Nutrition",
+                "hidden": false
+            },
+            {
+                "id": "yoga",
+                "name": "Yoga",
+                "hidden": false
+            },
+            {
+                "id": "mental-health",
+                "name": "Mental Health",
+                "hidden": false
+            },
+            {
+                "id": "dieting",
+                "name": "Dieting",
+                "hidden": false
+            },
+            {
+                "id": "self-defence",
+                "name": "Self Defence",
+                "hidden": false
+            },
+            {
+                "id": "meditation",
+                "name": "Meditation",
+                "hidden": false
+            },
+            {
+                "id": "others-in-health-and-fitness",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "personal-development",
+        "category": "Personal development",
+        "icon": "directions-run",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Develop your self",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "personal-transformation",
+                "name": "Personal Transformation",
+                "hidden": false
+            },
+            {
+                "id": "productivity",
+                "name": "Productivity",
+                "hidden": false
+            },
+            {
+                "id": "leadership",
+                "name": "Leadership",
+                "hidden": false
+            },
+            {
+                "id": "parenting-and-relationships",
+                "name": "Parenting & Relationships",
+                "hidden": false
+            },
+            {
+                "id": "happiness",
+                "name": "Happiness",
+                "hidden": false
+            },
+            {
+                "id": "personal-brand-building",
+                "name": "Personal Brand Building",
+                "hidden": false
+            },
+            {
+                "id": "creativity",
+                "name": "Creativity",
+                "hidden": false
+            },
+            {
+                "id": "influence",
+                "name": "Influence",
+                "hidden": false
+            },
+            {
+                "id": "self-esteem",
+                "name": "Self Esteem",
+                "hidden": false
+            },
+            {
+                "id": "stress-management",
+                "name": "Stress Management",
+                "hidden": false
+            },
+            {
+                "id": "memory-study-skills",
+                "name": "Memory & Study Skills",
+                "hidden": false
+            },
+            {
+                "id": "motivation",
+                "name": "Motivation",
+                "hidden": false
+            },
+            {
+                "id": "others-in-personal-development",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "life-style",
+        "category": "Life Style",
+        "icon": "style",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Learn Now",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "arts-and-crafts",
+                "name": "Arts & Crafts",
+                "hidden": false
+            },
+            {
+                "id": "food-and-beverage",
+                "name": "Food & Beverage",
+                "hidden": false
+            },
+            {
+                "id": "beauty-and-makeup",
+                "name": "Beauty & Makeup",
+                "hidden": false
+            },
+            {
+                "id": "travel",
+                "name": "Travel",
+                "hidden": false
+            },
+            {
+                "id": "gaming",
+                "name": "Gaming",
+                "hidden": false
+            },
+            {
+                "id": "home-improvement",
+                "name": "Home Improvement",
+                "hidden": false
+            },
+            {
+                "id": "pet-care-and-training",
+                "name": "Pet Care & Training",
+                "hidden": false
+            },
+            {
+                "id": "others-in-life-style",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "teaching-and-acadamics",
+        "category": "Teaching & Acadamics",
+        "icon": "school",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Learn & Teach",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "engineering",
+                "name": "Engineering",
+                "hidden": false
+            },
+            {
+                "id": "humanities",
+                "name": "Humanities",
+                "hidden": false
+            },
+            {
+                "id": "math",
+                "name": "Math",
+                "hidden": false
+            },
+            {
+                "id": "science",
+                "name": "Science",
+                "hidden": false
+            },
+            {
+                "id": "online-education",
+                "name": "Online Education",
+                "hidden": false
+            },
+            {
+                "id": "social-science",
+                "name": "Social Science",
+                "hidden": false
+            },
+            {
+                "id": "language",
+                "name": "Language",
+                "hidden": false
+            },
+            {
+                "id": "teacher-training",
+                "name": "Teacher Training",
+                "hidden": false
+            },
+            {
+                "id": "test-prep",
+                "name": "Test Prep",
+                "hidden": false
+            },
+            {
+                "id": "others-in-life-style",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "entertainment-or-hobbies",
+        "category": "Entertainment/Hobbies",
+        "icon": "movie",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Add yourself, new skills",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "singing",
+                "name": "Singing",
+                "hidden": false
+            },
+            {
+                "id": "dancing",
+                "name": "Dancing",
+                "hidden": false
+            },
+            {
+                "id": "music",
+                "name": "Music",
+                "hidden": false
+            },
+            {
+                "id": "photography",
+                "name": "Photography",
+                "hidden": false
+            },
+            {
+                "id": "cooking",
+                "name": "Cooking",
+                "hidden": false
+            },
+            {
+                "id": "drawing",
+                "name": "Drawing",
+                "hidden": false
+            },
+            {
+                "id": "painting",
+                "name": "Painting",
+                "hidden": false
+            },
+            {
+                "id": "others-in-entertainment",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "competitive-exams",
+        "category": "Competitive Exams",
+        "icon": "assignment",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "Prepare for exams",
+        "helpTextIconName": "play",
+        "subCategories": [
+            {
+                "id": "ielts",
+                "name": "IELTS",
+                "hidden": false
+            },
+            {
+                "id": "pte",
+                "name": "PTE Acadamic",
+                "hidden": false
+            },
+            {
+                "id": "gre",
+                "name": "GRE",
+                "hidden": false
+            },
+            {
+                "id": "gmat",
+                "name": "GMAT",
+                "hidden": false
+            },
+            {
+                "id": "tofel",
+                "name": "TOFEL",
+                "hidden": false
+            },
+            {
+                "id": "engineering-entrance",
+                "name": "Engineering Entrance",
+                "hidden": false
+            },
+            {
+                "id": "ca-coaching",
+                "name": "CA",
+                "hidden": false
+            },
+            {
+                "id": "mba-entrance",
+                "name": "MBA Entrance",
+                "hidden": false
+            },
+            {
+                "id": "medial-entance",
+                "name": "Medical Entrance",
+                "hidden": false
+            },
+            {
+                "id": "medical-entrance",
+                "name": "Medical Entrance",
+                "hidden": false
+            },
+            {
+                "id": "cet-coaching",
+                "name": "CET Coaching",
+                "hidden": false
+            },
+            {
+                "id": "ibpa-exams",
+                "name": "IBPS Exams",
+                "hidden": false
+            },
+            {
+                "id": "upsc-exams",
+                "name": "UPSC Exams",
+                "hidden": false
+            },
+            {
+                "id": "staff-selection-commission",
+                "name": "Staff Selection Commission Exam",
+                "hidden": false
+            },
+            {
+                "id": "bank-clerical",
+                "name": "Bank Clerical Exam",
+                "hidden": false
+            },
+            {
+                "id": "ugc-net-exam",
+                "name": "UGC NET Exam",
+                "hidden": false
+            },
+            {
+                "id": "ssb-coaching",
+                "name": "SSB Coaching",
+                "hidden": false
+            },
+            {
+                "id": "other-cometetive-exams",
+                "name": "Other",
+                "hidden": false
+            }
+        ]
+    },
+    {
+        "id": "other-categories",
+        "category": "Others",
+        "icon": "view-list",
+        "hidden": false,
+        "illustration": "https://i.imgur.com/MABUbpDl.jpg",
+        "helpText": "",
+        "helpTextIconName": "play",
+        "subCategories": []
     }
 ]

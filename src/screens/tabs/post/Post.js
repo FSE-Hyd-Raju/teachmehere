@@ -100,7 +100,7 @@ export default class Post extends Component {
             <TouchableOpacity
               onPress={this.goToMainCategories}
               style={styles.backButton}>
-              <Icon name="md-arrow-round-back" size={28} color="#000" />
+              <Icon name="arrow-back" size={28} color="#000" />
             </TouchableOpacity>
             <Text style={styles.heading}>{activeCategory.category}</Text>
           </View>
@@ -151,7 +151,7 @@ export default class Post extends Component {
 const styles = StyleSheet.create({
   heading: {
     color: '#444',
-    fontSize: 22,
+    fontSize: 20,
     padding: 25,
     textAlign: 'center',
   },
