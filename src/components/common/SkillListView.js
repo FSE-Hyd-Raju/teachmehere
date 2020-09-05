@@ -19,6 +19,13 @@ const { labelColor, buttonColor } = random_rgba();
 
 const SkillListView = ({ route, navigation }) => {
   const { title, category, skills } = route.params;
+  const showDetails = () => {
+    const data = {};
+    navigation.navigate('SkillDetail', {
+      title: '',
+      data,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -48,7 +55,7 @@ const SkillListView = ({ route, navigation }) => {
             <CategoryChipView data={category.subCategories} keyProp={'name'} />
           </View>
         )}
-        <TouchableOpacity style={styles.listview}>
+        <TouchableOpacity style={styles.listview} onPress={() => showDetails()}>
           <Image
             source={require('../../assets/img/skill.jpeg')}
             style={{ height: 80, width: 80, borderRadius: 7 }}

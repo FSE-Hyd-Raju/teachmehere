@@ -73,7 +73,7 @@ const Home = props => {
             {item.helpText}
           </Text>
           <IconMaterialIcons
-            name={'school'}
+            name={item.icon}
             size={24}
             color={'white'}
             style={{ marginLeft: 10 }}
