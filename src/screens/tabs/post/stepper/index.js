@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as Animatable from 'react-native-animatable';
 
-const defaultInOnNext = 'fadeInLeft';
-const defaultOutOnNext = 'fadeOutRight';
-const defaultInOnBack = 'fadeInRight';
-const defaultOutOnBack = 'fadeOutLeft';
+const defaultInOnNext = '';
+const defaultOutOnNext = '';
+const defaultInOnBack = '';
+const defaultOutOnBack = '';
 
 export class index extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export class index extends Component {
       currentStep: 0,
       totalSteps: 0,
       userState: {},
-      action: 'fadeInLeft',
+      action: '',
       animationFinished: false,
     };
   }
@@ -34,7 +34,7 @@ export class index extends Component {
     const {
       animate = true,
       OutOnNext = defaultOutOnNext,
-      duration = 1000,
+      duration = 100,
     } = this.props;
     if (currentStep !== totalSteps) {
       this.onNext();
@@ -54,7 +54,7 @@ export class index extends Component {
     const {
       animate = true,
       OutOnBack = defaultOutOnBack,
-      duration = 1000,
+      duration = 100,
     } = this.props;
     if (currentStep !== 0) {
       this.onBack();
@@ -133,7 +133,7 @@ export class index extends Component {
   };
 
   render() {
-    const { steps = 0, duration = 1000 } = this.props;
+    const { steps = 0, duration = 100 } = this.props;
     const { currentStep, action } = this.state;
     const Step = steps[currentStep].component;
     return (
