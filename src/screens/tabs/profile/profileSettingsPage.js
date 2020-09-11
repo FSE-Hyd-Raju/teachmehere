@@ -108,7 +108,8 @@ export default function ProfileSettingsPage({ navigation }) {
                             item = {
                                 ...data,
                                 _id: documentSnapshot.id,
-                                name: item.username
+                                name: item.username,
+                                support: true
                             }
                             break;
                         }
@@ -157,7 +158,8 @@ export default function ProfileSettingsPage({ navigation }) {
                 _id: ref.id,
                 name: item.username,
                 displaypic: item.displaypic,
-                senderDetailsId: item._id
+                senderDetailsId: item._id,
+                support: true
             }
             setLoading(false);
             navigation.navigate('ChatRoom', { thread: itemObj });

@@ -575,6 +575,14 @@ export default function ChatRoom({ route, navigation }) {
 
 
     }
+
+    const goToProfile = (thread) => {
+        if (!thread.support) {
+            navigation.navigate("UserDetailsPage", { userinfo: thread })
+        }
+    }
+
+
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 0 }}  >
             <View style={styles.headerComponent}>
@@ -583,8 +591,6 @@ export default function ChatRoom({ route, navigation }) {
                         name={"keyboard-backspace"}
                         // color="#fff"
                         size={27}
-
-
                     />
                 </TouchableOpacity>
                 <View style={{
@@ -596,7 +602,7 @@ export default function ChatRoom({ route, navigation }) {
                     marginLeft: 20,
                     // justifyContent: ""
                 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => goToProfile(thread)}>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 rounded
@@ -616,8 +622,8 @@ export default function ChatRoom({ route, navigation }) {
                     // style={{ paddingRight: 5 }}
                     />}
                     destructiveIndex={1}
-                    options={["Delete Chat", didBlock ? "Unblock" : "Block"]}
-                    actions={[deleteChat, didBlock ? unblockUser : blockUser]} />
+                    options={!thread.support ? ["Delete Chat", didBlock ? "Unblock" : "Block"] : ["Delete Chat"]}
+                    actions={!thread.support ? [deleteChat, didBlock ? unblockUser : blockUser] : [deleteChat]} />
                 {/* <Icons
                     name={"camera"}
                     // color="#fff"

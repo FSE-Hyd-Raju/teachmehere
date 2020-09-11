@@ -57,11 +57,11 @@ export default function UserDetailsPage({ route, navigation }) {
                     rounded
                     source={userinfo.displaypic ? { uri: userinfo.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
                 />
-                <Text style={styles.userName}>{"Akhil Goud"}</Text>
-                <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
-                    <Rating imageSize={20} readonly startingValue={4} type="custom" tintColor="rgb(243, 246, 252)" ratingBackgroundColor="grey" />
-                    <Text style={{ textAlign: "left", paddingLeft: 10, fontWeight: "bold" }}>20</Text>
-                </View>
+                <Text style={styles.userName}>{userinfo.username}</Text>
+                {/* <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
+                    <Rating imageSize={20} readonly startingValue={userinfo.avgrating} type="custom" tintColor="rgb(243, 246, 252)" ratingBackgroundColor="grey" />
+                    <Text style={{ textAlign: "left", paddingLeft: 10, fontWeight: "bold" }}>{userinfo.usersrated}</Text>
+                </View> */}
             </View >
         )
     }
