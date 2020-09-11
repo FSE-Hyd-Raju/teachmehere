@@ -33,7 +33,7 @@ import signupFormPage from './screens/tabs/userauth/singupForm';
 import signupOtpPage from './screens/tabs/userauth/signupOtp';
 import signupDescPage from './screens/tabs/userauth/signupDesc';
 import feedbackPage from './screens/tabs/profile/feedbackPage';
-import UserDetailsPage from './screens/tabs/profile/UserDetailsPage';
+import UserDetailsPage from './screens/tabs/profile/userDetailsPage';
 
 
 const TabNavigation = props => {
