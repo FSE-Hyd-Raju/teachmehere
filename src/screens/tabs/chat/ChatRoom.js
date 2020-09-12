@@ -62,7 +62,14 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.newChat && (!messages || !messages.length)) {
             firestore()
                 .collection('THREADS')
-                .doc(thread._id).delete().then(() => { if (navigation.canGoBack()) setTimeout(() => { navigation.popToTop() }, 100) })
+                .doc(thread._id).delete().then(() => {
+                    if (navigation.canGoBack()) setTimeout(() => {
+                        if (!thread.support)
+                            navigation.popToTop()
+                        else
+                            navigation.goBack()
+                    }, 100)
+                })
         }
         else if (navigation.canGoBack()) {
             if (!thread.support)
@@ -155,8 +162,8 @@ export default function ChatRoom({ route, navigation }) {
 
         var msgObj = {
             text: text,
-            serverTime: new Date().getTime(),
-            // serverTime: firestore.FieldValue.serverTimestamp(),
+            // serverTime: new Date().getTime(),
+            serverTime: firestore.FieldValue.serverTimestamp(),
             createdAt: new Date().getTime(),
             user: {
                 _id: userInfo._id,
@@ -172,11 +179,12 @@ export default function ChatRoom({ route, navigation }) {
             latestMessage: {
                 text: text,
                 createdAt: new Date().getTime(),
-                serverTime: new Date().getTime(),
-                // serverTime: firestore.FieldValue.serverTimestamp()
+                // serverTime: new Date().getTime(),
+                serverTime: firestore.FieldValue.serverTimestamp()
             },
             deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
             newChat: false,
+            support: !!thread.support
             // displaypic: userInfo.displaypic
         }
 

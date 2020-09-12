@@ -109,7 +109,7 @@ export default function feedbackPage({ navigation }) {
             <Snackbar
                 visible={!!visibleSnackbar}
                 onDismiss={() => setVisibleSnackbar("")}
-                duration={2000}
+                duration={4000}
                 action={{
                     label: 'Dismiss',
                     onPress: () => {

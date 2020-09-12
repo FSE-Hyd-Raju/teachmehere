@@ -23,7 +23,7 @@ export default function signupDescPage({ navigation }) {
         var options = {
             title: 'Select Image',
             customButtons: [
-                { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+                { name: 'RemovePic', title: 'Remove Pic' },
             ],
             storageOptions: {
                 skipBackup: true,
@@ -39,7 +39,7 @@ export default function signupDescPage({ navigation }) {
                 console.log('ImagePicker Error: ', response.error);
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
-                alert(response.customButton);
+                setSource("")
             } else {
                 let imgSource = { uri: 'data:image/jpeg;base64,' + response.data };
                 setSource(imgSource)

@@ -21,7 +21,7 @@ export default function ChangeProfilePage({ navigation }) {
     const [hidePassword2, sethidePassword2] = React.useState(true);
     const [eyeicon, seteyeicon] = React.useState('eye');
     const [eyeicon2, seteyeicon2] = React.useState('eye');
-    const [selectedIndex, setSelectedIndex] = React.useState(1)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
     const buttons = ["Edit Profile", "Change Password"]
 
 

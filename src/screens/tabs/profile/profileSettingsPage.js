@@ -159,7 +159,7 @@ export default function ProfileSettingsPage({ navigation }) {
                 name: item.username,
                 displaypic: item.displaypic,
                 senderDetailsId: item._id,
-                support: true
+                support: true,
             }
             setLoading(false);
             navigation.navigate('ChatRoom', { thread: itemObj });
