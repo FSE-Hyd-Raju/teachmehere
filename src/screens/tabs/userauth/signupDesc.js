@@ -29,6 +29,7 @@ export default function signupDescPage({ navigation }) {
                 skipBackup: true,
                 path: 'images',
             },
+            quality: 0.5
         };
         ImagePicker.showImagePicker(options, response => {
             console.log('Response = ', response);

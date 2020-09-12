@@ -194,7 +194,7 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
-                            <Text style={styles.statText}>Requested {'\n'}courses</Text>
+                            <Text style={styles.statText}>Requested {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>
@@ -202,7 +202,7 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
-                            <Text style={styles.statText}>Posted {'\n'}courses</Text>
+                            <Text style={styles.statText}>Posted {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>
@@ -210,7 +210,7 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate('WishlistCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.myfavoritescount}</Text>
-                            <Text style={styles.statText}>Wishlist {'\n'}courses</Text>
+                            <Text style={styles.statText}>Wishlist {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>

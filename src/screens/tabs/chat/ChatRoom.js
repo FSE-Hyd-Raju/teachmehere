@@ -65,7 +65,10 @@ export default function ChatRoom({ route, navigation }) {
                 .doc(thread._id).delete().then(() => { if (navigation.canGoBack()) setTimeout(() => { navigation.popToTop() }, 100) })
         }
         else if (navigation.canGoBack()) {
-            navigation.popToTop()
+            if (!thread.support)
+                navigation.popToTop()
+            else
+                navigation.goBack()
         }
     }
 

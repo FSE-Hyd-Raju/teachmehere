@@ -153,7 +153,7 @@ export function onChangeProfilePressed(param) {
             console.log("insdie try")
             console.log(param)
             const response = await axios.post(changeProfileUrl, {
-                devicetoken: devicetokenValue,
+                // devicetoken: devicetokenValue,
                 username: param.username,
                 _id: param.id,
                 description: param.description,

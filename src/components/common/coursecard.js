@@ -50,9 +50,10 @@ const avatarComponent = (course) => {
             <View>
                 <Avatar
                     rounded
-                    source={{
-                        uri: 'https://randomuser.me/api/portraits/men/41.jpg',
-                    }}
+                    source={course.displaypic ? { uri: course.displaypic } : require('../../assets/img/default-mask-avatar.png')}
+                    // source={{
+                    //     uri: 'https://randomuser.me/api/portraits/men/41.jpg',
+                    // }}
                     size="medium" />
                 <Badge
                     status={course.status != 'ACTIVE' ? "success" : "warning"}
