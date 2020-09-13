@@ -19,11 +19,10 @@ const { labelColor, buttonColor } = random_rgba();
 
 const SkillListView = ({ route, navigation }) => {
   const { title, category, skills } = route.params;
-  const showDetails = () => {
-    const data = {};
+  const showDetails = skill => {
     navigation.navigate('SkillDetail', {
       title: '',
-      data,
+      skill,
     });
   };
   return (
@@ -55,34 +54,43 @@ const SkillListView = ({ route, navigation }) => {
             <CategoryChipView data={category.subCategories} keyProp={'name'} />
           </View>
         )}
-        <TouchableOpacity style={styles.listview} onPress={() => showDetails()}>
-          <Image
-            source={require('../../assets/img/skill.jpeg')}
-            style={{ height: 80, width: 80, borderRadius: 7 }}
-          />
-          <View style={{ marginLeft: 25 }}>
-            <Text style={styles.skillName} numberOfLines={2}>
-              ReactJs skills from scratch
-            </Text>
-            <Text style={styles.teacherName} numberOfLines={2}>
-              Raju Thota
-            </Text>
-            <Rating
-              type="star"
-              imageSize={16}
-              startingValue={4}
-              readonly
-              style={{ marginTop: 5, marginLeft: -165 }}
-            />
-            <View style={{ marginTop: 7, width: 110 }}>
-              <Price />
-            </View>
-            <View style={styles.platform}>
-              <Text style={styles.platformText}>Skype</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-        <Divider style={{ backgroundColor: 'gray' }} />
+        {skills &&
+          skills.map(skill => {
+            return (
+              <>
+                <TouchableOpacity
+                  style={styles.listview}
+                  onPress={() => showDetails(skill)}>
+                  <Image
+                    source={require('../../assets/img/skill.jpeg')}
+                    style={{ height: 80, width: 80, borderRadius: 7 }}
+                  />
+                  <View style={{ marginLeft: 25 }}>
+                    <Text style={styles.skillName} numberOfLines={2}>
+                      {skill.coursename}
+                    </Text>
+                    <Text style={styles.teacherName} numberOfLines={2}>
+                      {skill.username}
+                    </Text>
+                    <Rating
+                      type="star"
+                      imageSize={16}
+                      startingValue={4}
+                      readonly
+                      style={{ marginTop: 5, marginLeft: -40 }}
+                    />
+                    <View style={{ marginTop: 7, width: 110 }}>
+                      <Price price={skill.price} />
+                    </View>
+                    <View style={styles.platform}>
+                      <Text style={styles.platformText}>{skill.platform}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+                <Divider style={{ backgroundColor: 'gray' }} />
+              </>
+            );
+          })}
       </ScrollView>
     </View>
   );

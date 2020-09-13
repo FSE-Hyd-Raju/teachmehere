@@ -16,10 +16,11 @@ import { Button, Avatar } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import globalStyles from '../screens/tabs/post/steps/styles';
 import { random_rgba } from '../utils/random_rgba';
+import { setLocale } from 'yup';
 
 const { labelColor, buttonColor } = random_rgba();
 const SkillDetail = ({ route, navigation }) => {
-  const { title } = route.params;
+  const { title, skill } = route.params || {};
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -55,7 +56,7 @@ const SkillDetail = ({ route, navigation }) => {
               fontSize: 16,
               textTransform: 'capitalize',
             }}>
-            Rajuuuuuuu thotaaaaaaa
+            {skill.username}
           </Text>
           <View style={{ flexDirection: 'row', padding: 3 }}>
             <MaterialCommunityIcons name="account-outline" size={17} />
@@ -77,7 +78,7 @@ const SkillDetail = ({ route, navigation }) => {
           <Button
             mode="text"
             color={'#0052cc'}
-            labelStyle={{fontSize: 14, textTransform: 'capitalize'}}
+            labelStyle={{ fontSize: 14, textTransform: 'capitalize' }}
             onPress={() => console.log('Pressed')}>
             View profile
           </Button>
@@ -87,15 +88,13 @@ const SkillDetail = ({ route, navigation }) => {
           name="heart"
           size={26}
         />
-        <Text style={styles.skillName}>
-          React native skills for beginers sadsd fff gg f asdasda sdasd
-        </Text>
+        <Text style={styles.skillName}>{skill.coursename}</Text>
         <View style={{ width: '40%', padding: 20 }}>
-          <Price />
+          <Price price={skill.price} />
         </View>
         <View style={styles.platform}>
-        <Text style={styles.platformText}>Skype</Text>
-      </View>
+          <Text style={styles.platformText}>{skill.platform}</Text>
+        </View>
         <View>
           <TouchableOpacity style={globalStyles.btnStyle}>
             <Button
@@ -167,6 +166,7 @@ const styles = StyleSheet.create({
   },
   platform: {
     marginTop: 8,
+    marginBottom: 20,
     width: 90,
     backgroundColor: buttonColor,
     padding: 3,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#444',
     padding: 20,
-   // marginTop: 20,
+    // marginTop: 20,
   },
   skillDetailView: {
     padding: 15,

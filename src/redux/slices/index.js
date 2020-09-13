@@ -9,6 +9,7 @@ import chatReducer from './chatSlice';
 import changeProfileReducer from './changeProfileSlice';
 import notificationReducer from './notificationSlice';
 import profileReducer from './profileSlice';
+import homeReducer from './homeSlice';
 
 const rootReducer = combineReducers({
   post: postReducer,
@@ -19,7 +20,8 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   changeProfile: changeProfileReducer,
   notification: notificationReducer,
-  profileReducer: profileReducer
+  profile: profileReducer,
+  home: homeReducer,
 });
 
 export default rootReducer;

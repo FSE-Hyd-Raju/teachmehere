@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
 const Price = props => {
+  const { oneonone, group } = props.price || {};
   return (
     <View>
       <View style={styles.container}>
@@ -10,9 +11,9 @@ const Price = props => {
         <Text style={styles.priceLable}>Group</Text>
       </View>
       <View style={styles.container}>
-        <Text style={styles.price}>$5095</Text>
+        <Text style={styles.price}>${oneonone}</Text>
         <View style={styles.devider} />
-        <Text style={styles.price}>$7855</Text>
+        <Text style={styles.price}>${group && group.price}</Text>
       </View>
     </View>
   );

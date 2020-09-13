@@ -114,7 +114,7 @@ const Step3 = props => {
               // isTentativeSchedule: getState().isTentativeSchedule || false,
             }
           }
-          // validationSchema={postStep2ValidationSchema}
+          validationSchema={postStep2ValidationSchema}
           onSubmit={values => {
             props.next();
             saveState(values);

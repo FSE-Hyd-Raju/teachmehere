@@ -17,24 +17,25 @@ import { useNavigation } from '@react-navigation/native';
 const { labelColor, buttonColor } = random_rgba();
 const SkillFlatList = props => {
   const navigation = useNavigation();
-  const showDetails = () => {
-    const data = {};
+  const showDetails = skill => {
     navigation.navigate('SkillDetail', {
       title: '',
-      data,
+      skill,
     });
   };
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.cardStyle} onPress={() => showDetails()}>
+    <TouchableOpacity
+      style={styles.cardStyle}
+      onPress={() => showDetails(item)}>
       <Image
         source={require('../../assets/img/skill.jpeg')}
         style={{ height: 95, width: 160 }}
       />
       <Text style={styles.skillName} numberOfLines={2}>
-        Complete React native basics and redux concepts
+        {item.coursename}
       </Text>
       <Text style={styles.teacherName} numberOfLines={1}>
-        Raju thota
+        {item.username}
       </Text>
       <View>
         <Rating
@@ -46,10 +47,10 @@ const SkillFlatList = props => {
         />
       </View>
       <View style={{ marginTop: 7, width: 110 }}>
-        <Price />
+        <Price price={item.price} />
       </View>
       <View style={styles.platform}>
-        <Text style={styles.platformText}>Skype</Text>
+        <Text style={styles.platformText}>{item.platform}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -57,7 +58,7 @@ const SkillFlatList = props => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={props.categories}
+        data={props.skills}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
         horizontal={true}

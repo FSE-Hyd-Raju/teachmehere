@@ -15,17 +15,24 @@ import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const categories = require('../post/categories.json');
+//const categories = require('../post/categories.json');
 
 import { random_rgba } from '../../../utils/random_rgba';
 import CategoryFlatList from '../../../components/common/CategoryFlatList';
 import CategoryChipView from '../../../components/common/CategoryChipView';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  homeSelector,
+  fetchInitialDataWhenAppLoading,
+} from '../../../redux/slices/homeSlice';
 
 const { labelColor } = random_rgba();
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const Home = props => {
+  const dispatch = useDispatch();
+  const { categories = [], featuredSkills = [] } = useSelector(homeSelector);
   const showMore = (title, skills) => {
     props.navigation.navigate('SkillListView', {
       title: 'TEST',
@@ -38,11 +45,12 @@ const Home = props => {
     props.navigation.navigate('SkillListView', {
       title: skills.category,
       category: skills,
-      skills,
+      skills: featuredCourses,
     });
   };
 
   const [entries, setEntries] = useState([]);
+  const [featuredCourses, setFeaturedCourses] = useState([]);
   const carouselRef = useRef(null);
 
   const goForward = () => {
@@ -50,7 +58,9 @@ const Home = props => {
   };
 
   useEffect(() => {
+    dispatch(fetchInitialDataWhenAppLoading());
     setEntries(categories);
+    setFeaturedCourses(featuredSkills);
   }, []);
 
   const { index } = useState(0);
@@ -85,7 +95,7 @@ const Home = props => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.logo}>
-        <View style={{ flex: 0.9, alignItems: "center" }}>
+        <View style={{ flex: 0.9, alignItems: 'center' }}>
           <Image
             source={require('../../../assets/img/logo.png')}
             style={{ height: 60, width: 150, flex: 0.8 }}
@@ -93,7 +103,7 @@ const Home = props => {
         </View>
         <Icons
           style={{ marginTop: 25 }}
-          name={"bell-outline"}
+          name={'bell-outline'}
           // color="#fff"
           size={27}
           onPress={() => props.navigation.navigate('Notification')}
@@ -122,7 +132,7 @@ const Home = props => {
           btnText={'See All'}
           onButtonPress={() => showMore({})}
         />
-        <SkillFlatList categories={categories} />
+        <SkillFlatList skills={featuredCourses} />
       </View>
       <View style={{ marginTop: 5 }}>
         <CategoryWrapper
@@ -140,7 +150,7 @@ const Home = props => {
           btnText={'See All'}
           onButtonPress={() => showMore({})}
         />
-        <CategoryFlatList categories={entries} />
+        <SkillFlatList skills={featuredCourses} />
       </View>
     </ScrollView>
   );
@@ -154,8 +164,8 @@ const styles = StyleSheet.create({
   },
   logo: {
     alignItems: 'center',
-    flexDirection: "row",
-    justifyContent: "space-evenly"
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
   carouselContainer: {
     marginTop: 25,
