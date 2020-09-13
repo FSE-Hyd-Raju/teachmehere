@@ -84,45 +84,43 @@ export default function ProfileSettingsPage({ navigation }) {
         };
 
         const checkIfChatExists = (item) => {
-            var exists = [];
+            var exists = false;
 
-            if (searchChatResults && searchChatResults.length) {
-                exists = searchChatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
-            }
+            // if (searchChatResults && searchChatResults.length) {
+            //     exists = searchChatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
+            // }
 
-            if (!exists.length) {
-                sendMessage(item)
-            } else {
-                setLoading(false);
-                navigation.navigate('ChatRoom', { thread: item });
-            }
-            // firestore().collection('THREADS').
-            //     where("ids", "array-contains", userInfo._id).
-            //     get().then(querySnapshot => {
-            //         for (var i in querySnapshot.docs) {
-            //             const documentSnapshot = querySnapshot.docs[i]
-            //             const data = documentSnapshot.data();
-            //             alert("data " + JSON.stringify(data))
+            // if (!exists.length) {
+            //     sendMessage(item)
+            // } else {
+            //     setLoading(false);
+            //     navigation.navigate('ChatRoom', { thread: item });
+            // }
+            firestore().collection('THREADS').
+                where("ids", "array-contains", userInfo._id).
+                get().then(querySnapshot => {
+                    for (var i in querySnapshot.docs) {
+                        const documentSnapshot = querySnapshot.docs[i]
+                        const data = documentSnapshot.data();
 
-            //             // if (data["ids"].indexOf(item.userinfo._id) > -1) {
-            //             //     exists = true;
-            //             //     item = {
-            //             //         ...data,
-            //             //         _id: documentSnapshot.id,
-            //             //         name: item.userinfo.username
-            //             //     }
-            //             //     break;
-            //             // }
-            //         }
-            //         alert("in check " + exists)
-            //         if (!exists) {
-            //             alert("in check if " + JSON.stringify(item))
-            //             sendMessage(item)
-            //         } else {
-            //             setLoading(false);
-            //             navigation.navigate('ChatRoom', { thread: item });
-            //         }
-            //     });
+                        if (data["ids"].indexOf(item._id) > -1) {
+                            exists = true;
+                            item = {
+                                ...data,
+                                _id: documentSnapshot.id,
+                                name: item.username,
+                                support: true
+                            }
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        sendMessage(item)
+                    } else {
+                        setLoading(false);
+                        navigation.navigate('ChatRoom', { thread: item });
+                    }
+                });
         }
 
         function sendMessage(item) {
@@ -160,7 +158,8 @@ export default function ProfileSettingsPage({ navigation }) {
                 _id: ref.id,
                 name: item.username,
                 displaypic: item.displaypic,
-                senderDetailsId: item._id
+                senderDetailsId: item._id,
+                support: true,
             }
             setLoading(false);
             navigation.navigate('ChatRoom', { thread: itemObj });

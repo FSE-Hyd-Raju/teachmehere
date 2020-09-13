@@ -33,6 +33,7 @@ import signupFormPage from './screens/tabs/userauth/singupForm';
 import signupOtpPage from './screens/tabs/userauth/signupOtp';
 import signupDescPage from './screens/tabs/userauth/signupDesc';
 import feedbackPage from './screens/tabs/profile/feedbackPage';
+import UserDetailsPage from './screens/tabs/profile/userDetailsPage';
 
 
 const TabNavigation = props => {
@@ -118,6 +119,7 @@ const TabNavigation = props => {
         <Stack.Screen name="ChangeProfile" component={ChangeProfilePage} />
         <Stack.Screen name="ChatRoom" component={ChatRoom} />
         <Stack.Screen name="Feedback" component={feedbackPage} />
+        <Stack.Screen name="UserDetailsPage" component={UserDetailsPage} />
       </Stack.Navigator>
     );
   }
@@ -130,6 +132,7 @@ const TabNavigation = props => {
         <Stack.Screen name="SkillGridView" component={SkillGridView} />
         <Stack.Screen name="SkillDetail" component={SkillDetail} />
         <Stack.Screen name="Notification" component={NotificationPage} />
+        <Stack.Screen name="UserDetailsPage" component={UserDetailsPage} />
       </Stack.Navigator>
     );
   }
@@ -140,6 +143,7 @@ const TabNavigation = props => {
         <Stack.Screen name="ChatPage" component={Chat} />
         <Stack.Screen name="ChatRoom" component={ChatRoom} />
         <Stack.Screen name="NewChat" component={NewChat} />
+        <Stack.Screen name="UserDetailsPage" component={UserDetailsPage} />
       </Stack.Navigator>
     );
   }

@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import Theme from '../../../Theme';
 import IconMaterialIcons from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux'
-import { clearErrors, onOtpPressed, forgotPasswordSelector } from '../../../redux/slices/forgotPasswordSlice'
+import { clearErrors, onOtpPressed, forgotPasswordSelector, onforgotPasswordPressed } from '../../../redux/slices/forgotPasswordSlice'
 import PageSpinner from '../../../components/common/PageSpinner';
 import * as yup from 'yup'
 import { Formik } from 'formik';
@@ -96,13 +96,15 @@ export default function forgotPasswordOtpPage({ navigation }) {
     }
 
     const resendOTP = () => {
-        dispatch(OtpResend({
-            email: signupFormObj.Email,
-            success: () => {
-                setVisibleSnackbar(true)
-                setResendtimer(5)
+        dispatch(onforgotPasswordPressed(
+            {
+                email: forgotPasswordFormObj.Email,
+                onSuccess: () => {
+                    setVisibleSnackbar(true)
+                    setResendtimer(5)
+                }
             }
-        }))
+        ))
     }
 
     const footerComponent = () => {
@@ -148,7 +150,7 @@ export default function forgotPasswordOtpPage({ navigation }) {
                     otp: values.OTP,
                     password: values.Password,
                     email: forgotPasswordFormObj.Email,
-                    onSuccess: () => {
+                    onSuccess: (data) => {
                         dispatch(loadUserInfo(data))
                         storeAsyncData('userInfo', data);
                         navigation.reset({
@@ -233,7 +235,7 @@ export default function forgotPasswordOtpPage({ navigation }) {
 
     return (
         <View style={styles.MainContainer}>
-            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} style={{ padding: 30 }}>
                 {headerComponent()}
                 {imageContainer()}
                 {inputContainer()}
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
         marginTop: 30
     },
     MainContainer: {
-        padding: 30,
+        // padding: 30,
         backgroundColor: "#fff",
         flex: 1
     },

@@ -112,7 +112,7 @@ export default function Profile({ navigation }) {
         var options = {
             title: 'Select Image',
             customButtons: [
-                { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+                { name: 'RemovePic', title: 'Remove Pic' },
             ],
             storageOptions: {
                 skipBackup: true,
@@ -127,6 +127,18 @@ export default function Profile({ navigation }) {
                 console.log('ImagePicker Error: ', response.error);
             } else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
+                dispatch(
+                    onChangeImagePressed({
+                        userId: userInfo._id,
+                        displaypic: "",
+                        devicetoken: devicetoken,
+                        // showToast: this.showToast,
+                        onSuccess: (data) => {
+                            dispatch(loadUserInfo(data))
+                            setVisibleSnackbar(true)
+                        },
+                    })
+                )
             } else {
                 let source = { uri: 'data:image/jpeg;base64,' + response.data };
                 dispatch(
@@ -169,7 +181,7 @@ export default function Profile({ navigation }) {
         return (
             <View style={styles.userDescContainer}>
                 <Text numberOfLines={2} style={styles.userDesc}>
-                    {userInfo.description ? userInfo.description : "Your description will be shown here!"}
+                    {userInfo.description ? userInfo.description : "Your description will be shown here! You can add your description from change profile page!"}
                 </Text>
             </View>
         );
@@ -190,11 +202,11 @@ export default function Profile({ navigation }) {
     const userStatsContainer = () => {
         return (
             <View style={styles.userStatsContainer}>
-                <View style={[styles.stat, { width: '30%' }]}>
+                <View style={[styles.stat, { width: '35%' }]}>
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
-                            <Text style={styles.statText}>Requested {'\n'}courses</Text>
+                            <Text style={styles.statText}>Requested {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>
@@ -202,7 +214,7 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
-                            <Text style={styles.statText}>Posted {'\n'}courses</Text>
+                            <Text style={styles.statText}>Posted {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>
@@ -210,7 +222,7 @@ export default function Profile({ navigation }) {
                     <TouchableOpacity onPress={() => navigation.navigate('WishlistCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.myfavoritescount}</Text>
-                            <Text style={styles.statText}>Wishlist {'\n'}courses</Text>
+                            <Text style={styles.statText}>Wishlist {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>

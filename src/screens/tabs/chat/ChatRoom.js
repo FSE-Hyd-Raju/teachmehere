@@ -62,10 +62,20 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.newChat && (!messages || !messages.length)) {
             firestore()
                 .collection('THREADS')
-                .doc(thread._id).delete().then(() => { if (navigation.canGoBack()) setTimeout(() => { navigation.popToTop() }, 100) })
+                .doc(thread._id).delete().then(() => {
+                    if (navigation.canGoBack()) setTimeout(() => {
+                        if (!thread.support)
+                            navigation.popToTop()
+                        else
+                            navigation.goBack()
+                    }, 100)
+                })
         }
         else if (navigation.canGoBack()) {
-            navigation.popToTop()
+            if (!thread.support)
+                navigation.popToTop()
+            else
+                navigation.goBack()
         }
     }
 
@@ -114,7 +124,7 @@ export default function ChatRoom({ route, navigation }) {
                 // for (var i in querySnapshot.docs) {
                 const data = querySnapshot.data();
                 // alert(JSON.stringify(data))
-                if (data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
+                if (data && data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
                     setGotBlocked(true);
                 }
                 // }
@@ -152,8 +162,8 @@ export default function ChatRoom({ route, navigation }) {
 
         var msgObj = {
             text: text,
-            serverTime: new Date().getTime(),
-            // serverTime: firestore.FieldValue.serverTimestamp(),
+            // serverTime: new Date().getTime(),
+            serverTime: firestore.FieldValue.serverTimestamp(),
             createdAt: new Date().getTime(),
             user: {
                 _id: userInfo._id,
@@ -169,11 +179,12 @@ export default function ChatRoom({ route, navigation }) {
             latestMessage: {
                 text: text,
                 createdAt: new Date().getTime(),
-                serverTime: new Date().getTime(),
-                // serverTime: firestore.FieldValue.serverTimestamp()
+                // serverTime: new Date().getTime(),
+                serverTime: firestore.FieldValue.serverTimestamp()
             },
             deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
             newChat: false,
+            support: !!thread.support
             // displaypic: userInfo.displaypic
         }
 
@@ -575,6 +586,15 @@ export default function ChatRoom({ route, navigation }) {
 
 
     }
+
+    const goToProfile = (thread) => {
+        if (!thread.support) {
+            thread.userid = thread.senderDetailsId;
+            navigation.navigate("UserDetailsPage", { userinfo: thread })
+        }
+    }
+
+
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingHorizontal: 0 }}  >
             <View style={styles.headerComponent}>
@@ -583,8 +603,6 @@ export default function ChatRoom({ route, navigation }) {
                         name={"keyboard-backspace"}
                         // color="#fff"
                         size={27}
-
-
                     />
                 </TouchableOpacity>
                 <View style={{
@@ -596,7 +614,7 @@ export default function ChatRoom({ route, navigation }) {
                     marginLeft: 20,
                     // justifyContent: ""
                 }}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => goToProfile(thread)}>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Avatar
                                 rounded
@@ -616,8 +634,8 @@ export default function ChatRoom({ route, navigation }) {
                     // style={{ paddingRight: 5 }}
                     />}
                     destructiveIndex={1}
-                    options={["Delete Chat", didBlock ? "Unblock" : "Block"]}
-                    actions={[deleteChat, didBlock ? unblockUser : blockUser]} />
+                    options={!thread.support ? ["Delete Chat", didBlock ? "Unblock" : "Block"] : ["Delete Chat"]}
+                    actions={!thread.support ? [deleteChat, didBlock ? unblockUser : blockUser] : [deleteChat]} />
                 {/* <Icons
                     name={"camera"}
                     // color="#fff"
