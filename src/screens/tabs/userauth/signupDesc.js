@@ -22,15 +22,17 @@ export default function signupDescPage({ navigation }) {
     const chooseFile = async () => {
         var options = {
             title: 'Select Image',
-            customButtons: [
-                { name: 'RemovePic', title: 'Remove Pic' },
-            ],
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
             },
             quality: 0.5
         };
+        if (userInfo.displaypic) {
+            options.customButtons = [
+                { name: 'RemovePic', title: 'Remove Pic' }
+            ]
+        }
         ImagePicker.showImagePicker(options, response => {
             console.log('Response = ', response);
             if (response.didCancel) {

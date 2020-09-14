@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import { loginSelector } from '../../../redux/slices/loginSlice'
 import { chatSelector } from '../../../redux/slices/chatSlice';
 import { searchSelector } from '../../../redux/slices/searchSlice';
+import { Snackbar } from 'react-native-paper';
 
 
 export default function ProfileSettingsPage({ navigation }) {
@@ -15,6 +16,7 @@ export default function ProfileSettingsPage({ navigation }) {
     const [loading, setLoading] = React.useState(false);
     const { userInfo } = useSelector(loginSelector)
     const { searchChatResults } = useSelector(chatSelector)
+    const [visibleSnackbar, setVisibleSnackbar] = React.useState("");
 
 
     const onShare = async () => {
@@ -61,27 +63,51 @@ export default function ProfileSettingsPage({ navigation }) {
     const helpAndSupportComponent = () => {
 
         const getAdminData = () => {
-            setLoading(true);
-            fetch('https://teachmeproject.herokuapp.com/getAdmindata', {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                }
-            }).then((response) => response.json())
-                .then((response) => {
-                    if (response.length) {
-                        var item = response[0]
-                        checkIfChatExists(item)
-                    } else {
-                        setLoading(false);
+            if (userInfo._id) {
+                setLoading(true);
+                fetch('https://teachmeproject.herokuapp.com/getAdmindata', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
                     }
-                }).catch((error) => {
-                    console.error(error);
-                    setLoading(false);
-                });
+                }).then((response) => response.json())
+                    .then((response) => {
+                        if (response.length) {
+                            var item = response[0]
+                            checkIfChatExists(item)
+                        } else {
+                            setLoading(false);
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                        setLoading(false);
+                    });
 
+            } else {
+                setVisibleSnackbar("Please login!")
+            }
         };
+
+        const snackComponent = () => {
+            return (
+                <Snackbar
+                    visible={!!visibleSnackbar}
+                    onDismiss={() => setVisibleSnackbar("")}
+                    duration={2000}
+                    action={{
+                        label: 'Dismiss',
+                        onPress: () => {
+                            setVisibleSnackbar("")
+                        },
+                    }}
+                    style={{ backgroundColor: "white" }}
+                    wrapperStyle={{ backgroundColor: "white" }}
+                >
+                    <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>{visibleSnackbar}</Text>
+                </Snackbar>
+            )
+        }
 
         const checkIfChatExists = (item) => {
             var exists = false;
@@ -250,6 +276,7 @@ export default function ProfileSettingsPage({ navigation }) {
                 </View>
             </ScrollView>
             <PageSpinner visible={loading} />
+            {snackComponent()}
         </View>
     );
 }

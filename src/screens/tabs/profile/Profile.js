@@ -75,16 +75,17 @@ export default function Profile({ navigation }) {
 
     const settingsIconContainer = () => {
         return (
-            <View style={styles.settingsIconContainer}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('ProfileSettings')}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate('ProfileSettings')}>
+                <View style={styles.settingsIconContainer}>
                     <IconMaterialIcons
                         name={'settings'}
                         color="rgb(102, 94, 94)"
                         size={25}
                     />
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableOpacity>
+
         );
     };
 
@@ -111,14 +112,17 @@ export default function Profile({ navigation }) {
     const chooseFile = async () => {
         var options = {
             title: 'Select Image',
-            customButtons: [
-                { name: 'RemovePic', title: 'Remove Pic' },
-            ],
+
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
             },
         };
+        if (userInfo.displaypic) {
+            options.customButtons = [
+                { name: 'RemovePic', title: 'Remove Pic' }
+            ]
+        }
         ImagePicker.showImagePicker(options, response => {
             console.log('Response = ', response);
             if (response.didCancel) {
