@@ -60,6 +60,27 @@ export default function ProfileSettingsPage({ navigation }) {
         )
     }
 
+    const snackComponent = () => {
+        return (
+            <Snackbar
+                visible={!!visibleSnackbar}
+                onDismiss={() => setVisibleSnackbar("")}
+                duration={2000}
+                action={{
+                    label: 'Dismiss',
+                    onPress: () => {
+                        setVisibleSnackbar("")
+                    },
+                }}
+                style={{ backgroundColor: "white" }}
+                wrapperStyle={{ backgroundColor: "white" }}
+            >
+                <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>{visibleSnackbar}</Text>
+            </Snackbar>
+        )
+    }
+
+
     const helpAndSupportComponent = () => {
 
         const getAdminData = () => {
@@ -88,26 +109,6 @@ export default function ProfileSettingsPage({ navigation }) {
                 setVisibleSnackbar("Please login!")
             }
         };
-
-        const snackComponent = () => {
-            return (
-                <Snackbar
-                    visible={!!visibleSnackbar}
-                    onDismiss={() => setVisibleSnackbar("")}
-                    duration={2000}
-                    action={{
-                        label: 'Dismiss',
-                        onPress: () => {
-                            setVisibleSnackbar("")
-                        },
-                    }}
-                    style={{ backgroundColor: "white" }}
-                    wrapperStyle={{ backgroundColor: "white" }}
-                >
-                    <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>{visibleSnackbar}</Text>
-                </Snackbar>
-            )
-        }
 
         const checkIfChatExists = (item) => {
             var exists = false;
