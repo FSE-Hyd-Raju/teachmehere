@@ -34,7 +34,7 @@ export default function ChatRoom({ route, navigation }) {
     }
 
     useEffect(() => {
-        // dispatch(setCurrentOpenedChat(thread))
+        dispatch(setCurrentOpenedChat(thread))
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
             setGotBlocked(true)
         }
