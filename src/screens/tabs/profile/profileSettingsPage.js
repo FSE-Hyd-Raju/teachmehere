@@ -112,6 +112,8 @@ export default function ProfileSettingsPage({ navigation }) {
 
         const checkIfChatExists = (item) => {
             var exists = false;
+            console.log(JSON.stringify(item), "checkifchatexists")
+            console.log(JSON.stringify(userInfo), "userinfo")
 
             // if (searchChatResults && searchChatResults.length) {
             //     exists = searchChatResults.filter(ele => ele["ids"].indexOf(item.userinfo._id) > -1)
@@ -145,12 +147,14 @@ export default function ProfileSettingsPage({ navigation }) {
                         sendMessage(item)
                     } else {
                         setLoading(false);
+                        console.log("exists", JSON.stringify(item))
                         navigation.navigate('ChatRoom', { thread: item });
                     }
                 });
         }
 
         function sendMessage(item) {
+            console.log("sendmessage", JSON.stringify(item))
             const ref = firestore().collection('THREADS').doc()
             var messageObj = {
                 userDetails: [{
@@ -189,6 +193,7 @@ export default function ProfileSettingsPage({ navigation }) {
                 support: true,
             }
             setLoading(false);
+            console.log("created and navigating", JSON.stringify(itemObj))
             navigation.navigate('ChatRoom', { thread: itemObj });
         }
 

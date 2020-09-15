@@ -85,6 +85,7 @@ export default function feedbackPage({ navigation }) {
     };
 
     const submitFeedback = (obj) => {
+        console.log(obj)
         setLoading(true);
         fetch('https://teachmeproject.herokuapp.com/submitfeedback', {
             method: 'POST',
@@ -96,7 +97,8 @@ export default function feedbackPage({ navigation }) {
         }).then((responseJson) => {
             setVisibleSnackbar("Feedback sent successfully!")
             setLoading(false);
-            navigation.goBack();
+            setTimeout(function () { navigation.goBack(); }, 1000)
+
         }).catch((error) => {
             setVisibleSnackbar("Something went wrong!")
             console.error(error);
@@ -109,7 +111,7 @@ export default function feedbackPage({ navigation }) {
             <Snackbar
                 visible={!!visibleSnackbar}
                 onDismiss={() => setVisibleSnackbar("")}
-                duration={4000}
+                duration={2000}
                 action={{
                     label: 'Dismiss',
                     onPress: () => {

@@ -26,7 +26,7 @@ export default function signupDescPage({ navigation }) {
                 skipBackup: true,
                 path: 'images',
             },
-            quality: 0.5
+            quality: 0.3
         };
         if (userInfo.displaypic) {
             options.customButtons = [

@@ -112,11 +112,11 @@ export default function Profile({ navigation }) {
     const chooseFile = async () => {
         var options = {
             title: 'Select Image',
-
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
             },
+            quality: 0.3
         };
         if (userInfo.displaypic) {
             options.customButtons = [
@@ -184,7 +184,7 @@ export default function Profile({ navigation }) {
     const userDescContainer = () => {
         return (
             <View style={styles.userDescContainer}>
-                <Text numberOfLines={2} style={styles.userDesc}>
+                <Text numberOfLines={4} style={styles.userDesc}>
                     {userInfo.description ? userInfo.description : "Your description will be shown here! You can add your description from change profile page!"}
                 </Text>
             </View>
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderColor: "#dbdbdb",
         backgroundColor: 'rgba(255, 213, 87, 0.63)',
-        height: 75,
+        // height: 75,
         width: 280,
         textAlign: 'center',
         paddingVertical: 15,

@@ -11,7 +11,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
 import { chatSelector, setLoading, setCurrentOpenedChat } from '../../../redux/slices/chatSlice';
 export default function ChatRoom({ route, navigation }) {
-
+    console.log("in chatroom ")
     const { userInfo } = useSelector(loginSelector)
     const [messages, setMessages] = useState([]);
     const [didBlock, setDidBlock] = useState(false);
@@ -28,19 +28,21 @@ export default function ChatRoom({ route, navigation }) {
             'hardwareBackPress',
             function () {
                 checkToRemoveChat();
-                return false;
+                return true;
             },
         );
     }
 
     useEffect(() => {
-        dispatch(setCurrentOpenedChat(thread))
+        // dispatch(setCurrentOpenedChat(thread))
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
             setGotBlocked(true)
         }
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(thread.senderDetailsId) > -1)) {
             setDidBlock(true)
         }
+
+        console.log("in useeffect ")
 
         let backhandler = backButtonHandler()
         const messagesListener = getMessages();
@@ -60,6 +62,9 @@ export default function ChatRoom({ route, navigation }) {
 
     const checkToRemoveChat = () => {
         if (thread.newChat && (!messages || !messages.length)) {
+            console.log("in if", thread.newChat)
+            console.log("in if", messages)
+
             firestore()
                 .collection('THREADS')
                 .doc(thread._id).delete().then(() => {
@@ -72,6 +77,8 @@ export default function ChatRoom({ route, navigation }) {
                 })
         }
         else if (navigation.canGoBack()) {
+            console.log("in else if", thread.support)
+
             if (!thread.support)
                 navigation.popToTop()
             else
@@ -112,6 +119,7 @@ export default function ChatRoom({ route, navigation }) {
 
                     // });
                 }
+                console.log("updagteig masgs", JSON.stringify(messagesArr))
                 setMessages(messagesArr);
             });
     }
@@ -159,11 +167,12 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const updateMessage = async (text) => {
+        console.log("updateMessage", JSON.stringify(thread))
 
         var msgObj = {
             text: text,
-            // serverTime: new Date().getTime(),
-            serverTime: firestore.FieldValue.serverTimestamp(),
+            serverTime: new Date().getTime(),
+            // serverTime: firestore.FieldValue.serverTimestamp(),
             createdAt: new Date().getTime(),
             user: {
                 _id: userInfo._id,
@@ -179,8 +188,8 @@ export default function ChatRoom({ route, navigation }) {
             latestMessage: {
                 text: text,
                 createdAt: new Date().getTime(),
-                // serverTime: new Date().getTime(),
-                serverTime: firestore.FieldValue.serverTimestamp()
+                serverTime: new Date().getTime(),
+                // serverTime: firestore.FieldValue.serverTimestamp()
             },
             deletedIds: firestore.FieldValue.arrayRemove(userInfo._id),
             newChat: false,
@@ -191,6 +200,11 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.newChat) {
             updateObj.deletedIds = firestore.FieldValue.arrayRemove(thread.senderDetailsId)
         }
+
+        console.log("msgObj", JSON.stringify(msgObj))
+        console.log("updateObj", JSON.stringify(updateObj))
+
+
 
         await firestore()
             .collection('THREADS')
@@ -211,7 +225,7 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const sendNotification = (text) => {
-        console.log("thread")
+        console.log("sendnotification", JSON.stringify(thread))
         // console.log(thread)
         // console.log(thread.ids)
         receiverId = thread.ids.filter(ele => ele != userInfo._id);
