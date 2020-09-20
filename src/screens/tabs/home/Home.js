@@ -14,9 +14,6 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-//const categories = require('../post/categories.json');
-
 import { random_rgba } from '../../../utils/random_rgba';
 import CategoryFlatList from '../../../components/common/CategoryFlatList';
 import CategoryChipView from '../../../components/common/CategoryChipView';
@@ -25,14 +22,13 @@ import {
   homeSelector,
   fetchInitialDataWhenAppLoading,
 } from '../../../redux/slices/homeSlice';
-
-const { labelColor } = random_rgba();
-
 const { width: screenWidth } = Dimensions.get('window');
 
 const Home = props => {
   const dispatch = useDispatch();
-  const { categories = [], featuredSkills = [] } = useSelector(homeSelector);
+  const { homeData } = useSelector(homeSelector);
+  const carouselRef = useRef(null);
+
   const showMore = (title, skills) => {
     props.navigation.navigate('SkillListView', {
       title: 'TEST',
@@ -45,55 +41,16 @@ const Home = props => {
     props.navigation.navigate('SkillListView', {
       title: skills.category,
       category: skills,
-      skills: featuredCourses,
+      // skills: featuredCourses,
     });
-  };
-
-  const [entries, setEntries] = useState([]);
-  const [featuredCourses, setFeaturedCourses] = useState([]);
-  const carouselRef = useRef(null);
-
-  const goForward = () => {
-    carouselRef.current.snapToNext();
   };
 
   useEffect(() => {
     dispatch(fetchInitialDataWhenAppLoading());
-    setEntries(categories);
-    setFeaturedCourses(featuredSkills);
   }, []);
 
-  const { index } = useState(0);
-  const renderItem = ({ item, index }, parallaxProps) => {
+  const headerComponent = () => {
     return (
-      <TouchableOpacity onPress={() => showCategorySkills(item)}>
-        <ParallaxImage
-          source={{ uri: item.illustration }}
-          containerStyle={styles.imageContainer}
-          style={styles.image}
-          parallaxFactor={0.4}
-          showSpinner={true}
-          {...parallaxProps}
-        />
-        <Text style={styles.title} numberOfLines={2}>
-          {item.category}
-        </Text>
-        <View style={styles.subTitleContainer}>
-          <Text style={styles.subTitle} numberOfLines={2}>
-            {item.helpText}
-          </Text>
-          <IconMaterialIcons
-            name={item.icon}
-            size={24}
-            color={'white'}
-            style={{ marginLeft: 10 }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-  return (
-    <ScrollView style={styles.container}>
       <View style={styles.logo}>
         <View style={{ flex: 0.9, alignItems: 'center' }}>
           <Image
@@ -104,18 +61,54 @@ const Home = props => {
         <Icons
           style={{ marginTop: 25 }}
           name={'bell-outline'}
-          // color="#fff"
           size={27}
           onPress={() => props.navigation.navigate('Notification')}
         />
       </View>
+    )
+  }
+
+  const carouselComponent = () => {
+
+    const renderItem = ({ item, index }, parallaxProps) => {
+      return (
+        <TouchableOpacity onPress={() => showCategorySkills(item)} style={{ borderColor: "lightgrey", borderRadius: 11, borderWidth: 1, backgroundColor: "rgba(243, 246, 252, 0.7)" }}>
+          <ParallaxImage
+            source={{ uri: item.illustration }}
+            containerStyle={styles.imageContainer}
+            style={styles.image}
+            style={{ resizeMode: item.rezisemode ? item.rezisemode : "contain" }}
+            parallaxFactor={0.4}
+            showSpinner={true}
+            {...parallaxProps}
+          />
+          <Text style={styles.title} numberOfLines={2}>
+            {item.category}
+          </Text>
+          <View style={styles.subTitleContainer}>
+            <IconMaterialIcons
+              name={item.icon}
+              size={20}
+              color={'black'}
+              style={{ marginHorizontal: 10 }}
+            />
+            <Text style={styles.subTitle} numberOfLines={1}>
+              {item.helpText}
+            </Text>
+
+          </View>
+        </TouchableOpacity>
+      );
+    };
+
+    return (
       <Carousel
         ref={carouselRef}
         containerCustomStyle={styles.carouselContainer}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 60}
-        data={entries}
+        itemWidth={screenWidth - 100}
+        data={homeData.categories}
         firstItem={0}
         renderItem={renderItem}
         hasParallaxImages={true}
@@ -126,32 +119,47 @@ const Home = props => {
         lockScrollWhileSnapping={false}
         loop={true}
       />
-      <View style={{ marginTop: 7 }}>
-        <CategoryWrapper
-          title={'Featured Skills'}
-          btnText={'See All'}
-          onButtonPress={() => showMore({})}
-        />
-        <SkillFlatList skills={featuredCourses} />
-      </View>
-      <View style={{ marginTop: 5 }}>
+    )
+  }
+
+  const topCategories = () => {
+    return (
+      <View style={{ marginTop: 25 }}>
         <CategoryWrapper
           title={'Top Categories'}
           btnText={'See All'}
           onButtonPress={() => showMore({})}
         />
         <View style={{ marginLeft: 15 }}>
-          <CategoryChipView data={categories} keyProp={'category'} />
+          <CategoryChipView data={homeData.topCategories} keyProp={'category'} />
         </View>
       </View>
-      <View style={{ marginTop: 5 }}>
-        <CategoryWrapper
-          title={'Recomended Skills'}
-          btnText={'See All'}
-          onButtonPress={() => showMore({})}
-        />
-        <SkillFlatList skills={featuredCourses} />
-      </View>
+    )
+  }
+
+  const dataGroupsComponent = () => {
+    return (
+      Object.keys(homeData.dataGroups).map(group => {
+        return (
+          <View style={{ marginTop: 7 }}>
+            <CategoryWrapper
+              title={group}
+              btnText={'See All'}
+              onButtonPress={() => showMore({})}
+            />
+            <SkillFlatList skills={homeData.dataGroups[group]} categories={homeData.categories} />
+          </View>
+        )
+      })
+    )
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      {headerComponent()}
+      {carouselComponent()}
+      {topCategories()}
+      {dataGroupsComponent()}
     </ScrollView>
   );
 };
@@ -159,7 +167,6 @@ const Home = props => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    marginBottom: 20,
     flex: 1,
   },
   logo: {
@@ -174,30 +181,38 @@ const styles = StyleSheet.create({
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderRadius: 8,
-    height: 250,
+    height: 230,
+    // opacity: 0.6,
+    maxHeight: 160
+
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+    // ...StyleSheet.absoluteFillObject,
+    // resizeMode: "center",
   },
   title: {
     position: 'absolute',
     alignSelf: 'center',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginVertical: 100,
-    color: 'white',
+    fontSize: 20,
+    // fontWeight: 'bold',
+    marginVertical: 165,
+    color: "black",
+    // backgroundColor: "skyblue"
   },
   subTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 14,
+    // fontWeight: 'bold',
+    color: 'black',
+    flex: 0.9,
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center"
   },
   subTitleContainer: {
     flexDirection: 'row',
     position: 'absolute',
     alignSelf: 'center',
-    marginVertical: 150,
+    marginVertical: 200,
   },
 });
 

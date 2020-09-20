@@ -23,37 +23,41 @@ const SkillFlatList = props => {
       skill,
     });
   };
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.cardStyle}
-      onPress={() => showDetails(item)}>
-      <Image
-        source={require('../../assets/img/skill.jpeg')}
-        style={{ height: 95, width: 160 }}
-      />
-      <Text style={styles.skillName} numberOfLines={2}>
-        {item.coursename}
-      </Text>
-      <Text style={styles.teacherName} numberOfLines={1}>
-        {item.username}
-      </Text>
-      <View>
-        <Rating
-          type="star"
-          imageSize={16}
-          startingValue={4}
-          readonly
-          style={{ marginTop: 5, marginLeft: -90 }}
+  const renderItem = ({ item }) => {
+    var categoryImage = (props.categories.filter(cat => cat.category == item.category))
+    return (
+      <TouchableOpacity
+        style={styles.cardStyle}
+        onPress={() => showDetails(item)}>
+        <Image
+          source={categoryImage && categoryImage.length ? { uri: categoryImage[0].illustration } : require('../../assets/img/skill.jpeg')}
+          style={{ height: 95, width: 160 }}
         />
-      </View>
-      <View style={{ marginTop: 7, width: 110 }}>
-        <Price price={item.price} />
-      </View>
-      <View style={styles.platform}>
-        <Text style={styles.platformText}>{item.platform}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+        <Text style={styles.skillName} numberOfLines={2}>
+          {item.coursename}
+        </Text>
+        <Text style={styles.teacherName} numberOfLines={1}>
+          {item.username}
+        </Text>
+        <View>
+          <Rating
+            type="star"
+            imageSize={16}
+            startingValue={4}
+            readonly
+            style={{ marginTop: 5, marginLeft: -90 }}
+          />
+        </View>
+        <View style={{ marginTop: 7, width: 110 }}>
+          <Price price={item.price} />
+        </View>
+        <View style={styles.platform}>
+          <Text style={styles.platformText}>{item.platform}</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
 
   return (
     <View style={styles.container}>

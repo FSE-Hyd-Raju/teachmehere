@@ -5,8 +5,7 @@ import { useSelector } from 'react-redux';
 
 export const initialState = {
   loading: false,
-  categories: [],
-  featuredSkills: [],
+  homeData: [],
 };
 
 const homeSlice = createSlice({
@@ -18,13 +17,11 @@ const homeSlice = createSlice({
     },
     fetchInitialDataSuccuess: (state, { payload }) => {
       state.loading = false;
-      state.categories = payload && payload.categories;
-      state.featuredSkills = payload && payload.featuredSkills;
+      state.homeData = payload;
     },
     fetchInitialDataFailure: state => {
       state.loading = false;
-      state.categories = [];
-      state.featuredSkills = [];
+      state.homeData = [];
     },
   },
 });
@@ -40,7 +37,7 @@ export default homeSlice.reducer;
 
 export function fetchInitialDataWhenAppLoading() {
   return async dispatch => {
-    dispatch(fetchInitialData(true));
+    dispatch(fetchInitialData());
     try {
       const response = await axios.get(fetchInitialDataUrl);
       if (response) {
