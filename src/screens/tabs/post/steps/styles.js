@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-
+import { StyleSheet, Dimensions } from 'react-native';
+const { width: screenWidth } = Dimensions.get('window');
 export default StyleSheet.create({
   btnLabelStyle: {
     textTransform: 'capitalize',
@@ -85,5 +85,48 @@ export default StyleSheet.create({
     paddingLeft: 0,
     backgroundColor: '#fff',
     color: '#424242',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderColor: '#4444',
+    paddingBottom: 10,
+  },
+  inputStyle: {
+    flex: 1,
+    paddingTop: 20,
+    paddingBottom: 0,
+  },
+  textWrapper: {
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    left: 10,
+  },
+  column: {
+    width: screenWidth - 70,
+    padding: 5,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    backgroundColor: '#eff0f1',
+    marginTop: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+  },
+  bullet: {
+    width: 10,
+    marginLeft: 5,
+  },
+  content: {
+    width: 300,
+    paddingTop: 5,
+    paddingLeft: 5,
+  },
+  removeContent: {
+    marginLeft: 15,
+    marginTop: 7,
   },
 });

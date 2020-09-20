@@ -39,7 +39,7 @@ const Steps = props => {
     const {
       skillName,
       skillLevel,
-      content,
+      contents,
       totalHours,
       country,
       individualPrice,
@@ -56,7 +56,7 @@ const Steps = props => {
       platform,
       tags,
       experience,
-      profilesummary,
+      profileSummary,
       linkedInProfile,
       availableForDemo,
     } = state;
@@ -64,7 +64,7 @@ const Steps = props => {
       uid: '12122',
       coursename: skillName,
       courselevel: skillLevel,
-      content: content || '',
+      content: contents || '',
       category: category,
       subcategory: subCategory,
       totalhours: parseInt(totalHours),
@@ -90,17 +90,17 @@ const Steps = props => {
         tentativeschedule: isTentativeSchedule,
       },
       platform: platform,
-      tags: tags && tags.split(','),
-      experience: parseInt(experience),
-      profilesummary: profilesummary,
+      tags: tags && tags.length > 0 ? tags.split(',') : [],
+      experience: parseInt(experience) || 0,
+      profilesummary: profileSummary,
       linkedinprofile: linkedInProfile,
       demo: availableForDemo,
     };
-   // dispatch(postNewSkill(postData));
+    // dispatch(postNewSkill(postData));
     // if (postResponse === 'successfull') {
     //   alert("Post Succussfull")
     // }
-    console.log("postData", postData)
+    console.log('postData', postData);
   };
 
   return (

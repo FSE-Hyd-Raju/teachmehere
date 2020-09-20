@@ -10,6 +10,7 @@ import styles from './styles';
 import { Formik } from 'formik';
 import { Dialog, Portal, List, Button, Appbar } from 'react-native-paper';
 import { postStep1ValidationSchema } from '../../../../utils/validations';
+import { Icon } from 'react-native-elements';
 import {
   DefaultTheme,
   DarkTheme,
@@ -21,13 +22,27 @@ import { Header } from 'react-native-elements';
 
 const Step1 = props => {
   const [showDailog, setshowDailog] = useState(false);
+  const [content, setContent] = useState();
   const { colors } = props.theme;
-  const { getState } = props;
+  const { getState, saveState } = props;
+  const { contents = [] } = getState();
   const options = [
     { value: 'basic', label: 'Basic' },
     { value: 'intermediate', label: 'Intermediate' },
     { value: 'advanced', label: 'Advanced' },
   ];
+
+  const addContent = () => {
+    if (content) {
+      saveState({ contents: [...contents, content] });
+      setContent({});
+    }
+  };
+
+  const removeContent = data => {
+    const newContents = contents.filter(e => e !== data);
+    saveState({ contents: newContents });
+  };
 
   return (
     <View>
@@ -41,7 +56,6 @@ const Step1 = props => {
             skillName: getState().skillName || '',
             skillLevel: getState().skillLevel || '',
             totalHours: getState().totalHours || '',
-            contents: getState().contents || '',
           }}
           validationSchema={postStep1ValidationSchema}
           onSubmit={values => {
@@ -115,18 +129,47 @@ const Step1 = props => {
                 {formProps.touched.totalHours && formProps.errors.totalHours}
               </Text>
               <Text style={styles.label}>Contents</Text>
-              <TextInput
-                placeholderTextColor={'#7777'}
-                style={styles.inputTextArea}
-                onChangeText={formProps.handleChange('contents')}
-                value={formProps.values.contents}
-                multiline={true}
-                numberOfLines={7}
-                scrollEnabled={true}
-                placeholder={
-                  'contents to cover \n  example: \n 1. Agenda \n 2. Introduction\n 3. etc. '
-                }
-              />
+              {!!contents &&
+                contents.map(data => {
+                  return (
+                    <View style={styles.column}>
+                      <View style={styles.row}>
+                        <View style={styles.bullet}>
+                          <Text style={{ fontSize: 22 }}>{'\u2022' + ' '}</Text>
+                        </View>
+                        <View style={styles.row}>
+                          <View style={styles.content}>
+                            <Text>{data}</Text>
+                          </View>
+                        </View>
+                        <View style={styles.row}>
+                          <TouchableOpacity
+                            style={styles.removeContent}
+                            onPress={() => removeContent(data)}>
+                            <Icon name="delete" color="#444" size={18} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  );
+                })}
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.inputStyle}
+                  autoCorrect={true}
+                  placeholder={'Add content line'}
+                  value={content}
+                  onChangeText={val => setContent(val)}
+                />
+                <TouchableOpacity onPress={() => addContent()}>
+                  <Icon
+                    name="add"
+                    color="#000"
+                    size={23}
+                    style={{ marginTop: 20, marginRight: 15 }}
+                  />
+                </TouchableOpacity>
+              </View>
               <View style={styles.btnContainer}>
                 <TouchableOpacity style={styles.btnStyle}>
                   <Button
