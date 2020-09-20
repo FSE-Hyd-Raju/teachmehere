@@ -107,7 +107,7 @@ const Home = props => {
         containerCustomStyle={styles.carouselContainer}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 100}
+        itemWidth={screenWidth - 125}
         data={homeData.categories}
         firstItem={0}
         renderItem={renderItem}
@@ -181,9 +181,9 @@ const styles = StyleSheet.create({
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderRadius: 8,
-    height: 230,
+    height: 210,
     // opacity: 0.6,
-    maxHeight: 160
+    maxHeight: 150
 
   },
   image: {
@@ -193,9 +193,9 @@ const styles = StyleSheet.create({
   title: {
     position: 'absolute',
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: 17,
     // fontWeight: 'bold',
-    marginVertical: 165,
+    marginVertical: 155,
     color: "black",
     // backgroundColor: "skyblue"
   },
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     alignSelf: 'center',
-    marginVertical: 200,
+    marginVertical: 180,
   },
 });
 
