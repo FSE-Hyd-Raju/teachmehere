@@ -91,7 +91,9 @@ const styles = StyleSheet.create({
   platform: {
     marginTop: 8,
     width: 90,
-    backgroundColor: buttonColor,
+    backgroundColor: "white",
+    borderColor: "lightgrey",
+    borderWidth: 1,
     padding: 3,
     borderRadius: 2,
   },
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    color: labelColor,
+    color: "black",
   },
   cardStyle: {
     width: 170,
