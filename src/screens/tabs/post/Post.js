@@ -133,7 +133,7 @@ export default class Post extends Component {
           )}
         </ScrollView>
         {showSteps && (
-          <Modal animationType="slide" visible={showSteps}>
+          <View style={{ flex: 2000 }}>
             <Provider>
               <Steps
                 backFromSteps={this.backFromSteps}
@@ -141,7 +141,7 @@ export default class Post extends Component {
                 subCategory={activeSubCategory.name}
               />
             </Provider>
-          </Modal>
+          </View>
         )}
       </View>
     );

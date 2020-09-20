@@ -20,14 +20,12 @@ const postStep2ValidationSchema = yup.object({
     .min(1),
   noOfPeople: yup.number().min(1),
   groupPrice: yup.number().min(1),
-  languages: yup.array().defined(),
 });
 
 const postStep4ValidationSchema = yup.object({
   platform: yup.string().required(),
   //tags: yup.string().test(),
   experience: yup.number().min(1),
-  profileSummary: yup.string(),
 });
 
 export {

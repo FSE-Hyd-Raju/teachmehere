@@ -96,10 +96,11 @@ const Steps = props => {
       linkedinprofile: linkedInProfile,
       demo: availableForDemo,
     };
-    dispatch(postNewSkill(postData));
-    if (postResponse === 'successfull') {
-      alert("Post Succussfull")
-    }
+   // dispatch(postNewSkill(postData));
+    // if (postResponse === 'successfull') {
+    //   alert("Post Succussfull")
+    // }
+    console.log("postData", postData)
   };
 
   return (
