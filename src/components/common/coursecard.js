@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Card, Avatar, Badge, Icon, Rating } from 'react-native-elements';
 import moment from 'moment';
 
@@ -17,17 +17,17 @@ const bodyTextContentComponent = (course, wishlistClicked) => {
     return (
         <View style={styles.bodyContent}>
             <View style={styles.wishAndText}>
-                <View style={styles.whishlistIcon}>
+                {/* <View style={styles.whishlistIcon}>
                     <Icon
                         size={20}
                         name='heart-o'
                         type='font-awesome'
                         onPress={wishlistClicked} />
-                </View>
+                </View> */}
                 <View style={styles.textContent}>
                     <Text style={styles.courseName} numberOfLines={2}
                     >{course.coursename}</Text>
-                    <Text style={{}}> Level -{course.courselevel} </Text>
+                    <Text style={{}}> {course.courselevel} </Text>
                 </View>
             </View>
             <View style={styles.priceGrid}>
@@ -74,15 +74,15 @@ const footerComponent = (course) => {
                 <Text style={styles.footerTextHeader} numberOfLines={1}> Skill Duration</Text>
                 <Text > {course.totalhours} hours</Text>
             </View>
-            <View style={[styles.footerContent, styles.footerExp, styles.footerBorderLine]}>
+            <View style={[styles.footerContent, styles.footerExp]}>
                 <Text style={styles.footerTextHeader} numberOfLines={1}> Experience</Text>
                 <Text > {course.experience} yrs</Text>
             </View>
-            <View style={[styles.footerContent, styles.footerUpdatedDate]}>
+            {/* <View style={[styles.footerContent, styles.footerUpdatedDate]}>
                 <Text style={[styles.footerTextHeader, styles.footerText]} numberOfLines={1}> Posted On</Text>
                 <Text style={[styles.footerText, styles.footerUpdatedDateText]} numberOfLines={1}
                 > {moment(course.updateddate).fromNow()}</Text>
-            </View>
+            </View> */}
         </View>
     )
 }
@@ -94,7 +94,7 @@ const courseClickedd = () => {
 export default function CourseCard({ course, courseClicked, wishlistClicked }) {
     return (
         <View style={styles.container}>
-            <TouchableOpacity
+            <TouchableWithoutFeedback
                 style={styles.recentSearchsItem}
                 onPress={courseClicked}
             >
@@ -102,12 +102,12 @@ export default function CourseCard({ course, courseClicked, wishlistClicked }) {
                     {bodyComponent(course, wishlistClicked)}
                     {footerComponent(course)}
                 </Card>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         </View >
     );
 }
 
-const cardHeight = 160;
+const cardHeight = 170;
 const bodyHeight = 115;
 const footerHeight = 45;
 const bodyContentWidth = 0.7;
@@ -125,6 +125,12 @@ const styles = StyleSheet.create({
         height: cardHeight,
         padding: 0,
         margin: 5,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
+        borderBottomLeftRadius: 25,
+        // borderBottomRightRadius: 20,
+        elevation: 5
+
         // marginBottom: 20
     },
     body: {
@@ -143,12 +149,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     footerCourse: {
-        width: '39%',
+        // width: '39%',
+        flex: 0.5,
         overflow: 'hidden',
         maxHeight: footerHeight
     },
     footerExp: {
-        width: '28%',
+        // width: '28%',
+        flex: 0.5,
         overflow: 'hidden',
         maxHeight: footerHeight
     },
