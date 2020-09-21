@@ -22,12 +22,12 @@ import {
   homeSelector,
   fetchInitialDataWhenAppLoading,
 } from '../../../redux/slices/homeSlice';
-const { width: screenWidth } = Dimensions.get('window');
 
 const Home = props => {
   const dispatch = useDispatch();
   const { homeData } = useSelector(homeSelector);
   const carouselRef = useRef(null);
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
   const showMore = (title, skills) => {
     props.navigation.navigate('SkillListView', {
@@ -124,7 +124,7 @@ const Home = props => {
 
   const topCategories = () => {
     return (
-      <View style={{ marginTop: 25 }}>
+      <View style={{ marginTop: 40 }}>
         <CategoryWrapper
           title={'Top Categories'}
           btnText={'See All'}
@@ -141,7 +141,7 @@ const Home = props => {
     return (
       Object.keys(homeData.dataGroups).map(group => {
         return (
-          <View style={{ marginTop: 7 }}>
+          <View style={{ marginTop: 30 }}>
             <CategoryWrapper
               title={group}
               btnText={'See All'}
@@ -155,7 +155,7 @@ const Home = props => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} onLayout={() => setScreenWidth(Dimensions.get('window').width)}>
       {headerComponent()}
       {carouselComponent()}
       {topCategories()}
@@ -164,6 +164,8 @@ const Home = props => {
   );
 };
 
+const carouselHeight = 210;
+const carouselImageHeight = carouselHeight - 60;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -181,21 +183,21 @@ const styles = StyleSheet.create({
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderRadius: 8,
-    height: 210,
+    height: carouselHeight,
     // opacity: 0.6,
-    maxHeight: 150
+    maxHeight: carouselImageHeight
 
   },
   image: {
     // ...StyleSheet.absoluteFillObject,
-    // resizeMode: "center",
+    resizeMode: "contain",
   },
   title: {
     position: 'absolute',
     alignSelf: 'center',
     fontSize: 17,
     // fontWeight: 'bold',
-    marginVertical: 155,
+    marginVertical: carouselImageHeight + 5,
     color: "black",
     // backgroundColor: "skyblue"
   },
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     alignSelf: 'center',
-    marginVertical: 180,
+    marginVertical: carouselImageHeight + 30,
   },
 });
 

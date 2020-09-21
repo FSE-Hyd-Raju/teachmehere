@@ -13,6 +13,7 @@ import { random_rgba } from '../../utils/random_rgba';
 import Price from '../common/Price';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import CourseCard from './coursecard';
 
 const { labelColor, buttonColor } = random_rgba();
 const SkillFlatList = props => {
@@ -23,7 +24,8 @@ const SkillFlatList = props => {
       skill,
     });
   };
-  const renderItem = ({ item }) => {
+
+  const renderItemCopy = ({ item }) => {
     var categoryImage = (props.categories.filter(cat => cat.category == item.category))
     return (
       <TouchableOpacity
@@ -58,12 +60,22 @@ const SkillFlatList = props => {
     )
   }
 
+  const renderItem = (item) => {
+    return (
+      <TouchableOpacity
+        style={{ width: 300 }}
+        onPress={() => showDetails(item)}>
+        <CourseCard course={item} courseClicked={() => showDetails(item)} wishlistClicked={() => showDetails(item)} />
+      </TouchableOpacity>
+    )
+  }
+
 
   return (
     <View style={styles.container}>
       <FlatList
         data={props.skills}
-        renderItem={renderItem}
+        renderItem={({ item }) => renderItem(item)}
         showsHorizontalScrollIndicator={false}
         horizontal={true}
         ItemSeparatorComponent={() => <View style={{ margin: 4 }} />}
