@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     textContent: {
-        alignItems: 'center',
+        alignItems: "center",
         textAlign: 'center',
         justifyContent: 'center',
         flex: 0.8

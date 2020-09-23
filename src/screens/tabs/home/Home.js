@@ -39,9 +39,7 @@ const Home = props => {
 
   const showCategorySkills = skills => {
     props.navigation.navigate('SkillListView', {
-      title: skills.category,
       category: skills,
-      // skills: featuredCourses,
     });
   };
 

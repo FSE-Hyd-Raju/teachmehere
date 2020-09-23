@@ -15,6 +15,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import CourseCard from './coursecard';
 
+
 const { labelColor, buttonColor } = random_rgba();
 const SkillFlatList = props => {
   const navigation = useNavigation();

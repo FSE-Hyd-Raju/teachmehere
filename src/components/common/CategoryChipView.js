@@ -11,15 +11,10 @@ const CategoryChipView = props => {
         data.map(item => {
           return (
             <Chip
-              style={{ margin: 5, padding: 3, backgroundColor: "rgba(243, 246, 252, 0.7)" }}
-              avatar={
-                item.icon ? (
-                  <IconMaterialIcons name={item.icon} size={20} />
-                ) : (
-                    <></>
-                  )
-              }
-              onPress={() => console.log('Pressed')}>
+              style={{ margin: 5, padding: 3, borderColor: "lightgrey", borderWidth: 0, backgroundColor: "rgba(243, 246, 252, 0.7)" }}
+              avatar={item.icon ? (<IconMaterialIcons name={item.icon} size={20} />) : null}
+              onPress={() => console.log('Pressed')}
+            >
               {item[keyProp]}
             </Chip>
           );
