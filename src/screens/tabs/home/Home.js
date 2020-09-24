@@ -23,17 +23,18 @@ import {
   fetchInitialDataWhenAppLoading,
 } from '../../../redux/slices/homeSlice';
 
+
 const Home = props => {
   const dispatch = useDispatch();
   const { homeData } = useSelector(homeSelector);
   const carouselRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
-  const showMore = (title, skills) => {
+
+  const showMore = (group) => {
     props.navigation.navigate('SkillListView', {
-      title: 'TEST',
-      category: {},
-      skills,
+      title: group,
+      category: homeData.dataGroups[group]
     });
   };
 
@@ -125,11 +126,12 @@ const Home = props => {
       <View style={{ marginTop: 40 }}>
         <CategoryWrapper
           title={'Top Categories'}
-          btnText={'See All'}
-          onButtonPress={() => showMore({})}
+          hideBtn={true}
+        // btnText={''}
+        // onButtonPress={() => showMore({})}
         />
         <View style={{ marginLeft: 15 }}>
-          <CategoryChipView data={homeData.topCategories} keyProp={'category'} />
+          <CategoryChipView data={homeData.topCategories} keyProp={'category'} categoryClicked={(item) => showCategorySkills(item)} />
         </View>
       </View>
     )
@@ -143,7 +145,7 @@ const Home = props => {
             <CategoryWrapper
               title={group}
               btnText={'See All'}
-              onButtonPress={() => showMore({})}
+              onButtonPress={() => showMore(group)}
             />
             <SkillFlatList skills={homeData.dataGroups[group]} categories={homeData.categories} />
           </View>

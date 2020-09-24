@@ -4,7 +4,7 @@ import { Button } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const CategoryWrapper = props => {
-  const { title, onButtonPress, btnText } = props;
+  const { title, onButtonPress, btnText, hideBtn } = props;
   return (
     <View style={styles.topWrapper}>
       <Text style={styles.title} type="title2">
@@ -13,9 +13,10 @@ const CategoryWrapper = props => {
       {/* <TouchableOpacity onPress={onButtonPress} style={{ padding: 10 }}>
         <Text style={styles.seeAll}>{btnText}</Text>
       </TouchableOpacity> */}
-      <Button mode="text" color={'black'} onPress={onButtonPress}>
+      {!hideBtn && <Button mode="text" color={'black'} onPress={onButtonPress}>
         {btnText}
       </Button>
+      }
     </View>
   );
 };
