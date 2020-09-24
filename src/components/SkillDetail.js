@@ -1,25 +1,21 @@
-import React from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  Text,
-  ScrollView,
-  Image,
-  Share
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, FlatList, Text, ScrollView, Image, Share } from 'react-native';
 import { Icon, Rating } from 'react-native-elements';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Price from './common/Price';
 import { Card, ListItem } from 'react-native-elements';
-import { Button, Avatar } from 'react-native-paper';
+import { Button, Avatar, Snackbar } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import globalStyles from '../screens/tabs/post/steps/styles';
 import { random_rgba } from '../utils/random_rgba';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocale } from 'yup';
 import { homeSelector } from '../redux/slices/homeSlice';
+import { loginSelector } from '../redux/slices/loginSlice';
+import { profileSelector, setRequestedSkills } from '../redux/slices/profileSlice';
+import PageSpinner from '../components/common/PageSpinner';
+
 
 const { labelColor, buttonColor } = random_rgba();
 
@@ -27,7 +23,68 @@ const { labelColor, buttonColor } = random_rgba();
 export default function SkillDetail({ route, navigation }) {
   const { skill } = route.params;
   const { homeData } = useSelector(homeSelector);
+  const { userInfo } = useSelector(loginSelector);
+  const { requestedSkills } = useSelector(profileSelector);
+  const [visibleSnackbar, setVisibleSnackbar] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [requestedObj, setRequestedObj] = React.useState({});
 
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    if (userInfo._id && (!requestedSkills || !requestedSkills.length)) {
+      getRequetedCourses(userInfo._id)
+    } else if (userInfo._id) {
+      let reqObj = requestedSkills.filter(obj => obj.uid == userInfo._id)
+      if (reqObj.length) setRequestedObj(reqObj[0])
+    }
+  }, []);
+
+  const getRequetedCourses = (uid) => {
+    setLoading(true);
+    fetch('https://teachmeproject.herokuapp.com/requestedCoursesByid', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "uid": uid
+      })
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        console.log(JSON.stringify(responseJson))
+        if (responseJson && responseJson.length)
+          dispatch(setRequestedSkills(responseJson))
+        let reqObj = responseJson.filter(obj => obj.uid == userInfo._id)
+        if (reqObj.length) setRequestedObj(reqObj[0])
+        setLoading(false);
+      }).catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }
+
+  const snackComponent = () => {
+    return (
+      <Snackbar
+        visible={!!visibleSnackbar}
+        onDismiss={() => setVisibleSnackbar("")}
+        duration={2000}
+        action={{
+          label: 'Dismiss',
+          onPress: () => {
+            setVisibleSnackbar("")
+          },
+        }}
+        style={{ backgroundColor: "white" }}
+        wrapperStyle={{ backgroundColor: "white" }}
+      >
+        <Text style={{ color: "black", fontSize: 16, letterSpacing: 1 }}>{visibleSnackbar}</Text>
+      </Snackbar>
+    )
+  }
 
   const headerComponent = () => {
     var categoryImage = (homeData.categories.filter(cat => cat.category == skill.category));
@@ -183,20 +240,121 @@ export default function SkillDetail({ route, navigation }) {
   }
 
   const requestButtonComponent = () => {
-    const requestBtn = () => {
 
+    const requestBtn = () => {
+      if (!userInfo._id) {
+        setVisibleSnackbar("Please login!")
+      } else {
+        sendRequest(skill)
+      }
     }
+
+    const sendRequest = (skill) => {
+      setLoading(true);
+      fetch('https://teachmeproject.herokuapp.com/addToRequestedCourses', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "uid": userInfo._id,
+          "courseid": skill._id,
+        })
+
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          addFirebaseNotification(skill);
+        }).catch((error) => {
+          setVisibleSnackbar("Something went wrong!")
+          console.error(error);
+          setLoading(false);
+        });
+    }
+
+    const addFirebaseNotification = (skill) => {
+      notifyobj = {
+        senderName: userInfo.username,
+        senderId: userInfo._id,
+        receiverName: skill.username,
+        receiverId: skill.uid,
+        status: "PENDING",
+        type: "REQUEST",
+        createdAt: new Date().getTime(),
+        message: "Lets be friends..!"
+      }
+
+      firestore().collection('NOTIFICATIONS').add(notifyobj).then(docRef => {
+        sendNotification(skill, notifyobj)
+      }, err => {
+        setVisibleSnackbar("Something went wrong!")
+        console.error(error);
+        setLoading(false);
+      });
+    }
+
+    const sendNotification = (skill, notifyobj) => {
+      fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "username": userInfo.username,
+          "message": notifyobj.message,
+          "_id": skill.uid,
+          "data": notifyobj
+        })
+
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          setVisibleSnackbar("Request sent to the user!")
+          setLoading(false);
+        }).catch((error) => {
+          setVisibleSnackbar("Something went wrong!")
+          console.error(error);
+          setLoading(false);
+        });
+    }
+
+    const checkIfChatExists = (item) => {
+      exists = false;
+      firestore().collection('THREADS').
+        where("ids", "array-contains", user._id).
+        get().then(querySnapshot => {
+          querySnapshot.forEach(documentSnapshot => {
+            data = documentSnapshot.data();
+            if (data["ids"].indexOf(item._id) > -1) {
+              exists = true;
+
+              item = {
+                ...item,
+                _id: documentSnapshot.id,
+                name: item.username
+              }
+            }
+          })
+          if (!exists) {
+            sendMessage(item)
+          } else {
+            navigation.navigate('Room', { thread: item });
+          }
+        });
+    };
+
+
+
     return (
       <View>
         <TouchableOpacity style={globalStyles.btnStyle}>
-          <Button
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}
-            onPress={requestBtn}
-          >
-            Request
-        </Button>
+          {!requestedObj.status && <Button mode="contained" title="Request" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={requestBtn} />
+          }
+          {(requestedObj.status == "REJECTED" || requestedObj.status == "PENDING") &&
+            <Button disabled={true} mode="contained" title={requestedObj.status} color={'black'} labelStyle={globalStyles.btnLabelStyle} />
+          }
+          {requestedObj.status == "ACCEPTED" && <Button mode="contained" title="Message" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={checkIfChatExists} />
+          }
         </TouchableOpacity>
       </View>
     )
@@ -212,6 +370,8 @@ export default function SkillDetail({ route, navigation }) {
         {contentComponent()}
         {descriptionComponent()}
       </View>
+      {snackComponent()}
+      <PageSpinner visible={loading} />
     </ScrollView>
   );
 };
