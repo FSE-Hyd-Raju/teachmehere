@@ -21,13 +21,16 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const { labelColor, buttonColor } = random_rgba();
 
 export default function SkillListView({ route, navigation }) {
-  const { category } = route.params;
+  const { category, skills, title } = route.params;
   const [subCatSelected, setSubCatSelected] = useState([])
   const [categorySkills, setCategorySkills] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    fetchCategoryData()
+    if (!skills)
+      fetchCategoryData()
+    else
+      setCategorySkills(skills)
   }, [subCatSelected])
 
   const loadingComponent = () => {
@@ -62,8 +65,7 @@ export default function SkillListView({ route, navigation }) {
 
   const showDetails = skill => {
     navigation.navigate('SkillDetail', {
-      title: '',
-      skill,
+      skill: skill,
     });
   };
 
@@ -75,7 +77,7 @@ export default function SkillListView({ route, navigation }) {
           size={27}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>{category.category}</Text>
+        <Text style={styles.headerTitle}>{title}</Text>
         {/* <Icons
         name={'filter'}
         size={27}
@@ -144,7 +146,7 @@ export default function SkillListView({ route, navigation }) {
             )
           })}
         {loading && loadingComponent()}
-        {(!categorySkills || (categorySkills && !categorySkills.length)) && !loading && noDataComponent()}
+        {(!categorySkills || (categorySkills && !categorySkills.length)) && !loading && !skills && noDataComponent()}
       </View>
     )
     // return (

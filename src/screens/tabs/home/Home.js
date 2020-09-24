@@ -24,7 +24,7 @@ import {
 } from '../../../redux/slices/homeSlice';
 
 
-const Home = props => {
+export default function Home(props) {
   const dispatch = useDispatch();
   const { homeData } = useSelector(homeSelector);
   const carouselRef = useRef(null);
@@ -34,13 +34,14 @@ const Home = props => {
   const showMore = (group) => {
     props.navigation.navigate('SkillListView', {
       title: group,
-      category: homeData.dataGroups[group]
+      skills: homeData.dataGroups[group]
     });
   };
 
-  const showCategorySkills = skills => {
+  const showCategorySkills = category => {
     props.navigation.navigate('SkillListView', {
-      category: skills,
+      title: !!category.category ? category.category : "",
+      category: category,
     });
   };
 
@@ -139,18 +140,20 @@ const Home = props => {
 
   const dataGroupsComponent = () => {
     return (
-      Object.keys(homeData.dataGroups).map(group => {
-        return (
-          <View style={{ marginTop: 30 }}>
-            <CategoryWrapper
-              title={group}
-              btnText={'See All'}
-              onButtonPress={() => showMore(group)}
-            />
-            <SkillFlatList skills={homeData.dataGroups[group]} categories={homeData.categories} />
-          </View>
-        )
-      })
+      <View style={{ marginTop: 10 }}>
+        {Object.keys(homeData.dataGroups).map(group => {
+          return (
+            <View style={{ marginTop: 18 }}>
+              <CategoryWrapper
+                title={group}
+                btnText={'See All'}
+                onButtonPress={() => showMore(group)}
+              />
+              <SkillFlatList skills={homeData.dataGroups[group]} categories={homeData.categories} />
+            </View>
+          )
+        })}
+      </View>
     )
   }
 
@@ -218,4 +221,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+

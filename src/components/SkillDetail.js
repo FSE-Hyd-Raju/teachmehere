@@ -6,6 +6,7 @@ import {
   Text,
   ScrollView,
   Image,
+  Share
 } from 'react-native';
 import { Icon, Rating } from 'react-native-elements';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,61 +17,94 @@ import { Button, Avatar } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import globalStyles from '../screens/tabs/post/steps/styles';
 import { random_rgba } from '../utils/random_rgba';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLocale } from 'yup';
+import { homeSelector } from '../redux/slices/homeSlice';
 
 const { labelColor, buttonColor } = random_rgba();
-const SkillDetail = ({ route, navigation }) => {
-  const { title, skill } = route.params || {};
-  return (
-    <ScrollView style={styles.container}>
-      <Image
-        source={require('../assets/img/skill.jpeg')}
-        style={styles.imgStyle}
-      />
-      <View style={styles.header}>
-        <Icons
-          name={'keyboard-backspace'}
-          size={27}
-          color={'white'}
-          style={{ fontWeight: 'bold' }}
-          onPress={() => navigation.goBack()}
+
+
+export default function SkillDetail({ route, navigation }) {
+  const { skill } = route.params;
+  const { homeData } = useSelector(homeSelector);
+
+
+  const headerComponent = () => {
+    var categoryImage = (homeData.categories.filter(cat => cat.category == skill.category));
+
+    const onShare = async () => {
+      try {
+        const result = await Share.share({
+          title: 'Skill On',
+          message: 'Found a good course about ' + skill.coursename + ' for just ' + skill.currency + skill.price.oneonone + ' in SkillOn App, Check it out! AppLink :https://play.google.com/store/apps/details?id=com.TAGIdeas.BMB',
+          url: 'https://play.google.com/store/apps/details?id=com.TAGIdeas.BMB'
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    return (
+      <View>
+        <Image
+          // source={require('../assets/img/skill.jpeg')}
+          source={categoryImage && categoryImage.length ? { uri: categoryImage[0].illustration } : require('../assets/img/skill.jpeg')}
+          style={styles.imgStyle}
         />
-        <MaterialCommunityIcons
-          name="share-variant"
-          size={26}
-          color={'white'}
-        />
+        <View style={styles.header}>
+          <Icons
+            name={'keyboard-backspace'}
+            size={27}
+            color={'white'}
+            style={{ fontWeight: 'bold' }}
+            onPress={() => navigation.goBack()}
+          />
+          <MaterialCommunityIcons
+            name="share-variant"
+            size={26}
+            color={'white'}
+            onPress={() => onShare()}
+          />
+        </View>
       </View>
-      <View style={styles.skillDetailView}>
+    )
+  }
+
+  const imageComponent = () => {
+    return (
+      <View>
         <View style={{ alignItems: 'center' }}>
           <Avatar.Image
             size={150}
             style={{ marginTop: -80, elevation: 10 }}
-            source={require('../assets/img/defaultAvatar.png')}
+            source={skill.displaypic ? { uri: skill.displaypic } : require('../assets/img/default-mask-avatar.png')}
+          // source={require('../assets/img/defaultAvatar.png')}
           />
-          <Text
-            style={{
-              marginTop: 10,
-              color: '#444',
-              fontWeight: 'bold',
-              fontSize: 16,
-              textTransform: 'capitalize',
-            }}>
+          <Text style={{ marginTop: 10, color: '#444', fontWeight: 'bold', fontSize: 16, textTransform: 'capitalize' }}>
             {skill.username}
           </Text>
-          <View style={{ flexDirection: 'row', padding: 3 }}>
+          {/* <View style={{ flexDirection: 'row', padding: 3 }}>
             <MaterialCommunityIcons name="account-outline" size={17} />
             <Text style={{ marginLeft: 5 }}>91 students</Text>
           </View>
           <View style={{ flexDirection: 'row', padding: 3 }}>
             <MaterialCommunityIcons name="book-outline" size={17} />
             <Text style={{ marginLeft: 5 }}>11 skills</Text>
-          </View>
+          </View> */}
           <View style={{ marginLeft: 90 }}>
             <Rating
               type="star"
               imageSize={15}
-              startingValue={4}
+              startingValue={skill.avgrating}
               readonly
               style={{ marginTop: 5, marginLeft: -90 }}
             />
@@ -79,71 +113,104 @@ const SkillDetail = ({ route, navigation }) => {
             mode="text"
             color={'#0052cc'}
             labelStyle={{ fontSize: 14, textTransform: 'capitalize' }}
-            onPress={() => console.log('Pressed')}>
+            onPress={() => navigation.navigate("UserDetailsPage", { userinfo: skill })}>
             View profile
           </Button>
         </View>
-        <MaterialCommunityIcons
+        {/* <MaterialCommunityIcons
           style={{ marginLeft: '88%', position: 'absolute', padding: 10 }}
           name="heart"
           size={26}
-        />
+        /> */}
+      </View>
+    )
+  }
+
+  const bodyComponent = () => {
+    return (
+      <View>
         <Text style={styles.skillName}>{skill.coursename}</Text>
-        <View style={{ width: '40%', padding: 20 }}>
-          <Price price={skill.price} />
+        <View style={{ width: '40%', padding: 20, paddingTop: 0 }}>
+          <Price price={skill.price} currency={skill.currency} />
         </View>
         <View style={styles.platform}>
           <Text style={styles.platformText}>{skill.platform}</Text>
         </View>
-        <View>
-          <TouchableOpacity style={globalStyles.btnStyle}>
-            <Button
-              mode="contained"
-              color={'black'}
-              labelStyle={globalStyles.btnLabelStyle}
-              //onPress={formProps.handleSubmit}
-            >
-              Request
-            </Button>
-          </TouchableOpacity>
-        </View>
-        <View style={[styles.shadowBottonContainerStyle, { marginTop: 20 }]}>
-          <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold' }}>
-            What will you learn ?
+      </View>
+    )
+  }
+
+  const contentComponent = () => {
+    return (
+      <View style={[styles.shadowBottonContainerStyle, { marginTop: 20 }]}>
+        <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold' }}>
+          What will you learn ?
           </Text>
-          <View style={styles.container}>
-            <FlatList
-              data={[
-                { key: 'Devin ghgjh jhjhbhj jhb' },
-                { key: 'Dan cvbngf ggfhj' },
-                { key: 'Dominic gfhgfh hghg' },
-                { key: 'Jackson jhgjhg hghjgj jhgjh' },
-                { key: 'Jameshgbjhbjmnbj jhjhbh' },
-              ]}
-              renderItem={({ item }) => (
-                <View style={{ flexDirection: 'row' }}>
-                  <MaterialCommunityIcons
-                    name="check"
-                    size={16}
-                    style={{ padding: 7 }}
-                  />
-                  <Text style={styles.item}>{item.key}</Text>
-                </View>
-              )}
-            />
-          </View>
+        <View style={styles.container}>
+          {!!skill.content && !!skill.content.length && <FlatList
+            data={skill.content}
+            renderItem={({ item }) => (
+              <View style={{ flexDirection: 'row' }}>
+                <MaterialCommunityIcons
+                  name="check"
+                  size={16}
+                  style={{ padding: 7 }}
+                />
+                <Text style={styles.item}>{item}</Text>
+              </View>
+            )}
+          />}
+          {!skill.content && !skill.content.length && <Text style={{ padding: 20, fontSize: 15 }}>Contents not mentioned</Text>}
         </View>
-        <View style={[styles.shadowBottonContainerStyle, { marginTop: 20 }]}>
-          <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold' }}>
-            Description
-          </Text>
-          <Text style={{ padding: 10 }}>
-            Use whenever building standard forms where there's enough space for
-            labels and other associated information in the view. Form groups
-            ensure correct spacing around form elements and can be arranged in
-            various configurations.
-          </Text>
-        </View>
+      </View>
+    )
+  }
+
+  const descriptionComponent = () => {
+    return (
+      <View style={[styles.shadowBottonContainerStyle, { marginTop: 20 }]}>
+        <Text style={{ padding: 10, fontSize: 20, fontWeight: 'bold' }}>
+          Description
+      </Text>
+        {!!skill.description && <Text style={{ padding: 10 }}>
+          {skill.description}
+        </Text>
+        }
+        {!skill.description && <Text style={{ padding: 20, fontSize: 15 }}>
+          Description not mentioned</Text>}
+      </View>
+    )
+  }
+
+  const requestButtonComponent = () => {
+    const requestBtn = () => {
+
+    }
+    return (
+      <View>
+        <TouchableOpacity style={globalStyles.btnStyle}>
+          <Button
+            mode="contained"
+            color={'black'}
+            labelStyle={globalStyles.btnLabelStyle}
+            onPress={requestBtn}
+          >
+            Request
+        </Button>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      {headerComponent()}
+      <View style={styles.skillDetailView}>
+        {imageComponent()}
+        {bodyComponent()}
+        {requestButtonComponent()}
+        {contentComponent()}
+        {descriptionComponent()}
       </View>
     </ScrollView>
   );
@@ -168,7 +235,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 20,
     width: 90,
-    backgroundColor: buttonColor,
+    backgroundColor: "rgba(243, 246, 252, 0.7)",
+    borderColor: "lightgrey",
+    borderWidth: 0.3,
     padding: 3,
     borderRadius: 2,
   },
@@ -176,7 +245,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    color: labelColor,
+    color: "black",
   },
   headerTitle: {
     fontSize: 19,
@@ -185,9 +254,9 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   imgStyle: {
-    height: 350,
-    width: '100%',
-    opacity: 0.7,
+    height: 340,
+    // width: '100%',
+    // opacity: 0.7,
   },
   skillName: {
     fontWeight: 'bold',
@@ -218,4 +287,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SkillDetail;
+

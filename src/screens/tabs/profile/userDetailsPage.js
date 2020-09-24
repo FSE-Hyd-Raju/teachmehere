@@ -12,7 +12,7 @@ export default function UserDetailsPage({ route, navigation }) {
     const [courseData, setCourseData] = React.useState([]);
 
     useEffect(() => {
-        getPostedCourses(userinfo.userid)
+        getPostedCourses(userinfo.uid)
     }, []);
 
     const getPostedCourses = (uid) => {
