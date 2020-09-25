@@ -141,7 +141,7 @@ export default function Home(props) {
   const dataGroupsComponent = () => {
     return (
       <View style={{ marginTop: 10 }}>
-        {Object.keys(homeData.dataGroups).map(group => {
+        {!!homeData && !!homeData.dataGroups && !!homeData.dataGroups.length && Object.keys(homeData.dataGroups).map(group => {
           return (
             <View style={{ marginTop: 18 }}>
               <CategoryWrapper
