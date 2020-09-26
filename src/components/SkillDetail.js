@@ -39,7 +39,7 @@ export default function SkillDetail({ route, navigation }) {
       let reqObj = requestedSkills.filter(obj => obj.uid == userInfo._id)
       if (reqObj.length) setRequestedObj(reqObj[0])
     }
-  }, []);
+  }, [userInfo]);
 
   const getRequetedCourses = (uid) => {
     setLoading(true);
@@ -278,7 +278,7 @@ export default function SkillDetail({ route, navigation }) {
         senderId: userInfo._id,
         receiverName: skill.username,
         receiverId: skill.uid,
-        status: "PENDING",
+        request_status: "PENDING",
         type: "REQUEST",
         createdAt: new Date().getTime(),
         message: "Lets be friends..!"
@@ -343,36 +343,37 @@ export default function SkillDetail({ route, navigation }) {
         });
     };
 
-
-
     return (
       <View>
-        <TouchableOpacity style={globalStyles.btnStyle}>
-          {!requestedObj.status && <Button mode="contained" title="Request" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={requestBtn} />
-          }
-          {(requestedObj.status == "REJECTED" || requestedObj.status == "PENDING") &&
-            <Button disabled={true} mode="contained" title={requestedObj.status} color={'black'} labelStyle={globalStyles.btnLabelStyle} />
-          }
-          {requestedObj.status == "ACCEPTED" && <Button mode="contained" title="Message" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={checkIfChatExists} />
-          }
-        </TouchableOpacity>
+        {/* <View style={globalStyles.btnStyle}> */}
+        <Text>{JSON.stringify(requestedObj)}</Text>
+        {!requestedObj.request_status && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={requestBtn} > Request</Button>
+        }
+        {(requestedObj.request_status == "REJECTED" || requestedObj.request_status == "PENDING") &&
+          <Button disabled={true} mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle}>{requestedObj.request_status}</Button>
+        }
+        {requestedObj.request_status == "ACCEPTED" && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={checkIfChatExists} >Message</Button>
+        }
+        {/* </View> */}
       </View>
     )
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {headerComponent()}
-      <View style={styles.skillDetailView}>
-        {imageComponent()}
-        {bodyComponent()}
-        {requestButtonComponent()}
-        {contentComponent()}
-        {descriptionComponent()}
-      </View>
+    <View style={styles.container}>
+      <ScrollView >
+        {headerComponent()}
+        <View style={styles.skillDetailView}>
+          {imageComponent()}
+          {bodyComponent()}
+          {!requestedObj || !userInfo || (requestedObj && userInfo && requestedObj.courseuid != userInfo._id) && requestButtonComponent()}
+          {contentComponent()}
+          {descriptionComponent()}
+        </View>
+        <PageSpinner visible={loading} />
+      </ScrollView>
       {snackComponent()}
-      <PageSpinner visible={loading} />
-    </ScrollView>
+    </View>
   );
 };
 

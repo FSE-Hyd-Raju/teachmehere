@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  Image,
-  Platform,
-} from 'react-native';
+import { View, StyleSheet, Dimensions, Text, Image, Platform } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import SkillFlatList from '../../../components/common/SkillFlatList';
 import CategoryWrapper from '../../../components/common/CategoryWrapper';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
@@ -26,7 +20,7 @@ import {
 
 export default function Home(props) {
   const dispatch = useDispatch();
-  const { homeData } = useSelector(homeSelector);
+  const { homeData, loading } = useSelector(homeSelector);
   const carouselRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
@@ -124,6 +118,7 @@ export default function Home(props) {
 
   const topCategories = () => {
     return (
+      !!homeData && !!homeData.topCategories &&
       <View style={{ marginTop: 40 }}>
         <CategoryWrapper
           title={'Top Categories'}
@@ -141,7 +136,7 @@ export default function Home(props) {
   const dataGroupsComponent = () => {
     return (
       <View style={{ marginTop: 10 }}>
-        {!!homeData && !!homeData.dataGroups && !!homeData.dataGroups.length && Object.keys(homeData.dataGroups).map(group => {
+        {!!homeData && !!homeData.dataGroups && !!(Object.keys(homeData.dataGroups)).length && Object.keys(homeData.dataGroups).map(group => {
           return (
             <View style={{ marginTop: 18 }}>
               <CategoryWrapper
@@ -157,13 +152,24 @@ export default function Home(props) {
     )
   }
 
+  const loadingComponent = () => {
+    return (
+      <View style={styles.loadingBar}>
+        <ActivityIndicator size={35} animating={true} color={"black"} />
+      </View>
+    )
+  }
+
   return (
-    <ScrollView style={styles.container} onLayout={() => setScreenWidth(Dimensions.get('window').width)}>
-      {headerComponent()}
-      {carouselComponent()}
-      {topCategories()}
-      {dataGroupsComponent()}
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView onLayout={() => setScreenWidth(Dimensions.get('window').width)}>
+        {headerComponent()}
+        {carouselComponent()}
+        {topCategories()}
+        {dataGroupsComponent()}
+      </ScrollView>
+      {!!loading && loadingComponent()}
+    </View>
   );
 };
 
@@ -173,6 +179,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
+  },
+  loadingBar: {
+    // marginTop: 40
+    alignItems: "center",
+    // justifyContent: "space-around",
+    flex: 1
   },
   logo: {
     alignItems: 'center',
