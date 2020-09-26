@@ -16,14 +16,20 @@ import {
   homeSelector,
   fetchInitialDataWhenAppLoading,
 } from '../../../redux/slices/homeSlice';
+import messaging from '@react-native-firebase/messaging';
+import { loginSelector } from '../../../redux/slices/loginSlice';
+import PushNotification from 'react-native-push-notification';
+import firestore from '@react-native-firebase/firestore';
 
 
 export default function Home(props) {
   const dispatch = useDispatch();
   const { homeData, loading } = useSelector(homeSelector);
+  const { userInfo } = useSelector(loginSelector)
   const carouselRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
-
+  var notificunsubscribe = null;
+  var focusNotiMsg = null
 
   const showMore = (group) => {
     props.navigation.navigate('SkillListView', {
@@ -41,7 +47,55 @@ export default function Home(props) {
 
   useEffect(() => {
     dispatch(fetchInitialDataWhenAppLoading());
-  }, []);
+    notificunsubscribe && notificunsubscribe();
+
+    if (userInfo._id) {
+      notificationListener();
+      notificunsubscribe = appOpenedNotificationListener()
+    }
+  }, [userInfo]);
+
+  const notificationListener = async () => {
+    PushNotification.configure({
+      onNotification: function (notification) {
+        if (focusNotiMsg && focusNotiMsg.data && focusNotiMsg.data.data && JSON.parse(focusNotiMsg.data.data).type == "CHAT") {
+          navigation.push('Room', { thread: JSON.parse(focusNotiMsg.data.data) });
+        }
+        else if (notification && notification.data && notification.data.type == "CHAT") {
+          navigation.push('Room', { thread: notification.data });
+        }
+        else {
+          navigation.push('NotificationRoom');
+        }
+      },
+      popInitialNotification: true,
+      requestPermissions: true
+    })
+  }
+
+  const appOpenedNotificationListener = () => {
+    return messaging().onMessage(async remoteMessage => {
+      console.log("noti")
+      console.log(remoteMessage)
+
+      focusNotiMsg = remoteMessage;
+      PushNotification.localNotification({
+        // largeIcon: "ic_foreground",
+        smallIcon: "ic_foreground",
+        autoCancel: true,
+        bigText: remoteMessage.data.body,
+        // subText: remoteMessage.data.body,
+        title: remoteMessage.data.title,
+        message: remoteMessage.data.body,
+        vibrate: true,
+        vibration: 300,
+        playSound: true,
+        soundName: 'default',
+      })
+
+      // alert('A new FCM message arrived!' + JSON.stringify(remoteMessage));
+    });
+  }
 
   const headerComponent = () => {
     return (

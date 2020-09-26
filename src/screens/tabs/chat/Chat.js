@@ -25,12 +25,9 @@ export default function Chat({ navigation }) {
 
   useEffect(() => {
     dispatch(clearData())
-    unsubscribe && unsubscribe()
-    notificunsubscribe && notificunsubscribe();
+
     if (userInfo._id) {
       unsubscribe = getChats()
-      notificationListener();
-      notificunsubscribe = appOpenedNotificationListener()
     }
     // return () => unsubscribe();
 
@@ -40,44 +37,7 @@ export default function Chat({ navigation }) {
     return dispatch(fetchChats(userInfo))
   }
 
-  const notificationListener = async () => {
-    PushNotification.configure({
-      onNotification: function (notification) {
-        if (focusNotiMsg && focusNotiMsg.data && focusNotiMsg.data.data && JSON.parse(focusNotiMsg.data.data).type == "CHAT") {
-          navigation.push('Room', { thread: JSON.parse(focusNotiMsg.data.data) });
-        }
-        else if (notification && notification.data && notification.data.type == "CHAT") {
-          navigation.push('Room', { thread: notification.data });
-        }
-        else {
-          navigation.push('NotificationRoom');
-        }
-      },
-      popInitialNotification: true,
-      requestPermissions: true
-    })
-  }
 
-  appOpenedNotificationListener = () => {
-    return messaging().onMessage(async remoteMessage => {
-      focusNotiMsg = remoteMessage;
-      PushNotification.localNotification({
-        // largeIcon: "ic_foreground",
-        smallIcon: "ic_foreground",
-        autoCancel: true,
-        bigText: remoteMessage.data.body,
-        // subText: remoteMessage.data.body,
-        title: remoteMessage.data.title,
-        message: remoteMessage.data.body,
-        vibrate: true,
-        vibration: 300,
-        playSound: true,
-        soundName: 'default',
-      })
-
-      // alert('A new FCM message arrived!' + JSON.stringify(remoteMessage));
-    });
-  }
 
   const searchFun = (query) => {
     const newData = chatResults.filter((ele) => (ele.name).toLowerCase().includes(query.toLowerCase()));

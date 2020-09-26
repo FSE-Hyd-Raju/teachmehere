@@ -127,9 +127,11 @@ export function onLoginPressed(param) {
 
 
 export function logOutUser(param) {
+
   param.onSuccess();
 
   return async (dispatch, getState) => {
+    dispatch(setReqFavPostedCount({ coursedetailscount: 0, requestedcoursescount: 0, myfavoritescount: 0 }))
     clearAsyncData();
     dispatch(logoutSuccess());
   }

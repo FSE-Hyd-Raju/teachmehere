@@ -26,6 +26,7 @@ import {
   setRequestedSkills,
 } from '../redux/slices/profileSlice';
 import PageSpinner from '../components/common/PageSpinner';
+import firestore from '@react-native-firebase/firestore';
 
 const { labelColor, buttonColor } = random_rgba();
 
@@ -44,8 +45,8 @@ export default function SkillDetail({ route, navigation }) {
     if (userInfo._id && (!requestedSkills || !requestedSkills.length)) {
       getRequetedCourses(userInfo._id);
     } else if (userInfo._id) {
-      let reqObj = requestedSkills.filter(obj => obj.uid == userInfo._id);
-      if (reqObj.length) setRequestedObj(reqObj[0]);
+      let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
+      if (reqObj.length) setRequestedObj(reqObj[0])
     }
   }, [userInfo]);
 
@@ -65,9 +66,9 @@ export default function SkillDetail({ route, navigation }) {
       .then(responseJson => {
         console.log(JSON.stringify(responseJson));
         if (responseJson && responseJson.length)
-          dispatch(setRequestedSkills(responseJson));
-        let reqObj = responseJson.filter(obj => obj.uid == userInfo._id);
-        if (reqObj.length) setRequestedObj(reqObj[0]);
+          dispatch(setRequestedSkills(responseJson))
+        let reqObj = responseJson.filter(obj => obj.request_uid == userInfo._id)
+        if (reqObj.length) setRequestedObj(reqObj[0])
         setLoading(false);
       })
       .catch(error => {
@@ -170,7 +171,7 @@ export default function SkillDetail({ route, navigation }) {
                 ? { uri: skill.displaypic }
                 : require('../assets/img/default-mask-avatar.png')
             }
-            // source={require('../assets/img/defaultAvatar.png')}
+          // source={require('../assets/img/defaultAvatar.png')}
           />
           <Text
             style={{
@@ -198,7 +199,7 @@ export default function SkillDetail({ route, navigation }) {
               readonly
               style={{ marginTop: 5, marginLeft: -90 }}
             />
-             <Text style={styles.usersRated}>({skill.usersrated})</Text>
+            <Text style={styles.usersRated}>({skill.usersrated})</Text>
           </View>
           <Button
             mode="text"
@@ -302,12 +303,14 @@ export default function SkillDetail({ route, navigation }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          uid: userInfo._id,
-          courseid: skill._id,
-        }),
-      })
-        .then(response => response.json())
-        .then(responseJson => {
+          "uid": userInfo._id,
+          "courseid": skill._id,
+          "courseuid": skill.uid
+        })
+
+      }).then((response) => response.json())
+        .then((responseJson) => {
+          getRequetedCourses(userInfo._id)
           addFirebaseNotification(skill);
         })
         .catch(error => {
@@ -317,8 +320,8 @@ export default function SkillDetail({ route, navigation }) {
         });
     };
 
-    const addFirebaseNotification = skill => {
-      notifyobj = {
+    const addFirebaseNotification = (skill) => {
+      const notifyobj = {
         senderName: userInfo.username,
         senderId: userInfo._id,
         receiverName: skill.username,
@@ -400,36 +403,14 @@ export default function SkillDetail({ route, navigation }) {
     return (
       <View>
         {/* <View style={globalStyles.btnStyle}> */}
-        <Text>{JSON.stringify(requestedObj)}</Text>
-        {!requestedObj.request_status && (
-          <Button
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}
-            onPress={requestBtn}>
-            {' '}
-            Request
-          </Button>
-        )}
-        {(requestedObj.request_status == 'REJECTED' ||
-          requestedObj.request_status == 'PENDING') && (
-          <Button
-            disabled={true}
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}>
-            {requestedObj.request_status}
-          </Button>
-        )}
-        {requestedObj.request_status == 'ACCEPTED' && (
-          <Button
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}
-            onPress={checkIfChatExists}>
-            Message
-          </Button>
-        )}
+        {/* <Text>{JSON.stringify(requestedObj)}</Text> */}
+        {!requestedObj.request_status && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={requestBtn} > Request</Button>
+        }
+        {(requestedObj.request_status == "REJECTED" || requestedObj.request_status == "PENDING") &&
+          <Button disabled={true} mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle}>{requestedObj.request_status}</Button>
+        }
+        {requestedObj.request_status == "ACCEPTED" && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={checkIfChatExists} >Message</Button>
+        }
         {/* </View> */}
       </View>
     );
