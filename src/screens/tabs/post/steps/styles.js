@@ -129,4 +129,26 @@ export default StyleSheet.create({
     marginLeft: 15,
     marginTop: 7,
   },
+  platform: {
+    marginTop: 15,
+    marginBottom: 10,
+    width: 90,
+    backgroundColor: 'rgba(152,73,166,0.1)',
+    borderColor: 'lightgrey',
+    borderWidth: 1,
+    padding: 3,
+    borderRadius: 2,
+  },
+  platformText: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'rgba(152,73,166,1)',
+  },
+  usersRated: {
+    fontSize: 12,
+    color: '#444',
+    padding: 3,
+    marginTop: 1,
+  },
 });

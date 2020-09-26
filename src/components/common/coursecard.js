@@ -1,258 +1,174 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Image,
+} from 'react-native';
 import { Card, Avatar, Badge, Icon, Rating } from 'react-native-elements';
-import moment from 'moment';
+import Price from '../common/Price';
 
-
-const bodyComponent = (course, wishlistClicked) => {
-    return (
-        <View style={styles.body}>
-            {bodyTextContentComponent(course, wishlistClicked)}
-            {avatarComponent(course)}
+export default function CourseCard({
+  course,
+  courseClicked,
+  wishlistClicked,
+  cardWidth,
+}) {
+  const userProfilePic =
+    course && course.displaypic
+      ? course.displaypic
+      : 'https://bootdey.com/img/Content/avatar/avatar7.png';
+  return (
+    <View style={[styles.card, { width: cardWidth }]}>
+      <View style={styles.cardHeader}>
+        <Image
+          style={styles.icon}
+          source={{
+            uri: 'https://img.icons8.com/flat_round/64/000000/hearts.png',
+          }}
+        />
+      </View>
+      <Image
+        style={styles.userImage}
+        source={{
+          uri: userProfilePic,
+        }}
+      />
+      <View style={styles.cardFooter}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={styles.position}>{course.username}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Rating
+              type="star"
+              imageSize={15}
+              startingValue={course.avgrating}
+              readonly
+              style={{ marginTop: 5, marginBottom: 5 }}
+            />
+            <Text style={styles.usersRated}>({course.usersrated})</Text>
+          </View>
+          <Text style={styles.name}>{course.coursename}</Text>
+          <Text style={styles.position}>Level - {course.courselevel}</Text>
+          <View style={{ marginTop: 10, width: 110 }}>
+            <Price price={course.price} currency={course.currency} />
+          </View>
+          <View style={styles.platform}>
+            <Text style={styles.platformText}>{course.platform}</Text>
+          </View>
         </View>
-    )
+      </View>
+    </View>
+  );
 }
-
-const bodyTextContentComponent = (course, wishlistClicked) => {
-    return (
-        <View style={styles.bodyContent}>
-            <View style={styles.wishAndText}>
-                {/* <View style={styles.whishlistIcon}>
-                    <Icon
-                        size={20}
-                        name='heart-o'
-                        type='font-awesome'
-                        onPress={wishlistClicked} />
-                </View> */}
-                <View style={styles.textContent}>
-                    <Text style={styles.courseName} numberOfLines={2}
-                    >{course.coursename}</Text>
-                    <Text style={{}}> {course.courselevel} </Text>
-                </View>
-            </View>
-            <View style={styles.priceGrid}>
-                <View style={styles.oneOnOnePrice}>
-                    <Text style={styles.oneOnOneText}>One on One</Text>
-                    <Text style={styles.price}>${course.price?.oneonone}</Text>
-                </View>
-                <View style={styles.groupPrice}>
-                    <Text style={styles.groupText}>Group of {course.price?.group?.members}</Text>
-                    <Text style={styles.price}>${course.price?.group?.price}/person</Text>
-                </View>
-            </View>
-        </View>
-    )
-}
-
-const avatarComponent = (course) => {
-    return (
-        <View style={styles.imageContent}>
-            <View>
-                <Avatar
-                    rounded
-                    source={course.displaypic ? { uri: course.displaypic } : require('../../assets/img/default-mask-avatar.png')}
-                    // source={{
-                    //     uri: 'https://randomuser.me/api/portraits/men/41.jpg',
-                    // }}
-                    size="medium" />
-                <Badge
-                    status={course.status != 'ACTIVE' ? "success" : "warning"}
-                    containerStyle={{ position: 'absolute', top: -4, right: -4 }}
-                />
-            </View>
-            <Text style={styles.userName} numberOfLines={1}>{course.username}</Text>
-            <Rating imageSize={12} readonly startingValue={course.avgrating} style={styles.rating} />
-
-        </View>
-    )
-}
-
-const footerComponent = (course) => {
-    return (
-        <View style={styles.footer}>
-            <View style={[styles.footerContent, styles.footerCourse, styles.footerBorderLine]}>
-                <Text style={styles.footerTextHeader} numberOfLines={1}> Skill Duration</Text>
-                <Text > {course.totalhours} hours</Text>
-            </View>
-            <View style={[styles.footerContent, styles.footerExp]}>
-                <Text style={styles.footerTextHeader} numberOfLines={1}> Experience</Text>
-                <Text > {course.experience} yrs</Text>
-            </View>
-            {/* <View style={[styles.footerContent, styles.footerUpdatedDate]}>
-                <Text style={[styles.footerTextHeader, styles.footerText]} numberOfLines={1}> Posted On</Text>
-                <Text style={[styles.footerText, styles.footerUpdatedDateText]} numberOfLines={1}
-                > {moment(course.updateddate).fromNow()}</Text>
-            </View> */}
-        </View>
-    )
-}
-
-const courseClickedd = () => {
-    console.log("clickedddd")
-}
-
-export default function CourseCard({ course, courseClicked, wishlistClicked }) {
-    return (
-        <View style={styles.container}>
-            <TouchableWithoutFeedback
-                style={styles.recentSearchsItem}
-                onPress={courseClicked}
-            >
-                <Card containerStyle={styles.cardContent}>
-                    {bodyComponent(course, wishlistClicked)}
-                    {footerComponent(course)}
-                </Card>
-            </TouchableWithoutFeedback>
-        </View >
-    );
-}
-
-const cardHeight = 170;
-const bodyHeight = 115;
-const footerHeight = 45;
-const bodyContentWidth = 0.7;
-const imageContentWidth = 0.3;
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-        // backgroundColor: '#fff'
-        // margin: 5,
-        marginBottom: 20
+  card: {
+    shadowColor: '#00000021',
+    shadowOffset: {
+      width: 0,
+      height: 6,
     },
-    cardContent: {
-        minHeight: cardHeight,
-        height: cardHeight,
-        padding: 0,
-        margin: 5,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        borderBottomLeftRadius: 25,
-        // borderBottomRightRadius: 20,
-        elevation: 5
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
 
-        // marginBottom: 20
-    },
-    body: {
-        flexDirection: 'row',
-        minHeight: bodyHeight
-    },
-    footer: {
-        minHeight: footerHeight,
-        flex: 1,
-        flexWrap: 'wrap',
-        flexDirection: 'row'
-    },
-    footerContent: {
-        textAlign: "center",
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    footerCourse: {
-        // width: '39%',
-        flex: 0.5,
-        overflow: 'hidden',
-        maxHeight: footerHeight
-    },
-    footerExp: {
-        // width: '28%',
-        flex: 0.5,
-        overflow: 'hidden',
-        maxHeight: footerHeight
-    },
-    footerUpdatedDate: {
-        width: '33%',
-        maxHeight: footerHeight
-    },
-    footerUpdatedDateText: {
-        paddingLeft: 5
-    },
-    footerBorderLine: {
-        borderRightWidth: 1,
-        borderRightColor: "#b6b6b6",
-        borderStyle: "dashed",
-        borderRadius: 1,
-    },
-    footerText: {
-        overflow: 'hidden',
-    },
-    footerTextHeader: {
-        fontWeight: "bold"
-    },
-    bodyContent: {
-        flex: bodyContentWidth,
-        overflow: 'hidden',
-        maxHeight: bodyHeight
-    },
-    whishlistIcon: {
-        alignItems: 'center',
-        textAlign: 'center',
-        justifyContent: 'center',
-        flex: 0.2
-    },
-    wishAndText: {
-        flex: 1,
-        flexWrap: 'wrap',
-        flexDirection: 'row'
-    },
-    textContent: {
-        alignItems: "center",
-        textAlign: 'center',
-        justifyContent: 'center',
-        flex: 0.8
-    },
-    courseName: {
-        fontSize: 16,
-        // fontVariant: ["small-caps"],
-        fontWeight: "bold"
-    },
-    imageContent: {
-        flex: imageContentWidth,
-        textAlign: "center",
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        maxHeight: bodyHeight
-    },
-    userName: {
-        fontVariant: ['small-caps']
-    },
-    displayPic: {
-        height: 50,
-        width: 50,
-        "borderWidth": 1,
-        "borderColor": "#726b6b",
-        "borderStyle": "solid",
-        "borderTopLeftRadius": 39,
-        "borderTopRightRadius": 39,
-        "borderBottomRightRadius": 39,
-        "borderBottomLeftRadius": 39
-    },
-    price: {
-        "fontSize": 15,
-        "fontFamily": "sans-serif",
-        "color": "#719618"
-    },
-    priceGrid: {
-        flex: 1,
-        flexWrap: 'wrap',
-        flexDirection: 'row'
-    },
-    oneOnOnePrice: {
-        flex: 0.4,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    oneOnOneText: {
-        fontSize: 13
-    },
-    groupText: {
-        fontSize: 13
-    },
-    groupPrice: {
-        flex: 0.6,
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-
+    marginVertical: 5,
+    backgroundColor: 'white',
+    flexBasis: '46%',
+    marginHorizontal: 5,
+  },
+  list: {
+    paddingHorizontal: 5,
+    backgroundColor: '#E6E6E6',
+  },
+  listContainer: {
+    alignItems: 'center',
+  },
+  cardFooter: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderTopLeftRadius: 1,
+    borderTopRightRadius: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardContent: {
+    paddingVertical: 12.5,
+    paddingHorizontal: 16,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 12.5,
+    paddingBottom: 10,
+    paddingHorizontal: 16,
+    borderBottomLeftRadius: 1,
+    borderBottomRightRadius: 1,
+  },
+  userImage: {
+    height: 100,
+    width: 100,
+    borderRadius: 60,
+    alignSelf: 'center',
+    borderColor: '#DCDCDC',
+    borderWidth: 2,
+  },
+  name: {
+    fontSize: 18,
+    flex: 1,
+    alignSelf: 'center',
+    color: '#008080',
+    fontWeight: 'bold',
+  },
+  position: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    color: '#696969',
+    textTransform: 'capitalize',
+  },
+  followButton: {
+    marginTop: 15,
+    marginBottom: 5,
+    height: 30,
+    width: 90,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 30,
+    backgroundColor: '#00BFFF',
+  },
+  followButtonText: {
+    color: '#FFFFFF',
+    fontSize: 20,
+  },
+  icon: {
+    height: 20,
+    width: 20,
+  },
+  platform: {
+    marginTop: 15,
+    marginBottom: 10,
+    width: 90,
+    backgroundColor: 'rgba(152,73,166,0.1)',
+    borderColor: 'lightgrey',
+    borderWidth: 1,
+    padding: 3,
+    borderRadius: 2,
+  },
+  platformText: {
+    textAlign: 'center',
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'rgba(152,73,166,1)',
+  },
+  usersRated: {
+    fontSize: 12,
+    color: '#444',
+    padding: 3,
+    marginTop: 1,
+  },
 });
