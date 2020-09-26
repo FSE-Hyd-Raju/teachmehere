@@ -30,7 +30,7 @@ export default function SkillFlatList(props) {
           course={item}
           courseClicked={() => showDetails(item)}
           wishlistClicked={() => showDetails(item)}
-          cardWidth={310}
+          cardWidth={220}
         />
       </TouchableOpacity>
     );

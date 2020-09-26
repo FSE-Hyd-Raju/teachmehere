@@ -120,7 +120,7 @@ export default function Home(props) {
 
     const renderItem = ({ item, index }, parallaxProps) => {
       return (
-        <TouchableOpacity onPress={() => showCategorySkills(item)} style={{ borderColor: "lightgrey", borderRadius: 11, borderWidth: 1, backgroundColor: "rgba(243, 246, 252, 0.7)" }}>
+        <TouchableOpacity onPress={() => showCategorySkills(item)} style={{ borderColor: "lightgrey", borderRadius: 5, borderWidth: 0.5, backgroundColor: "rgba(243, 246, 252, 0.7)" }}>
           <ParallaxImage
             source={{ uri: item.illustration }}
             containerStyle={styles.imageContainer}
@@ -262,6 +262,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
+    // padding: 10,
     position: 'absolute',
     alignSelf: 'center',
     fontSize: 17,
@@ -277,7 +278,8 @@ const styles = StyleSheet.create({
     flex: 0.9,
     alignItems: "center",
     textAlign: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    // padding: 10
   },
   subTitleContainer: {
     flexDirection: 'row',

@@ -17,24 +17,26 @@ export default function CourseCard({
   cardWidth,
 }) {
   const userProfilePic =
-    course && course.displaypic
-      ? course.displaypic
-      : 'https://bootdey.com/img/Content/avatar/avatar7.png';
+    (course && course.displaypic)
+      ? {
+        uri: course.displaypic,
+      }
+      :
+      { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
+  // require("../../assets/img/default-mask-avatar.png");
   return (
     <View style={[styles.card, { width: cardWidth }]}>
-      <View style={styles.cardHeader}>
+      {/* <View style={styles.cardHeader}>
         <Image
           style={styles.icon}
           source={{
             uri: 'https://img.icons8.com/flat_round/64/000000/hearts.png',
           }}
         />
-      </View>
+      </View> */}
       <Image
         style={styles.userImage}
-        source={{
-          uri: userProfilePic,
-        }}
+        source={userProfilePic}
       />
       <View style={styles.cardFooter}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -55,7 +57,7 @@ export default function CourseCard({
             <Price price={course.price} currency={course.currency} />
           </View>
           <View style={styles.platform}>
-            <Text style={styles.platformText}>{course.platform}</Text>
+            <Text style={styles.platformText}>{course.totalhours} Hours</Text>
           </View>
         </View>
       </View>
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.37,
     shadowRadius: 7.49,
-    elevation: 12,
+    elevation: 5,
 
     marginVertical: 5,
     backgroundColor: 'white',
@@ -115,6 +117,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderColor: '#DCDCDC',
     borderWidth: 2,
+    marginTop: 10,
   },
   name: {
     fontSize: 18,
