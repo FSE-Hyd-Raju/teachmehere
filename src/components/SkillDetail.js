@@ -289,6 +289,7 @@ export default function SkillDetail({ route, navigation }) {
   };
 
   const requestButtonComponent = () => {
+
     const requestBtn = () => {
       if (!userInfo._id) {
         setVisibleSnackbar('Please login!');
@@ -377,32 +378,116 @@ export default function SkillDetail({ route, navigation }) {
         });
     };
 
-    const checkIfChatExists = item => {
-      exists = false;
+    const checkIfChatExists = () => {
+      setLoading(true);
+      var exists = false;
       firestore()
         .collection('THREADS')
-        .where('ids', 'array-contains', user._id)
+        .where('ids', 'array-contains', userInfo._id)
         .get()
         .then(querySnapshot => {
+          var itemObj = {}
           querySnapshot.forEach(documentSnapshot => {
-            data = documentSnapshot.data();
-            if (data['ids'].indexOf(item._id) > -1) {
+            var data = documentSnapshot.data();
+            if (data['ids'].indexOf(skill.uid) > -1) {
               exists = true;
 
-              item = {
-                ...item,
+              var messageObj = {
+                // id: ref.id,
+                userDetails: [{
+                  id: userInfo._id,
+                  name: userInfo.username,
+                  displaypic: userInfo.displaypic
+                }, {
+                  id: skill.uid,
+                  name: skill.username,
+                  displaypic: skill.displaypic
+                }],
+                ids: [userInfo._id, skill.uid],
+                latestMessage: {
+                  text: 'Say Hello..',
+                  createdAt: Date.now()
+                },
+                deletedIds: [skill.uid],
+                newChat: true
+              }
+
+              itemObj = {
+                // ...item,
+                ...messageObj,
                 _id: documentSnapshot.id,
-                name: item.username,
-              };
+                name: skill.username,
+                displaypic: skill.displaypic,
+                senderDetailsId: skill.uid
+              }
+
+              // item = {
+              //   ...item,
+              //   _id: documentSnapshot.id,
+              //   name: item.username,
+              // };
             }
           });
           if (!exists) {
-            sendMessage(item);
+            sendMessage();
           } else {
-            navigation.navigate('Room', { thread: item });
+            console.log("elseeeeeeeeeeeeeeeeeeeeeee")
+            console.log(itemObj)
+            setLoading(false);
+            navigation.navigate('ChatRoom', { thread: itemObj });
           }
         });
     };
+
+    function sendMessage() {
+      const ref = firestore().collection('THREADS').doc()
+
+      var messageObj = {
+        // id: ref.id,
+        userDetails: [{
+          id: userInfo._id,
+          name: userInfo.username,
+          displaypic: userInfo.displaypic
+        }, {
+          id: skill.uid,
+          name: skill.username,
+          displaypic: skill.displaypic
+        }],
+        ids: [userInfo._id, skill.uid],
+        latestMessage: {
+          text: 'Say Hello..',
+          createdAt: Date.now()
+        },
+        deletedIds: [skill.uid],
+        newChat: true
+      }
+      ref.set(messageObj)
+        .then(() => {
+          // ref.get().then(doc => {
+          //    alert(JSON.stringify(doc.data()))
+          // })
+          ref.collection('MESSAGES').add({
+            text: 'Say Hello..',
+            createdAt: Date.now(),
+            system: true
+          }).then(() => {
+
+
+          })
+        })
+
+      var itemObj = {
+        // ...item,
+        ...messageObj,
+        _id: ref.id,
+        name: skill.username,
+        displaypic: skill.displaypic,
+        senderDetailsId: skill.uid
+      }
+      // navigation.popToTop();
+      setLoading(false);
+      navigation.navigate('ChatRoom', { thread: itemObj });
+    }
 
     return (
       <View>
