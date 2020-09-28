@@ -42,12 +42,15 @@ export default function SkillDetail({ route, navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userInfo._id && (!requestedSkills || !requestedSkills.length)) {
+    if (userInfo._id
+      // && (!requestedSkills || !requestedSkills.length)
+    ) {
       getRequetedCourses(userInfo._id);
-    } else if (userInfo._id) {
-      let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
-      if (reqObj.length) setRequestedObj(reqObj[0])
     }
+    // else if (userInfo._id) {
+    //   let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
+    //   if (reqObj.length) setRequestedObj(reqObj[0])
+    // }
   }, [userInfo]);
 
   const getRequetedCourses = uid => {
@@ -164,7 +167,7 @@ export default function SkillDetail({ route, navigation }) {
       <View>
         <View style={{ alignItems: 'center' }}>
           <Avatar.Image
-            size={150}
+            size={130}
             style={{ marginTop: -80, elevation: 10 }}
             source={
               skill.displaypic
@@ -330,6 +333,7 @@ export default function SkillDetail({ route, navigation }) {
         type: 'REQUEST',
         createdAt: new Date().getTime(),
         message: 'Lets be friends..!',
+        courseid: skill._id
       };
 
       firestore()
@@ -477,7 +481,7 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   imgStyle: {
-    height: 340,
+    height: 200,
     // width: '100%',
     // opacity: 0.7,
   },

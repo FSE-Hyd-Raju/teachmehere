@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AnimatedMultistep from '../stepper';
 
@@ -13,7 +13,9 @@ import {
   fetchPost,
   postSelector,
   postNewSkill,
+  postSkill,
 } from '../../../../redux/slices/post';
+import { loginSelector } from '../../../../redux/slices/loginSlice';
 
 const allSteps = [
   { name: 'step 1', component: Step1 },
@@ -27,6 +29,7 @@ const Steps = props => {
   const { postResponse, isPostQueryActive, hasErrors } = useSelector(
     postSelector,
   );
+  const { userInfo } = useSelector(loginSelector)
   const onNext = () => {
     console.log('Next');
   };
@@ -60,47 +63,53 @@ const Steps = props => {
       linkedInProfile,
       availableForDemo,
     } = state;
-    const postData = {
-      uid: '12122',
-      coursename: skillName,
-      courselevel: skillLevel,
-      content: contents || '',
-      category: category,
-      subcategory: subCategory,
-      totalhours: parseInt(totalHours),
-      country: country && country.name,
-      currency: country && country.currency && country.currency.symbol,
-      price: {
-        oneonone: parseInt(individualPrice),
-        group: {
-          members: parseInt(noOfPeople) || 0,
-          price: parseInt(groupPrice) || 0,
+    dispatch(postSkill());
+    if (userInfo._id) {
+      const postData = {
+        uid: userInfo._id,
+        coursename: skillName,
+        courselevel: skillLevel,
+        content: contents || '',
+        category: category,
+        subcategory: subCategory,
+        totalhours: parseInt(totalHours),
+        country: country && country.name,
+        currency: country && country.currency && country.currency.symbol,
+        price: {
+          oneonone: parseInt(individualPrice),
+          group: {
+            members: parseInt(noOfPeople) || 0,
+            price: parseInt(groupPrice) || 0,
+          },
         },
-      },
-      speakinglanguages: languages,
-      availability: {
-        coursestartdate: startDate || '',
-        courseenddate: endDate || '',
-        ondays: {
-          availableon: onDays || '',
-          daysofweek: daysOfTheWeek || [],
+        speakinglanguages: languages,
+        availability: {
+          coursestartdate: startDate || '',
+          courseenddate: endDate || '',
+          ondays: {
+            availableon: onDays || '',
+            daysofweek: daysOfTheWeek || [],
+          },
+          coursestarttime: startTime || '',
+          coursesendtime: endTime || '',
+          tentativeschedule: isTentativeSchedule,
         },
-        coursestarttime: startTime || '',
-        coursesendtime: endTime || '',
-        tentativeschedule: isTentativeSchedule,
-      },
-      platform: platform,
-      tags: tags && tags.length > 0 ? tags.split(',') : [],
-      experience: parseInt(experience) || 0,
-      profilesummary: profileSummary,
-      linkedinprofile: linkedInProfile,
-      demo: availableForDemo,
-    };
-    // dispatch(postNewSkill(postData));
-    // if (postResponse === 'successfull') {
-    //   alert("Post Succussfull")
-    // }
-    console.log('postData', postData);
+        platform: platform,
+        tags: tags && tags.length > 0 ? tags.split(',') : [],
+        experience: parseInt(experience) || 0,
+        profilesummary: profileSummary,
+        linkedinprofile: linkedInProfile,
+        demo: availableForDemo,
+      };
+      dispatch(postNewSkill(postData, () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'PostedCourses' }],
+        });
+      }));
+    } else {
+      props.navigate('Login');
+    }
   };
 
   return (

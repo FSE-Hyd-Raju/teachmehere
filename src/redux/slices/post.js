@@ -21,6 +21,7 @@ const postSlice = createSlice({
       state.hasErrors = false;
     },
     postSkillFailure: state => {
+      state.postResponse = 'failed';
       state.isPostQueryActive = false;
       state.hasErrors = true;
     },
@@ -35,13 +36,14 @@ export const {
 export const postSelector = state => state.post;
 export default postSlice.reducer;
 
-export function postNewSkill(data) {
+export function postNewSkill(data, onSuccess) {
   return async dispatch => {
-    dispatch(postSkill());
     try {
       const response = await axios.post(postSkillUrl, data);
       if (response) {
+        console.log("ressssss====---->", response)
         dispatch(postSkillSuccess());
+        onSuccess();
       }
     } catch (error) {
       dispatch(postSkillFailure());

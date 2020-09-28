@@ -121,7 +121,7 @@ export default StyleSheet.create({
     marginLeft: 5,
   },
   content: {
-    width: 300,
+    width: 280,
     paddingTop: 5,
     paddingLeft: 5,
   },

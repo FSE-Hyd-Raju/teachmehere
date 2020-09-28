@@ -47,25 +47,30 @@ export default function Home(props) {
 
   useEffect(() => {
     dispatch(fetchInitialDataWhenAppLoading());
-    notificunsubscribe && notificunsubscribe();
 
-    if (userInfo._id) {
+    if (userInfo._id && !notificunsubscribe) {
+      console.log(notificunsubscribe)
+      console.log("inhomeuse")
       notificationListener();
-      notificunsubscribe = appOpenedNotificationListener()
+      appOpenedNotificationListener()
+      console.log(notificunsubscribe)
     }
+    return () => { if (notificunsubscribe) notificunsubscribe() }
   }, [userInfo]);
 
   const notificationListener = async () => {
     PushNotification.configure({
       onNotification: function (notification) {
+        console.log("notificationListener")
+
         if (focusNotiMsg && focusNotiMsg.data && focusNotiMsg.data.data && JSON.parse(focusNotiMsg.data.data).type == "CHAT") {
-          navigation.push('Room', { thread: JSON.parse(focusNotiMsg.data.data) });
+          props.navigation.push('ChatRoom', { thread: JSON.parse(focusNotiMsg.data.data) });
         }
         else if (notification && notification.data && notification.data.type == "CHAT") {
-          navigation.push('Room', { thread: notification.data });
+          props.navigation.push('ChatRoom', { thread: notification.data });
         }
         else {
-          navigation.push('NotificationRoom');
+          props.navigation.push('Notification');
         }
       },
       popInitialNotification: true,
@@ -74,7 +79,9 @@ export default function Home(props) {
   }
 
   const appOpenedNotificationListener = () => {
-    return messaging().onMessage(async remoteMessage => {
+
+
+    notificunsubscribe = messaging().onMessage(async remoteMessage => {
       console.log("noti")
       console.log(remoteMessage)
 

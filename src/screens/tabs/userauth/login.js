@@ -8,11 +8,13 @@ import { loginSelector, clearErrors, onLoginPressed } from '../../../redux/slice
 import PageSpinner from '../../../components/common/PageSpinner';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+import { postSelector } from '../../../redux/slices/post';
 
 export default function LoginPage({ navigation }) {
 
   const dispatch = useDispatch();
   const { loading, loginPasswordError, loginEmailError } = useSelector(loginSelector);
+  const { isPostQueryActive } = useSelector(postSelector);
   const [hidePassword, sethidePassword] = React.useState(true);
   const [eyeicon, seteyeicon] = React.useState('eye');
 
@@ -48,10 +50,15 @@ export default function LoginPage({ navigation }) {
           email: values.Email,
           password: values.Password,
           onSuccess: () => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Profile' }],
-            });
+            console.log("Post========>", isPostQueryActive)
+            if (isPostQueryActive) {
+              navigation.navigate('Post')
+            } else {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Profile' }],
+              });
+            }
           },
         }),
       )

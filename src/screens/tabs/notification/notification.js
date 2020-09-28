@@ -20,12 +20,11 @@ export default function NotificationPage({ navigation }) {
     const [infoNotificationsList, setInfoNotificationsList] = React.useState([])
 
     useEffect(() => {
-        if (!notificationsList.length && userInfo && userInfo._id)
+        if (userInfo && userInfo._id)
             getNotifications()
-        setInfoNotificationsList(notificationsList.filter(ele => ele.type != "REQUEST"))
-        setRequestNotificationsList(notificationsList.filter(ele => ele.type == "REQUEST"))
 
-    }, [notificationsList]);
+
+    }, []);
 
     const getNotifications = () => {
         setLoading(true);
@@ -35,7 +34,7 @@ export default function NotificationPage({ navigation }) {
                 "receiverId", "==", userInfo._id
             ).get()
             .then(snapshot => {
-                notificationsArr = []
+                let notificationsArr = []
                 snapshot.forEach(documentSnapshot => {
                     const data = {
                         _id: documentSnapshot.id,
@@ -47,6 +46,8 @@ export default function NotificationPage({ navigation }) {
                     notificationsArr.push(data)
                 });
                 dispatch(setNotificationsList(notificationsArr));
+                setInfoNotificationsList(notificationsArr.filter(ele => ele.type != "REQUEST"))
+                setRequestNotificationsList(notificationsArr.filter(ele => ele.type == "REQUEST"))
                 setLoading(false);
             }, (error) => {
                 setLoading(false);
@@ -54,6 +55,11 @@ export default function NotificationPage({ navigation }) {
     }
 
     const changestatus = async (item, status) => {
+        console.log("chn")
+        console.log(item)
+        console.log(status)
+
+
         setLoading(true);
         await firestore()
             .collection('NOTIFICATIONS')
@@ -63,7 +69,9 @@ export default function NotificationPage({ navigation }) {
                     status: status
                 },
                 { merge: true }
-            ).then(() => {
+            ).then((res) => {
+                console.log(res)
+
                 updateRequestedCourse(item, status)
             }, (error) => {
                 console.error(error);
@@ -73,6 +81,8 @@ export default function NotificationPage({ navigation }) {
     }
 
     const updateRequestedCourse = (item, status) => {
+        console.log("updateRequestedCourse")
+
         fetch('https://teachmeproject.herokuapp.com/updateStatus', {
             method: 'POST',
             headers: {
@@ -82,21 +92,24 @@ export default function NotificationPage({ navigation }) {
             body: JSON.stringify({
                 "uid": item.senderId,
                 "courseid": item.courseid,
+                "courseuid": item.receiverId,
                 "status": status
             })
         }).then((response) => response.json())
             .then((responseJson) => {
-                sendNotification(item, status);
+                console.log(responseJson)
+
+                addNotification(item, status);
             }).catch((error) => {
                 console.error(error);
                 setLoading(false);
-                cosole.log("something went wrong")
+                console.log("something went wrong")
             });
     }
 
-    const sendNotification = (item, status) => {
+    const addNotification = (item, status) => {
 
-        notifyobj = {
+        const notifyobj = {
             senderName: userInfo.username,
             senderId: userInfo._id,
             receiverName: item.senderName,
@@ -114,6 +127,7 @@ export default function NotificationPage({ navigation }) {
             // createdAt: new Date().getTime(),
             // message: "accepted your request"
         }
+        console.log(notifyobj)
 
         firestore().collection('NOTIFICATIONS').add(notifyobj).then(docRef => {
             fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
@@ -131,7 +145,9 @@ export default function NotificationPage({ navigation }) {
 
             }).then((response) => response.json())
                 .then((responseJson) => {
+                    console.log(responseJson)
                     setLoading(false);
+                    sendNotification(item, notifyobj)
                     navigation.goBack();
                 }).catch((error) => {
                     setLoading(false);
@@ -144,6 +160,33 @@ export default function NotificationPage({ navigation }) {
             cosole.log("something went wrong")
         });
     }
+
+    const sendNotification = (item, notifyobj) => {
+        console.log("insendnoti")
+        let obj = {
+            username: userInfo.username,
+            message: notifyobj.message,
+            _id: item.senderId,
+            data: notifyobj,
+        }
+        console.log(obj)
+        fetch('https://teachmeproject.herokuapp.com/sendChatNotification', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(obj),
+        })
+            .then(response => response.json())
+            .then(responseJson => {
+                console.log(responseJson)
+            })
+            .catch(error => {
+                console.error(error);
+                // setLoading(false);
+            });
+    };
 
     const loadingComponent = () => {
         return (

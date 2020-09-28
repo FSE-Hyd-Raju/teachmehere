@@ -22,8 +22,8 @@ export default function CourseCard({
         uri: course.displaypic,
       }
       :
-      { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-  // require("../../assets/img/default-mask-avatar.png");
+      // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
+      require("../../assets/img/default-mask-avatar.png");
   return (
     <View style={[styles.card, { width: cardWidth }]}>
       {/* <View style={styles.cardHeader}>
@@ -52,7 +52,8 @@ export default function CourseCard({
             <Text style={styles.usersRated}>({course.usersrated})</Text>
           </View>
           <Text style={styles.name}>{course.coursename}</Text>
-          <Text style={styles.position}>Level - {course.courselevel}</Text>
+          {!!course && !!course.courselevel && (
+            <Text style={[styles.position, { width: 135 }]}>Level - {course.courselevel}</Text>)}
           <View style={{ marginTop: 10, width: 110 }}>
             <Price price={course.price} currency={course.currency} />
           </View>

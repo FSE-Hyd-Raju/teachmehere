@@ -138,7 +138,7 @@ export default function SkillListView({ route, navigation }) {
                     }
                     onPress={() => subCategoryClicked(item.name)}
                     selected={subCatSelected.indexOf(item.name) > -1}
-                    // selectedColor="green"
+                  // selectedColor="green"
                   >
                     {item.name}
                   </Chip>
@@ -191,7 +191,7 @@ export default function SkillListView({ route, navigation }) {
   return (
     <View style={styles.container}>
       {headerComponent()}
-      <ScrollView style={{ padding: 5 }}>
+      <ScrollView style={{ padding: 5 }} showsVerticalScrollIndicator={false}>
         {subCategoriesComponent()}
         {skillsListComponent()}
       </ScrollView>
