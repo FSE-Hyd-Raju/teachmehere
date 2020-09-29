@@ -22,6 +22,11 @@ export default function ChatRoom({ route, navigation }) {
 
 
     const { thread } = route.params;
+    const [newChat, setNewChat] = useState(thread.newChat);
+    const [senderObj, setSenderObj] = useState(thread.userDetails.find(o => o.id != userInfo._id))
+    console.log("asdfasdfadsfasdfasdfadsdfasdfsdfdsafasfasfsdfsd")
+
+    console.log(thread.userDetails.find(o => o.id != userInfo._id))
 
     const backButtonHandler = () => {
         return BackHandler.addEventListener(
@@ -38,7 +43,7 @@ export default function ChatRoom({ route, navigation }) {
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
             setGotBlocked(true)
         }
-        if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(thread.senderDetailsId) > -1)) {
+        if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(senderObj.id) > -1)) {
             setDidBlock(true)
         }
 
@@ -61,33 +66,33 @@ export default function ChatRoom({ route, navigation }) {
     }, []);
 
     const checkToRemoveChat = () => {
-        if (thread.newChat && (!messages || !messages.length)) {
-            console.log("in if", thread.newChat)
+        if (newChat && (!messages || !messages.length)) {
+            console.log("in if", newChat)
             console.log("in if", messages)
 
             firestore()
                 .collection('THREADS')
                 .doc(thread._id).delete().then(() => {
                     if (navigation.canGoBack()) setTimeout(() => {
-                        if (!thread.support)
-                            navigation.popToTop()
-                        else
-                            navigation.goBack()
+                        // if (!thread.support)
+                        //     navigation.popToTop()
+                        // else
+                        navigation.goBack()
                     }, 100)
                 })
         }
         else if (navigation.canGoBack()) {
             console.log("in else if", thread.support)
 
-            if (!thread.support)
-                navigation.popToTop()
-            else
-                navigation.goBack()
+            // if (!thread.support)
+            //     navigation.popToTop()
+            // else
+            navigation.goBack()
         }
     }
 
 
-    getMessages = () => {
+    const getMessages = () => {
         return firestore()
             .collection('THREADS')
             .doc(thread._id)
@@ -99,6 +104,11 @@ export default function ChatRoom({ route, navigation }) {
                     const doc = querySnapshot.docs[i]
                     // const messagesArr = querySnapshot.docs.filter(doc => {
                     const firebaseData = doc.data();
+                    console.log("getejlkj")
+
+                    console.log(firebaseData.deletedIds)
+                    console.log(userInfo._id)
+
 
                     if (!firebaseData.deletedIds || !firebaseData.deletedIds.length || (firebaseData.deletedIds.length && firebaseData.deletedIds.indexOf(userInfo._id) == -1)) {
                         const data = {
@@ -124,16 +134,21 @@ export default function ChatRoom({ route, navigation }) {
             });
     }
 
-    listenForThread = () => {
+    const listenForThread = () => {
         return firestore()
             .collection('THREADS')
             .doc(thread._id)
             .onSnapshot(querySnapshot => {
                 // for (var i in querySnapshot.docs) {
                 const data = querySnapshot.data();
+                console.log("listenforthresads")
+
+                console.log(data)
                 // alert(JSON.stringify(data))
                 if (data && data.blockedIds && data.blockedIds.length && (data.blockedIds.indexOf(userInfo._id) > -1)) {
                     setGotBlocked(true);
+                } else {
+                    setGotBlocked(false);
                 }
                 // }
             });
@@ -181,7 +196,8 @@ export default function ChatRoom({ route, navigation }) {
             },
         }
         if (gotBlocked) {
-            msgObj.deletedIds = firestore.FieldValue.arrayRemove(userInfo._id)
+            // msgObj.deletedIds = firestore.FieldValue.arrayRemove(userInfo._id)
+            msgObj.deletedIds = [senderObj.id]
         }
 
         var updateObj = {
@@ -197,8 +213,8 @@ export default function ChatRoom({ route, navigation }) {
             // displaypic: userInfo.displaypic
         }
 
-        if (thread.newChat) {
-            updateObj.deletedIds = firestore.FieldValue.arrayRemove(thread.senderDetailsId)
+        if (newChat) {
+            updateObj.deletedIds = firestore.FieldValue.arrayRemove(senderObj.id)
         }
 
         console.log("msgObj", JSON.stringify(msgObj))
@@ -219,6 +235,7 @@ export default function ChatRoom({ route, navigation }) {
                 updateObj,
                 { merge: true }
             );
+        setNewChat(false)
         if (!gotBlocked)
             sendNotification(text)
     }
@@ -228,7 +245,7 @@ export default function ChatRoom({ route, navigation }) {
         console.log("sendnotification", JSON.stringify(thread))
         // console.log(thread)
         // console.log(thread.ids)
-        receiverId = thread.ids.filter(ele => ele != userInfo._id);
+        var receiverId = thread.ids.filter(ele => ele != userInfo._id);
         var dataobj = {
             ...thread,
             type: "CHAT",
@@ -474,14 +491,14 @@ export default function ChatRoom({ route, navigation }) {
             );
         // }
 
-        // navigation.goBack();
+        navigation.goBack();
         dispatch(setLoading(false));
         return;
 
     }
 
     const deleteChat = () => {
-        if (!thread.newChat)
+        if (!newChat)
             Alert.alert(
                 "",
                 "Do you want to delete the chat?",
@@ -495,7 +512,7 @@ export default function ChatRoom({ route, navigation }) {
                 ],
                 { cancelable: false }
             );
-
+        // else alert("sfjskfjl")
 
         // await foreach(querySnapshot,  (documentSnapshot) => {
         //     // await firestore()
@@ -551,13 +568,13 @@ export default function ChatRoom({ route, navigation }) {
 
     const blockUserConfirmed = async () => {
         console.log("didBlock")
-        console.log(thread.senderDetailsId)
+        console.log(senderObj.id)
         await firestore()
             .collection('THREADS')
             .doc(thread._id)
             .set(
                 {
-                    blockedIds: !didBlock ? firestore.FieldValue.arrayUnion(thread.senderDetailsId) : firestore.FieldValue.arrayRemove(thread.senderDetailsId),
+                    blockedIds: !didBlock ? firestore.FieldValue.arrayUnion(senderObj.id) : firestore.FieldValue.arrayRemove(senderObj.id),
                 },
                 { merge: true }
             );
@@ -567,8 +584,8 @@ export default function ChatRoom({ route, navigation }) {
 
     const blockUser = () => {
         Alert.alert(
-            "block " + thread.name + " ?",
-            "we won't let them know you blocked them",
+            "block " + senderObj.name + " ?",
+            "you won't receive any messages from this user",
             [
                 {
                     text: "No",
@@ -585,7 +602,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const unblockUser = () => {
         Alert.alert(
-            "Unblock " + thread.name + " ?",
+            "Unblock " + senderObj.name + " ?",
             "User will be able to send messages",
             [
                 {
@@ -603,7 +620,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const goToProfile = (thread) => {
         if (!thread.support) {
-            thread.userid = thread.senderDetailsId;
+            thread.userid = senderObj.id;
             navigation.navigate("UserDetailsPage", { userinfo: thread })
         }
     }
@@ -635,9 +652,9 @@ export default function ChatRoom({ route, navigation }) {
                                 containerStyle={{ margin: 7 }}
                                 size={30}
                                 // source={require('../../../assets/img/default-mask-avatar.png')}
-                                source={thread.displaypic ? { uri: thread.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
+                                source={senderObj.displaypic ? { uri: senderObj.displaypic } : require('../../../assets/img/default-mask-avatar.png')}
                             />
-                            <Text style={styles.headerTitle} numberOfLines={1}>{thread.name}</Text>
+                            <Text style={styles.headerTitle} numberOfLines={1}>{senderObj.name}</Text>
                         </View>
                     </TouchableOpacity>
 
