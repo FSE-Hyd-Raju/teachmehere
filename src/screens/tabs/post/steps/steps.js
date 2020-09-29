@@ -29,7 +29,7 @@ const Steps = props => {
   const { postResponse, isPostQueryActive, hasErrors } = useSelector(
     postSelector,
   );
-  const { userInfo } = useSelector(loginSelector)
+  const { userInfo } = useSelector(loginSelector);
   const onNext = () => {
     console.log('Next');
   };
@@ -101,14 +101,19 @@ const Steps = props => {
         linkedinprofile: linkedInProfile,
         demo: availableForDemo,
       };
-      dispatch(postNewSkill(postData, () => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'PostedCourses' }],
-        });
-      }));
+      dispatch(
+        postNewSkill({
+          postData,
+          onSuccess: () => {
+            props.navigation.reset({
+              index: 0,
+              routes: [{ name: 'PostedCourses' }],
+            });
+          },
+        }),
+      );
     } else {
-      props.navigate('Login');
+      props.navigation.navigate('Login');
     }
   };
 

@@ -36,14 +36,13 @@ export const {
 export const postSelector = state => state.post;
 export default postSlice.reducer;
 
-export function postNewSkill(data, onSuccess) {
+export function postNewSkill(param) {
   return async dispatch => {
     try {
-      const response = await axios.post(postSkillUrl, data);
+      const response = await axios.post(postSkillUrl, param.postData);
       if (response) {
-        console.log("ressssss====---->", response)
         dispatch(postSkillSuccess());
-        onSuccess();
+        param.onSuccess();
       }
     } catch (error) {
       dispatch(postSkillFailure());

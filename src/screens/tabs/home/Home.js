@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Dimensions, Text, Image, Platform } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  Image,
+  Platform,
+} from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import SkillFlatList from '../../../components/common/SkillFlatList';
 import CategoryWrapper from '../../../components/common/CategoryWrapper';
@@ -21,26 +28,27 @@ import { loginSelector } from '../../../redux/slices/loginSlice';
 import PushNotification from 'react-native-push-notification';
 import firestore from '@react-native-firebase/firestore';
 
-
 export default function Home(props) {
   const dispatch = useDispatch();
   const { homeData, loading } = useSelector(homeSelector);
-  const { userInfo } = useSelector(loginSelector)
+  const { userInfo } = useSelector(loginSelector);
   const carouselRef = useRef(null);
-  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get('window').width,
+  );
   var notificunsubscribe = null;
-  var focusNotiMsg = null
+  var focusNotiMsg = null;
 
-  const showMore = (group) => {
+  const showMore = group => {
     props.navigation.navigate('SkillListView', {
       title: group,
-      skills: homeData.dataGroups[group]
+      skills: homeData.dataGroups[group],
     });
   };
 
   const showCategorySkills = category => {
     props.navigation.navigate('SkillListView', {
-      title: !!category.category ? category.category : "",
+      title: !!category.category ? category.category : '',
       category: category,
     });
   };
@@ -49,46 +57,54 @@ export default function Home(props) {
     dispatch(fetchInitialDataWhenAppLoading());
 
     if (userInfo._id && !notificunsubscribe) {
-      console.log(notificunsubscribe)
-      console.log("inhomeuse")
+      console.log(notificunsubscribe);
       notificationListener();
-      appOpenedNotificationListener()
-      console.log(notificunsubscribe)
+      appOpenedNotificationListener();
+      console.log(notificunsubscribe);
     }
-    return () => { if (notificunsubscribe) notificunsubscribe() }
+    return () => {
+      if (notificunsubscribe) notificunsubscribe();
+    };
   }, [userInfo]);
 
   const notificationListener = async () => {
     PushNotification.configure({
-      onNotification: function (notification) {
-        console.log("notificationListener")
+      onNotification: function(notification) {
+        console.log('notificationListener');
 
-        if (focusNotiMsg && focusNotiMsg.data && focusNotiMsg.data.data && JSON.parse(focusNotiMsg.data.data).type == "CHAT") {
-          props.navigation.push('ChatRoom', { thread: JSON.parse(focusNotiMsg.data.data) });
-        }
-        else if (notification && notification.data && notification.data.type == "CHAT") {
+        if (
+          focusNotiMsg &&
+          focusNotiMsg.data &&
+          focusNotiMsg.data.data &&
+          JSON.parse(focusNotiMsg.data.data).type == 'CHAT'
+        ) {
+          props.navigation.push('ChatRoom', {
+            thread: JSON.parse(focusNotiMsg.data.data),
+          });
+        } else if (
+          notification &&
+          notification.data &&
+          notification.data.type == 'CHAT'
+        ) {
           props.navigation.push('ChatRoom', { thread: notification.data });
-        }
-        else {
+        } else {
           props.navigation.push('Notification');
         }
       },
       popInitialNotification: true,
-      requestPermissions: true
-    })
-  }
+      requestPermissions: true,
+    });
+  };
 
   const appOpenedNotificationListener = () => {
-
-
     notificunsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log("noti")
-      console.log(remoteMessage)
+      console.log('noti');
+      console.log(remoteMessage);
 
       focusNotiMsg = remoteMessage;
       PushNotification.localNotification({
         // largeIcon: "ic_foreground",
-        smallIcon: "ic_foreground",
+        smallIcon: 'ic_foreground',
         autoCancel: true,
         bigText: remoteMessage.data.body,
         // subText: remoteMessage.data.body,
@@ -98,11 +114,11 @@ export default function Home(props) {
         vibration: 300,
         playSound: true,
         soundName: 'default',
-      })
+      });
 
       // alert('A new FCM message arrived!' + JSON.stringify(remoteMessage));
     });
-  }
+  };
 
   const headerComponent = () => {
     return (
@@ -120,19 +136,26 @@ export default function Home(props) {
           onPress={() => props.navigation.navigate('Notification')}
         />
       </View>
-    )
-  }
+    );
+  };
 
   const carouselComponent = () => {
-
     const renderItem = ({ item, index }, parallaxProps) => {
       return (
-        <TouchableOpacity onPress={() => showCategorySkills(item)} style={{ borderColor: "lightgrey", borderRadius: 5, borderWidth: 0.5, backgroundColor: "rgba(243, 246, 252, 0.7)" }}>
+        <TouchableOpacity
+          onPress={() => showCategorySkills(item)}
+          style={{
+            borderColor: 'lightgrey',
+            borderRadius: 5,
+            borderWidth: 0.5,
+            backgroundColor: 'rgba(243, 246, 252, 0.7)',
+          }}>
           <ParallaxImage
             source={{ uri: item.illustration }}
             containerStyle={styles.imageContainer}
-            style={styles.image}
-            style={{ resizeMode: item.rezisemode ? item.rezisemode : "contain" }}
+            style={{
+              resizeMode: item.rezisemode ? item.rezisemode : 'contain',
+            }}
             parallaxFactor={0.4}
             showSpinner={true}
             {...parallaxProps}
@@ -150,7 +173,6 @@ export default function Home(props) {
             <Text style={styles.subTitle} numberOfLines={1}>
               {item.helpText}
             </Text>
-
           </View>
         </TouchableOpacity>
       );
@@ -174,56 +196,69 @@ export default function Home(props) {
         lockScrollWhileSnapping={false}
         loop={true}
       />
-    )
-  }
+    );
+  };
 
   const topCategories = () => {
     return (
-      !!homeData && !!homeData.topCategories &&
-      <View style={{ marginTop: 40 }}>
-        <CategoryWrapper
-          title={'Top Categories'}
-          hideBtn={true}
-        // btnText={''}
-        // onButtonPress={() => showMore({})}
-        />
-        <View style={{ marginLeft: 15 }}>
-          <CategoryChipView data={homeData.topCategories} keyProp={'category'} categoryClicked={(item) => showCategorySkills(item)} />
+      !!homeData &&
+      !!homeData.topCategories && (
+        <View style={{ marginTop: 40 }}>
+          <CategoryWrapper
+            title={'Top Categories'}
+            hideBtn={true}
+            // btnText={''}
+            // onButtonPress={() => showMore({})}
+          />
+          <View style={{ marginLeft: 15 }}>
+            <CategoryChipView
+              data={homeData.topCategories}
+              keyProp={'category'}
+              categoryClicked={item => showCategorySkills(item)}
+            />
+          </View>
         </View>
-      </View>
-    )
-  }
+      )
+    );
+  };
 
   const dataGroupsComponent = () => {
     return (
       <View style={{ marginTop: 10 }}>
-        {!!homeData && !!homeData.dataGroups && !!(Object.keys(homeData.dataGroups)).length && Object.keys(homeData.dataGroups).map(group => {
-          return (
-            <View style={{ marginTop: 18 }}>
-              <CategoryWrapper
-                title={group}
-                btnText={'See All'}
-                onButtonPress={() => showMore(group)}
-              />
-              <SkillFlatList skills={homeData.dataGroups[group]} categories={homeData.categories} />
-            </View>
-          )
-        })}
+        {!!homeData &&
+          !!homeData.dataGroups &&
+          !!Object.keys(homeData.dataGroups).length &&
+          Object.keys(homeData.dataGroups).map(group => {
+            return (
+              <View style={{ marginTop: 18 }}>
+                <CategoryWrapper
+                  title={group}
+                  btnText={'See All'}
+                  onButtonPress={() => showMore(group)}
+                />
+                <SkillFlatList
+                  skills={homeData.dataGroups[group]}
+                  categories={homeData.categories}
+                />
+              </View>
+            );
+          })}
       </View>
-    )
-  }
+    );
+  };
 
   const loadingComponent = () => {
     return (
       <View style={styles.loadingBar}>
-        <ActivityIndicator size={35} animating={true} color={"black"} />
+        <ActivityIndicator size={35} animating={true} color={'black'} />
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView onLayout={() => setScreenWidth(Dimensions.get('window').width)}>
+      <ScrollView
+        onLayout={() => setScreenWidth(Dimensions.get('window').width)}>
         {headerComponent()}
         {carouselComponent()}
         {topCategories()}
@@ -232,7 +267,7 @@ export default function Home(props) {
       {!!loading && loadingComponent()}
     </View>
   );
-};
+}
 
 const carouselHeight = 210;
 const carouselImageHeight = carouselHeight - 60;
@@ -243,9 +278,9 @@ const styles = StyleSheet.create({
   },
   loadingBar: {
     // marginTop: 40
-    alignItems: "center",
+    alignItems: 'center',
     // justifyContent: "space-around",
-    flex: 1
+    flex: 1,
   },
   logo: {
     alignItems: 'center',
@@ -261,12 +296,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: carouselHeight,
     // opacity: 0.6,
-    maxHeight: carouselImageHeight
-
+    maxHeight: carouselImageHeight,
   },
   image: {
     // ...StyleSheet.absoluteFillObject,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   title: {
     // padding: 10,
@@ -275,7 +309,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     // fontWeight: 'bold',
     marginVertical: carouselImageHeight + 5,
-    color: "black",
+    color: 'black',
     // backgroundColor: "skyblue"
   },
   subTitle: {
@@ -283,9 +317,9 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     color: 'black',
     flex: 0.9,
-    alignItems: "center",
-    textAlign: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
     // padding: 10
   },
   subTitleContainer: {
@@ -295,5 +329,3 @@ const styles = StyleSheet.create({
     marginVertical: carouselImageHeight + 30,
   },
 });
-
-

@@ -15,7 +15,7 @@ import { random_rgba } from '../../utils/random_rgba';
 import { Divider } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CategoryChipView from './CategoryChipView';
-import CourseCard from './coursecard';
+import CourseListCard from './CourseListCard';
 import { Chip, ActivityIndicator } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -172,7 +172,7 @@ export default function SkillListView({ route, navigation }) {
           !!categorySkills.length &&
           categorySkills.map(skill => {
             return (
-              <CourseCard
+              <CourseListCard
                 course={skill}
                 courseClicked={() => showDetails(skill)}
                 cardWidth={screenWidth - 50}

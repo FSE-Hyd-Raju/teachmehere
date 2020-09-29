@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, FlatList 
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { Avatar, Rating } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
-import CourseCard from '../../../components/common/coursecard';
+import CourseListCard from '../../../components/common/CourseListCard';
 
 export default function UserDetailsPage({ route, navigation }) {
     const { userinfo } = route.params;
@@ -87,9 +87,11 @@ export default function UserDetailsPage({ route, navigation }) {
         )
     }
 
-    const courseClicked = (item) => {
-        console.log(item)
-    }
+    const courseClicked = item => {
+      navigation.navigate('SkillDetail', {
+        skill: item,
+      });
+    };
 
     const wishlistClicked = (item) => {
         console.log(item)
@@ -103,7 +105,7 @@ export default function UserDetailsPage({ route, navigation }) {
                         showsVerticalScrollIndicator={false}
                         data={courseData}
                         keyExtractor={item => item._id}
-                        renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
+                        renderItem={({ item }) => <CourseListCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
                         style={{ marginBottom: 80 }}
                     />
                 </View>

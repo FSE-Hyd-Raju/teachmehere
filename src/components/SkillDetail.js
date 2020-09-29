@@ -27,6 +27,8 @@ import {
 } from '../redux/slices/profileSlice';
 import PageSpinner from '../components/common/PageSpinner';
 import firestore from '@react-native-firebase/firestore';
+import { DataTable } from 'react-native-paper';
+import moment from 'moment';
 
 const { labelColor, buttonColor } = random_rgba();
 
@@ -42,7 +44,8 @@ export default function SkillDetail({ route, navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userInfo._id
+    if (
+      userInfo._id
       // && (!requestedSkills || !requestedSkills.length)
     ) {
       getRequetedCourses(userInfo._id);
@@ -69,9 +72,11 @@ export default function SkillDetail({ route, navigation }) {
       .then(responseJson => {
         console.log(JSON.stringify(responseJson));
         if (responseJson && responseJson.length)
-          dispatch(setRequestedSkills(responseJson))
-        let reqObj = responseJson.filter(obj => obj.request_uid == userInfo._id)
-        if (reqObj.length) setRequestedObj(reqObj[0])
+          dispatch(setRequestedSkills(responseJson));
+        let reqObj = responseJson.filter(
+          obj => obj.request_uid == userInfo._id,
+        );
+        if (reqObj.length) setRequestedObj(reqObj[0]);
         setLoading(false);
       })
       .catch(error => {
@@ -174,7 +179,7 @@ export default function SkillDetail({ route, navigation }) {
                 ? { uri: skill.displaypic }
                 : require('../assets/img/default-mask-avatar.png')
             }
-          // source={require('../assets/img/defaultAvatar.png')}
+            // source={require('../assets/img/defaultAvatar.png')}
           />
           <Text
             style={{
@@ -214,12 +219,55 @@ export default function SkillDetail({ route, navigation }) {
             View profile
           </Button>
         </View>
-        {/* <MaterialCommunityIcons
+        <MaterialCommunityIcons
           style={{ marginLeft: '88%', position: 'absolute', padding: 10 }}
           name="heart"
           size={26}
-        /> */}
+        />
       </View>
+    );
+  };
+
+  const getSpeakingLanguages = lang => {
+    return lang.join('');
+  };
+
+  const dataTableComponent = () => {
+    return (
+      <DataTable>
+        <DataTable.Header>
+          <DataTable.Title>Other Info</DataTable.Title>
+        </DataTable.Header>
+        <DataTable.Row>
+          <DataTable.Cell>Skill Level</DataTable.Cell>
+          <DataTable.Cell>{skill.courselevel}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Speaking Languages</DataTable.Cell>
+          <DataTable.Cell>
+            {skill.speakinglanguages.length > 0
+              ? getSpeakingLanguages(skill.speakinglanguages)
+              : ''}
+          </DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Platform</DataTable.Cell>
+          <DataTable.Cell>{skill.platform}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Country</DataTable.Cell>
+          <DataTable.Cell>{skill.country}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Demo available ?</DataTable.Cell>
+          <DataTable.Cell>{skill.demo ? 'Yes' : 'No'}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Posted</DataTable.Cell>
+          <DataTable.Cell>{moment(skill.createddate).fromNow()}</DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row />
+      </DataTable>
     );
   };
 
@@ -227,13 +275,15 @@ export default function SkillDetail({ route, navigation }) {
     return (
       <View>
         <Text style={styles.skillName}>{skill.coursename}</Text>
-        <Text style={styles.skillLevel}>Level - {skill.courselevel}</Text>
         <View style={{ width: '40%', padding: 20, paddingTop: 0 }}>
           <Price price={skill.price} currency={skill.currency} />
         </View>
-        <View style={globalStyles.platform}>
-          <Text style={globalStyles.platformText}>{skill.platform}</Text>
+        <View style={[globalStyles.platform, { marginLeft: 15 }]}>
+          <Text style={globalStyles.platformText}>
+            Duration: {skill.totalhours}
+          </Text>
         </View>
+        {dataTableComponent()}
       </View>
     );
   };
@@ -289,7 +339,6 @@ export default function SkillDetail({ route, navigation }) {
   };
 
   const requestButtonComponent = () => {
-
     const requestBtn = () => {
       if (!userInfo._id) {
         setVisibleSnackbar('Please login!');
@@ -307,14 +356,14 @@ export default function SkillDetail({ route, navigation }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "uid": userInfo._id,
-          "courseid": skill._id,
-          "courseuid": skill.uid
-        })
-
-      }).then((response) => response.json())
-        .then((responseJson) => {
-          getRequetedCourses(userInfo._id)
+          uid: userInfo._id,
+          courseid: skill._id,
+          courseuid: skill.uid,
+        }),
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          getRequetedCourses(userInfo._id);
           addFirebaseNotification(skill);
         })
         .catch(error => {
@@ -324,7 +373,7 @@ export default function SkillDetail({ route, navigation }) {
         });
     };
 
-    const addFirebaseNotification = (skill) => {
+    const addFirebaseNotification = skill => {
       const notifyobj = {
         senderName: userInfo.username,
         senderId: userInfo._id,
@@ -334,7 +383,7 @@ export default function SkillDetail({ route, navigation }) {
         type: 'REQUEST',
         createdAt: new Date().getTime(),
         message: 'Lets be friends..!',
-        courseid: skill._id
+        courseid: skill._id,
       };
 
       firestore()
@@ -386,7 +435,7 @@ export default function SkillDetail({ route, navigation }) {
         .where('ids', 'array-contains', userInfo._id)
         .get()
         .then(querySnapshot => {
-          var itemObj = {}
+          var itemObj = {};
           querySnapshot.forEach(documentSnapshot => {
             var data = documentSnapshot.data();
             if (data['ids'].indexOf(skill.uid) > -1) {
@@ -394,23 +443,26 @@ export default function SkillDetail({ route, navigation }) {
 
               var messageObj = {
                 // id: ref.id,
-                userDetails: [{
-                  id: userInfo._id,
-                  name: userInfo.username,
-                  displaypic: userInfo.displaypic
-                }, {
-                  id: skill.uid,
-                  name: skill.username,
-                  displaypic: skill.displaypic
-                }],
+                userDetails: [
+                  {
+                    id: userInfo._id,
+                    name: userInfo.username,
+                    displaypic: userInfo.displaypic,
+                  },
+                  {
+                    id: skill.uid,
+                    name: skill.username,
+                    displaypic: skill.displaypic,
+                  },
+                ],
                 ids: [userInfo._id, skill.uid],
                 latestMessage: {
                   text: 'Say Hello..',
-                  createdAt: Date.now()
+                  createdAt: Date.now(),
                 },
                 deletedIds: [skill.uid],
-                newChat: true
-              }
+                newChat: true,
+              };
 
               itemObj = {
                 // ...item,
@@ -418,8 +470,8 @@ export default function SkillDetail({ route, navigation }) {
                 _id: documentSnapshot.id,
                 name: skill.username,
                 displaypic: skill.displaypic,
-                senderDetailsId: skill.uid
-              }
+                senderDetailsId: skill.uid,
+              };
 
               // item = {
               //   ...item,
@@ -431,8 +483,8 @@ export default function SkillDetail({ route, navigation }) {
           if (!exists) {
             sendMessage();
           } else {
-            console.log("elseeeeeeeeeeeeeeeeeeeeeee")
-            console.log(itemObj)
+            console.log('elseeeeeeeeeeeeeeeeeeeeeee');
+            console.log(itemObj);
             setLoading(false);
             navigation.navigate('ChatRoom', { thread: itemObj });
           }
@@ -440,41 +492,45 @@ export default function SkillDetail({ route, navigation }) {
     };
 
     function sendMessage() {
-      const ref = firestore().collection('THREADS').doc()
+      const ref = firestore()
+        .collection('THREADS')
+        .doc();
 
       var messageObj = {
         // id: ref.id,
-        userDetails: [{
-          id: userInfo._id,
-          name: userInfo.username,
-          displaypic: userInfo.displaypic
-        }, {
-          id: skill.uid,
-          name: skill.username,
-          displaypic: skill.displaypic
-        }],
+        userDetails: [
+          {
+            id: userInfo._id,
+            name: userInfo.username,
+            displaypic: userInfo.displaypic,
+          },
+          {
+            id: skill.uid,
+            name: skill.username,
+            displaypic: skill.displaypic,
+          },
+        ],
         ids: [userInfo._id, skill.uid],
         latestMessage: {
           text: 'Say Hello..',
-          createdAt: Date.now()
+          createdAt: Date.now(),
         },
         deletedIds: [skill.uid],
-        newChat: true
-      }
-      ref.set(messageObj)
-        .then(() => {
-          // ref.get().then(doc => {
-          //    alert(JSON.stringify(doc.data()))
-          // })
-          ref.collection('MESSAGES').add({
+        newChat: true,
+      };
+      ref.set(messageObj).then(() => {
+        // ref.get().then(doc => {
+        //    alert(JSON.stringify(doc.data()))
+        // })
+        ref
+          .collection('MESSAGES')
+          .add({
             text: 'Say Hello..',
             createdAt: Date.now(),
-            system: true
-          }).then(() => {
-
-
+            system: true,
           })
-        })
+          .then(() => {});
+      });
 
       var itemObj = {
         // ...item,
@@ -482,8 +538,8 @@ export default function SkillDetail({ route, navigation }) {
         _id: ref.id,
         name: skill.username,
         displaypic: skill.displaypic,
-        senderDetailsId: skill.uid
-      }
+        senderDetailsId: skill.uid,
+      };
       // navigation.popToTop();
       setLoading(false);
       navigation.navigate('ChatRoom', { thread: itemObj });
@@ -493,13 +549,35 @@ export default function SkillDetail({ route, navigation }) {
       <View>
         {/* <View style={globalStyles.btnStyle}> */}
         {/* <Text>{JSON.stringify(requestedObj)}</Text> */}
-        {!requestedObj.request_status && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={requestBtn} > Request</Button>
-        }
-        {(requestedObj.request_status == "REJECTED" || requestedObj.request_status == "PENDING") &&
-          <Button disabled={true} mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle}>{requestedObj.request_status}</Button>
-        }
-        {requestedObj.request_status == "ACCEPTED" && <Button mode="contained" color={'black'} labelStyle={globalStyles.btnLabelStyle} onPress={checkIfChatExists} >Message</Button>
-        }
+        {!requestedObj.request_status && (
+          <Button
+            mode="contained"
+            color={'black'}
+            labelStyle={globalStyles.btnLabelStyle}
+            onPress={requestBtn}>
+            {' '}
+            Request
+          </Button>
+        )}
+        {(requestedObj.request_status == 'REJECTED' ||
+          requestedObj.request_status == 'PENDING') && (
+          <Button
+            disabled={true}
+            mode="contained"
+            color={'black'}
+            labelStyle={globalStyles.btnLabelStyle}>
+            {requestedObj.request_status}
+          </Button>
+        )}
+        {requestedObj.request_status == 'ACCEPTED' && (
+          <Button
+            mode="contained"
+            color={'black'}
+            labelStyle={globalStyles.btnLabelStyle}
+            onPress={checkIfChatExists}>
+            Message
+          </Button>
+        )}
         {/* </View> */}
       </View>
     );
@@ -573,9 +651,9 @@ const styles = StyleSheet.create({
   skillName: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#444',
+    color: '#008080',
     padding: 20,
-    // marginTop: 20,
+    textTransform: 'capitalize',
   },
   skillLevel: {
     fontSize: 14,

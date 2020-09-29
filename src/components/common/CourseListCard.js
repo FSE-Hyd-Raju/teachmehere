@@ -10,38 +10,26 @@ import {
 import { Card, Avatar, Badge, Icon, Rating } from 'react-native-elements';
 import Price from '../common/Price';
 
-export default function CourseCard({
+export default function CourseListCard({
   course,
   courseClicked,
   wishlistClicked,
   cardWidth,
 }) {
   const userProfilePic =
-    (course && course.displaypic)
+    course && course.displaypic
       ? {
-        uri: course.displaypic,
-      }
-      :
-      // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-      require("../../assets/img/default-mask-avatar.png");
+          uri: course.displaypic,
+        }
+      : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
+        require('../../assets/img/default-mask-avatar.png');
   return (
-    <View style={[styles.card, { width: cardWidth }]}>
-      {/* <View style={styles.cardHeader}>
-        <Image
-          style={styles.icon}
-          source={{
-            uri: 'https://img.icons8.com/flat_round/64/000000/hearts.png',
-          }}
-        />
-      </View> */}
-      <Image
-        style={styles.userImage}
-        source={userProfilePic}
-      />
-      <View style={styles.cardFooter}>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={styles.position}>{course.username}</Text>
-          <View style={{ flexDirection: 'row' }}>
+    <TouchableOpacity onPress={courseClicked}>
+      <View style={styles.card}>
+        <View style={styles.userDetails}>
+          <Image style={styles.userImage} source={userProfilePic} />
+          <Text style={styles.textStyle}>{course.username}</Text>
+          <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Rating
               type="star"
               imageSize={15}
@@ -51,18 +39,25 @@ export default function CourseCard({
             />
             <Text style={styles.usersRated}>({course.usersrated})</Text>
           </View>
-          <Text style={styles.name}>{course.coursename}</Text>
-          {!!course && !!course.courselevel && (
-            <Text style={[styles.position, { width: 135 }]}>Level - {course.courselevel}</Text>)}
-          <View style={{ marginTop: 10, width: 110 }}>
-            <Price price={course.price} currency={course.currency} />
-          </View>
-          <View style={styles.platform}>
-            <Text style={styles.platformText}>{course.totalhours} Hours</Text>
+        </View>
+        <View style={styles.courseDetails}>
+          <View>
+            <Text style={styles.courseName}>{course.coursename}</Text>
+            {!!course && !!course.courselevel && (
+              <Text style={[styles.textStyle, { width: 135 }]}>
+                Level - {course.courselevel}
+              </Text>
+            )}
+            <View style={{ marginTop: 10, width: 110 }}>
+              <Price price={course.price} currency={course.currency} />
+            </View>
+            <View style={styles.platform}>
+              <Text style={styles.platformText}>{course.totalhours} Hours</Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -81,57 +76,42 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexBasis: '46%',
     marginHorizontal: 5,
+    flexDirection: 'row',
   },
-  list: {
-    paddingHorizontal: 5,
-    backgroundColor: '#E6E6E6',
+  userDetails: {
+    padding: 15,
+    width: 150,
   },
-  listContainer: {
-    alignItems: 'center',
-  },
-  cardFooter: {
+  courseDetails: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderTopLeftRadius: 1,
     borderTopRightRadius: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   cardContent: {
     paddingVertical: 12.5,
     paddingHorizontal: 16,
   },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: 12.5,
-    paddingBottom: 10,
-    paddingHorizontal: 16,
-    borderBottomLeftRadius: 1,
-    borderBottomRightRadius: 1,
-  },
   userImage: {
-    height: 90,
-    width: 90,
+    height: 100,
+    width: 100,
     borderRadius: 60,
-    alignSelf: 'center',
     borderColor: '#DCDCDC',
     borderWidth: 2,
-    marginTop: 10,
+    alignSelf: 'center',
   },
-  name: {
+  courseName: {
     fontSize: 18,
     flex: 1,
-    alignSelf: 'center',
     color: '#008080',
     fontWeight: 'bold',
   },
-  position: {
+  textStyle: {
     fontSize: 14,
     fontWeight: 'bold',
-    alignSelf: 'center',
     color: '#696969',
+    alignSelf: 'center',
     textTransform: 'capitalize',
   },
   followButton: {

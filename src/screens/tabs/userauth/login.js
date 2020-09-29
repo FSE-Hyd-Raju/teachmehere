@@ -50,9 +50,8 @@ export default function LoginPage({ navigation }) {
           email: values.Email,
           password: values.Password,
           onSuccess: () => {
-            console.log("Post========>", isPostQueryActive)
             if (isPostQueryActive) {
-              navigation.navigate('Post')
+              navigation.navigate('Post');
             } else {
               navigation.reset({
                 index: 0,

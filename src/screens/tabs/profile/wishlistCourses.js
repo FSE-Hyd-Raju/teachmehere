@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableWithoutFeedback, RefreshControl, Image } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CourseCard from '../../../components/common/coursecard';
+import CourseListCard from '../../../components/common/CourseListCard';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import { profileSelector, setWishlistSkills } from '../../../redux/slices/profileSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,10 +49,11 @@ export default function WishlistCoursesPage({ navigation }) {
         )
     }
 
-    const courseClicked = (course) => {
-        console.log(course.coursename)
-        alert("Imagine it navigated to course detail page")
-    }
+    const courseClicked = course => {
+      navigation.navigate('SkillDetail', {
+        skill: course,
+      });
+    };
 
     const wishlistClicked = (item) => {
         console.log("wishlistClicked clicked")
@@ -66,7 +67,7 @@ export default function WishlistCoursesPage({ navigation }) {
                         showsVerticalScrollIndicator={false}
                         data={wishlistSkills}
                         keyExtractor={item => item._id}
-                        renderItem={({ item }) => <CourseCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
+                        renderItem={({ item }) => <CourseListCard course={item} courseClicked={() => courseClicked(item)} wishlistClicked={() => wishlistClicked(item)} />}
                         refreshControl={
                             <RefreshControl
                                 refreshing={loading}

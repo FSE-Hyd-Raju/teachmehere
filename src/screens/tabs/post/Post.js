@@ -139,7 +139,7 @@ export default class Post extends Component {
                 backFromSteps={this.backFromSteps}
                 category={activeCategory.category}
                 subCategory={activeSubCategory.name}
-                navigate={this.props.navigation.navigate}
+                navigation={this.props.navigation}
               />
             </Provider>
           </View>
