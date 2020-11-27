@@ -34,12 +34,12 @@ export default function CourseCard({
           }}
         />
       </View> */}
-      <Image
-        style={styles.userImage}
-        source={userProfilePic}
-      />
-      <View style={styles.cardFooter}>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-evenly" }}>
+        <Image
+          style={styles.userImage}
+          source={userProfilePic}
+        />
+        <View style={{ marginTop: 15 }}>
           <Text style={styles.position}>{course.username}</Text>
           <View style={{ flexDirection: 'row' }}>
             <Rating
@@ -51,6 +51,12 @@ export default function CourseCard({
             />
             <Text style={styles.usersRated}>({course.usersrated})</Text>
           </View>
+        </View>
+      </View>
+
+      <View style={styles.cardFooter}>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+
           <Text style={styles.name}>{course.coursename}</Text>
           {!!course && !!course.courselevel && (
             <Text style={[styles.position, { width: 135 }]}>Level - {course.courselevel}</Text>)}
@@ -68,15 +74,14 @@ export default function CourseCard({
 
 const styles = StyleSheet.create({
   card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 5,
-
+    // shadowColor: '#00000021',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 6,
+    // },
+    // shadowOpacity: 0.37,
+    // shadowRadius: 7.49,
+    elevation: 2,
     marginVertical: 5,
     backgroundColor: 'white',
     flexBasis: '46%',
@@ -112,13 +117,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 1,
   },
   userImage: {
-    height: 90,
-    width: 90,
-    borderRadius: 60,
-    alignSelf: 'center',
+    height: 60,
+    width: 60,
+    // borderRadius: 60,
+    // alignSelf: 'center',
     borderColor: '#DCDCDC',
-    borderWidth: 2,
+    // borderWidth: 2,
     marginTop: 10,
+    // elevation: 5,
   },
   name: {
     fontSize: 18,
@@ -157,17 +163,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     width: 90,
-    backgroundColor: 'rgba(152,73,166,0.1)',
-    borderColor: 'lightgrey',
-    borderWidth: 1,
+    // backgroundColor: 'rgba(152,73,166,0.1)',
+    // borderColor: 'lightgrey',
+    borderWidth: 0.1,
     padding: 3,
-    borderRadius: 2,
+    borderRadius: 10,
+    // elevation: 2
   },
   platformText: {
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'rgba(152,73,166,1)',
+    // color: 'rgba(152,73,166,1)',
   },
   usersRated: {
     fontSize: 12,

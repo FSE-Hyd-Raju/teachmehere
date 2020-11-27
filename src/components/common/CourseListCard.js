@@ -19,10 +19,10 @@ export default function CourseListCard({
   const userProfilePic =
     course && course.displaypic
       ? {
-          uri: course.displaypic,
-        }
+        uri: course.displaypic,
+      }
       : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-        require('../../assets/img/default-mask-avatar.png');
+      require('../../assets/img/default-mask-avatar.png');
   return (
     <TouchableOpacity onPress={courseClicked}>
       <View style={styles.card}>
@@ -63,15 +63,14 @@ export default function CourseListCard({
 
 const styles = StyleSheet.create({
   card: {
-    shadowColor: '#00000021',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 5,
-
+    // shadowColor: '#00000021',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 6,
+    // },
+    // shadowOpacity: 0.37,
+    // shadowRadius: 7.49,
+    elevation: 2,
     marginVertical: 5,
     backgroundColor: 'white',
     flexBasis: '46%',
@@ -84,21 +83,21 @@ const styles = StyleSheet.create({
   },
   courseDetails: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderTopLeftRadius: 1,
-    borderTopRightRadius: 1,
-    justifyContent: 'center',
+    // paddingHorizontal: 16,
+    // borderTopLeftRadius: 1,
+    // borderTopRightRadius: 1,
+    // justifyContent: 'center',
   },
   cardContent: {
     paddingVertical: 12.5,
     paddingHorizontal: 16,
   },
   userImage: {
-    height: 100,
-    width: 100,
+    height: 60,
+    width: 60,
     borderRadius: 60,
     borderColor: '#DCDCDC',
-    borderWidth: 2,
+    // borderWidth: 2,
     alignSelf: 'center',
   },
   courseName: {

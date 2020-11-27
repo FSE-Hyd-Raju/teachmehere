@@ -166,7 +166,7 @@ export default function ChangeProfilePage({ navigation }) {
                                 <IconMaterialIcons name="lock" size={20} />} errorMessage={oldPasswordError} value={values.Oldpassword} touched={touched.Oldpassword} errors={errors.Oldpassword} handleChange={handleChange} setFieldTouched={setFieldTouched} rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon} />} secureTextEntry={hidePassword}></InputComponent>
 
                             <InputComponent placeholder="New Password" fieldName="Newpassword" leftIcon={
-                                <IconMaterialIcons name="lock" size={20} />} errorMessage={newPasswordError} value={values.Newpassword} touched={touched.Newpassword} errors={errors.Newpassword} handleChange={handleChange} setFieldTouched={setFieldTouched} rightIcon={<IconMaterialIcons name={eyeicon} size={20} margin="10" onPress={toggleEyeIcon2} />} secureTextEntry={hidePassword2}></InputComponent>
+                                <IconMaterialIcons name="lock" size={20} />} errorMessage={newPasswordError} value={values.Newpassword} touched={touched.Newpassword} errors={errors.Newpassword} handleChange={handleChange} setFieldTouched={setFieldTouched} rightIcon={<IconMaterialIcons name={eyeicon2} size={20} margin="10" onPress={toggleEyeIcon2} />} secureTextEntry={hidePassword2}></InputComponent>
 
                         </View>
                         <Button

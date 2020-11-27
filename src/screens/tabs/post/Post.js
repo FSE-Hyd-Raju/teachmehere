@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   FlatList,
   Dimensions,
   Modal,
+  BackHandler
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -14,32 +15,92 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Steps from './steps/steps';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Provider } from 'react-native-paper';
-const categories = require('./categories.json');
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  homeSelector
+} from '../../../redux/slices/homeSlice';
 
-export default class Post extends Component {
-  constructor(props) {
-    super(props);
+export default function Post(props) {
+  // constructor(props) {
+  //   super(props);
+  const { homeData } = useSelector(homeSelector);
+  const categories = homeData["categories"];
 
-    this.state = {
+  const [state, setState] = useState(
+    {
       showMainCategories: true,
       showSubCategories: false,
       showSteps: false,
       activeCategory: {},
       activeSubCategory: {},
-    };
-  }
+    }
+  );
 
-  showSubCategories = category => {
-    this.setState({
+  // const [showSubCategories, setShowSubCategories] = useState(false);
+  // const [showMainCategories, setShowMainCategories] = useState(true);
+  // const [showSteps, setShowSteps] = useState(false);
+  // const [activeCategory, setActiveCategory] = useState({});
+  // const [activeSubCategory, setActiveSubCategory] = useState({});
+
+
+
+  // this.state = {
+  //   showMainCategories: true,
+  //   showSubCategories: false,
+  //   showSteps: false,
+  //   activeCategory: {},
+  //   activeSubCategory: {},
+  // };
+  // }
+
+
+  const backButtonHandler = () => {
+    return BackHandler.addEventListener('hardwareBackPress', () => {
+      if (showSubCategories) {
+        goToMainCategories()
+        return true;
+      } else if (showSteps) {
+        backFromSteps();
+        return true;
+      }
+      return false;
+    });
+  };
+
+  useEffect(() => {
+    console.log(activeCategory)
+    let backhandler = backButtonHandler();
+    return () => {
+      backhandler.remove();
+    };
+  });
+
+  const showSubCategoriesFun = category => {
+    // alert(JSON.stringify(category))
+    setState({
+      ...state,
       activeCategory: category,
       showMainCategories: false,
       showSubCategories: true,
       showSteps: false,
     });
+    // setState({
+    // setActiveCategory(category)
+    // setShowMainCategories(false)
+    // setShowSubCategories(true)
+    // setShowSteps(false)
+    // alert(showSubCategories)
+
+    // });
   };
 
-  showSteps = subCategory => {
-    this.setState({
+  const showStepsFun = subCategory => {
+    setState({
+      // setActiveSubCategory(subCategory)
+      // setShowMainCategories(false)
+      // setShowSubCategories(false)
+      // setShowSteps(true)
+      ...state,
       showMainCategories: false,
       showSubCategories: false,
       showSteps: true,
@@ -47,15 +108,22 @@ export default class Post extends Component {
     });
   };
 
-  keyExtractor = (item, index) => index.toString();
-  renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => this.showSteps(item)}>
+  const keyExtractor = (item, index) => index.toString();
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => showStepsFun(item)}>
       <ListItem title={item.name} bottomDivider chevron />
     </TouchableOpacity>
   );
 
-  goToMainCategories = () => {
-    this.setState({
+  const goToMainCategories = () => {
+    // setActiveSubCategory({})
+    // setActiveCategory({})
+    // setShowMainCategories(true)
+    // setShowSubCategories(false)
+    // setShowSteps(false)
+    setState({
+      ...state,
       activeCategory: {},
       activeSubCategory: {},
       showMainCategories: true,
@@ -64,90 +132,95 @@ export default class Post extends Component {
     });
   };
 
-  goToSubCategories = () => {
-    this.setState({
-      activeSubCategory: {},
+  // const goToSubCategories = () => {
+  //   setState({
+  //     activeSubCategory: {},
+  //     showMainCategories: false,
+  //     showSubCategories: true,
+  //     showSteps: false,
+  //   });
+  // };
+
+  const backFromSteps = () => {
+    // setShowMainCategories(false)
+    // setShowSubCategories(true)
+    // setShowSteps(false)
+    setState({
+      ...state,
+      showSteps: false,
       showMainCategories: false,
       showSubCategories: true,
-      showSteps: false,
     });
   };
 
-  backFromSteps = () => {
-    this.setState({
-      showSteps: false,
-      showMainCategories: false,
-      showSubCategories: true,
-    });
-  };
+  // render() {
+  const {
+    showMainCategories,
+    showSubCategories,
+    activeCategory,
+    activeSubCategory,
+    showSteps,
+  } = state;
 
-  render() {
-    const {
-      showMainCategories,
-      showSubCategories,
-      activeCategory,
-      activeSubCategory,
-      showSteps,
-    } = this.state;
+  return (
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
+      {showMainCategories && (
+        <Text style={styles.heading}>What do you want to teach?</Text>
+      )}
+      {!!showSubCategories && (
+        <View>
+          <TouchableOpacity
+            onPress={goToMainCategories}
+            style={styles.backButton}>
+            <Icon name="arrow-back" size={28} color="#000" />
+          </TouchableOpacity>
+          <Text style={styles.heading}>{activeCategory.category}</Text>
+        </View>
+      )}
 
-    return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        {showMainCategories && (
-          <Text style={styles.heading}>What do you want to teach?</Text>
-        )}
-        {showSubCategories && (
-          <View>
+      <ScrollView contentContainerStyle={styles.container}>
+        {showMainCategories &&
+          categories &&
+          categories.map(category => (
             <TouchableOpacity
-              onPress={this.goToMainCategories}
-              style={styles.backButton}>
-              <Icon name="arrow-back" size={28} color="#000" />
+              key={category.id}
+              style={styles.category}
+              onPress={() => showSubCategoriesFun(category)}>
+              <View key={category.id} style={styles.IconAndName}>
+                <IconMaterialIcons
+                  name={category.icon}
+                  color="#000"
+                  size={30}
+                />
+                <Text style={{ textAlign: "center" }}>{category.category}</Text>
+              </View>
             </TouchableOpacity>
-            <Text style={styles.heading}>{activeCategory.category}</Text>
-          </View>
+          ))}
+        {showSubCategories && (
+          <FlatList
+            keyExtractor={keyExtractor}
+            data={activeCategory.subCategories}
+            renderItem={renderItem}
+          />
         )}
-
-        <ScrollView contentContainerStyle={styles.container}>
-          {showMainCategories &&
-            categories &&
-            categories.map(category => (
-              <TouchableOpacity
-                key={category.id}
-                style={styles.category}
-                onPress={() => this.showSubCategories(category)}>
-                <View key={category.id} style={styles.IconAndName}>
-                  <IconMaterialIcons
-                    name={category.icon}
-                    color="#000"
-                    size={30}
-                  />
-                  <Text>{category.category}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          {showSubCategories && (
-            <FlatList
-              keyExtractor={this.keyExtractor}
-              data={activeCategory.subCategories}
-              renderItem={this.renderItem}
+      </ScrollView>
+      {showSteps && (
+        <View style={{ flex: 2000 }}>
+          <Provider>
+            <Steps
+              backFromSteps={backFromSteps}
+              category={activeCategory.category}
+              subCategory={activeSubCategory.name}
+              navigation={props.navigation}
             />
-          )}
-        </ScrollView>
-        {showSteps && (
-          <View style={{ flex: 2000 }}>
-            <Provider>
-              <Steps
-                backFromSteps={this.backFromSteps}
-                category={activeCategory.category}
-                subCategory={activeSubCategory.name}
-                navigation={this.props.navigation}
-              />
-            </Provider>
-          </View>
-        )}
-      </View>
-    );
-  }
+          </Provider>
+        </View>
+      )}
+
+    </View>
+  );
 }
+// }
 
 const styles = StyleSheet.create({
   heading: {
