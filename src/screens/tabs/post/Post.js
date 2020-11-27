@@ -21,8 +21,6 @@ import {
 } from '../../../redux/slices/homeSlice';
 
 export default function Post(props) {
-  // constructor(props) {
-  //   super(props);
   const { homeData } = useSelector(homeSelector);
   const categories = homeData["categories"];
 
@@ -35,24 +33,6 @@ export default function Post(props) {
       activeSubCategory: {},
     }
   );
-
-  // const [showSubCategories, setShowSubCategories] = useState(false);
-  // const [showMainCategories, setShowMainCategories] = useState(true);
-  // const [showSteps, setShowSteps] = useState(false);
-  // const [activeCategory, setActiveCategory] = useState({});
-  // const [activeSubCategory, setActiveSubCategory] = useState({});
-
-
-
-  // this.state = {
-  //   showMainCategories: true,
-  //   showSubCategories: false,
-  //   showSteps: false,
-  //   activeCategory: {},
-  //   activeSubCategory: {},
-  // };
-  // }
-
 
   const backButtonHandler = () => {
     return BackHandler.addEventListener('hardwareBackPress', () => {
@@ -76,7 +56,6 @@ export default function Post(props) {
   });
 
   const showSubCategoriesFun = category => {
-    // alert(JSON.stringify(category))
     setState({
       ...state,
       activeCategory: category,
@@ -84,22 +63,10 @@ export default function Post(props) {
       showSubCategories: true,
       showSteps: false,
     });
-    // setState({
-    // setActiveCategory(category)
-    // setShowMainCategories(false)
-    // setShowSubCategories(true)
-    // setShowSteps(false)
-    // alert(showSubCategories)
-
-    // });
   };
 
   const showStepsFun = subCategory => {
     setState({
-      // setActiveSubCategory(subCategory)
-      // setShowMainCategories(false)
-      // setShowSubCategories(false)
-      // setShowSteps(true)
       ...state,
       showMainCategories: false,
       showSubCategories: false,
@@ -117,11 +84,6 @@ export default function Post(props) {
   );
 
   const goToMainCategories = () => {
-    // setActiveSubCategory({})
-    // setActiveCategory({})
-    // setShowMainCategories(true)
-    // setShowSubCategories(false)
-    // setShowSteps(false)
     setState({
       ...state,
       activeCategory: {},
@@ -132,19 +94,7 @@ export default function Post(props) {
     });
   };
 
-  // const goToSubCategories = () => {
-  //   setState({
-  //     activeSubCategory: {},
-  //     showMainCategories: false,
-  //     showSubCategories: true,
-  //     showSteps: false,
-  //   });
-  // };
-
   const backFromSteps = () => {
-    // setShowMainCategories(false)
-    // setShowSubCategories(true)
-    // setShowSteps(false)
     setState({
       ...state,
       showSteps: false,
@@ -153,7 +103,6 @@ export default function Post(props) {
     });
   };
 
-  // render() {
   const {
     showMainCategories,
     showSubCategories,
@@ -220,7 +169,6 @@ export default function Post(props) {
     </View>
   );
 }
-// }
 
 const styles = StyleSheet.create({
   heading: {
