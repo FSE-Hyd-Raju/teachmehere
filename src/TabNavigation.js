@@ -24,8 +24,15 @@ import forgotPassword from './screens/tabs/userauth/forgotPassword';
 import forgotPasswordOtpPage from './screens/tabs/userauth/forgotPasswordOtp';
 import { getAsyncData, stGetUser } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSelector, loadUserInfo, setDeviceToken } from './redux/slices/loginSlice';
-import { getRecentSearches, fetchTopCategories } from './redux/slices/searchSlice';
+import {
+  loginSelector,
+  loadUserInfo,
+  setDeviceToken,
+} from './redux/slices/loginSlice';
+import {
+  getRecentSearches,
+  fetchTopCategories,
+} from './redux/slices/searchSlice';
 import messaging from '@react-native-firebase/messaging';
 import SkillDetail from './components/SkillDetail';
 import NotificationPage from './screens/tabs/notification/notification';
@@ -35,21 +42,20 @@ import signupDescPage from './screens/tabs/userauth/signupDesc';
 import feedbackPage from './screens/tabs/profile/feedbackPage';
 import UserDetailsPage from './screens/tabs/profile/userDetailsPage';
 
-
 const TabNavigation = props => {
   const dispatch = useDispatch();
   const { colors } = props.theme;
-
   const Stack = createStackNavigator();
   const Tab = createMaterialBottomTabNavigator();
-  const [Intialroutename, setIntialroutename] = React.useState("GuestPage");
+  const [Intialroutename, setIntialroutename] = React.useState('GuestPage');
+  const { userInfo } = useSelector(loginSelector);
 
   useEffect(() => {
     loadInitialData();
-  });
+  }, []);
 
   const loadInitialData = () => {
-    userInfo();
+    getUserInfo();
     searchInitialData();
     checkPermission();
   };
@@ -59,9 +65,8 @@ const TabNavigation = props => {
     dispatch(fetchTopCategories());
   };
 
-  const userInfo = async () => {
+  const getUserInfo = async () => {
     const userData = await getAsyncData('userInfo');
-
     if (userData) {
       dispatch(loadUserInfo(userData));
       setIntialroutename('Profile');
@@ -80,7 +85,7 @@ const TabNavigation = props => {
   };
 
   const getFcmToken = async () => {
-    fcmToken = await messaging().getToken();
+    var fcmToken = await messaging().getToken();
     if (fcmToken) {
       // alert(fcmToken)
       dispatch(setDeviceToken(fcmToken));
@@ -103,7 +108,9 @@ const TabNavigation = props => {
 
   function ProfileStackScreen() {
     return (
-      <Stack.Navigator headerMode={'none'} initialRouteName={Intialroutename}>
+      <Stack.Navigator
+        headerMode={'none'}
+        initialRouteName={userInfo._id ? 'Profile' : 'GuestPage'}>
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="GuestPage" component={GuestPage} />
         <Stack.Screen name="Login" component={LoginPage} />
@@ -111,9 +118,15 @@ const TabNavigation = props => {
         <Stack.Screen name="SignupOtp" component={signupOtpPage} />
         <Stack.Screen name="SignupDescPage" component={signupDescPage} />
         <Stack.Screen name="ForgotPassword" component={forgotPassword} />
-        <Stack.Screen name="ForgotPasswordOTP" component={forgotPasswordOtpPage} />
+        <Stack.Screen
+          name="ForgotPasswordOTP"
+          component={forgotPasswordOtpPage}
+        />
         <Stack.Screen name="ProfileSettings" component={ProfileSettingsPage} />
-        <Stack.Screen name="RequestedCourses" component={RequestedCoursesPage} />
+        <Stack.Screen
+          name="RequestedCourses"
+          component={RequestedCoursesPage}
+        />
         <Stack.Screen name="WishlistCourses" component={WishlistCoursesPage} />
         <Stack.Screen name="PostedCourses" component={PostedCoursesPage} />
         <Stack.Screen name="ChangeProfile" component={ChangeProfilePage} />
@@ -145,6 +158,16 @@ const TabNavigation = props => {
         <Stack.Screen name="ChatRoom" component={ChatRoom} />
         <Stack.Screen name="NewChat" component={NewChat} />
         <Stack.Screen name="UserDetailsPage" component={UserDetailsPage} />
+      </Stack.Navigator>
+    );
+  }
+
+  function PostStackScreen() {
+    return (
+      <Stack.Navigator headerMode={'none'} initialRouteName={'PostPage'}>
+        <Stack.Screen name="PostPage" component={Post} />
+        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="PostedCourses" component={PostedCoursesPage} />
       </Stack.Navigator>
     );
   }
@@ -183,7 +206,7 @@ const TabNavigation = props => {
         />
         <Tab.Screen
           name="Post"
-          component={Post}
+          component={PostStackScreen}
           options={{
             tabBarLabel: 'Post',
             tabBarIcon: ({ color }) => (

@@ -6,12 +6,16 @@ export const initialState = {
   isPostQueryActive: false,
   hasErrors: false,
   postResponse: '',
+  loading: false,
 };
 
 const postSlice = createSlice({
   name: 'post',
   initialState,
   reducers: {
+    postLoading: state => {
+      state.loading = true;
+    },
     postSkill: state => {
       state.isPostQueryActive = true;
     },
@@ -19,16 +23,19 @@ const postSlice = createSlice({
       state.postResponse = 'successfull';
       state.isPostQueryActive = false;
       state.hasErrors = false;
+      state.loading = false;
     },
     postSkillFailure: state => {
       state.postResponse = 'failed';
       state.isPostQueryActive = false;
       state.hasErrors = true;
+      state.loading = false;
     },
   },
 });
 
 export const {
+  postLoading,
   postSkill,
   postSkillSuccess,
   postSkillFailure,

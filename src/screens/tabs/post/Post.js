@@ -7,37 +7,36 @@ import {
   FlatList,
   Dimensions,
   Modal,
-  BackHandler
+  BackHandler,
 } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 import Steps from './steps/steps';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Provider } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  homeSelector
-} from '../../../redux/slices/homeSlice';
+import { homeSelector } from '../../../redux/slices/homeSlice';
+import { loginSelector } from '../../../redux/slices/loginSlice';
 
 export default function Post(props) {
   const { homeData } = useSelector(homeSelector);
-  const categories = homeData["categories"];
+  const categories = homeData['categories'];
+  const { userInfo } = useSelector(loginSelector);
 
-  const [state, setState] = useState(
-    {
-      showMainCategories: true,
-      showSubCategories: false,
-      showSteps: false,
-      activeCategory: {},
-      activeSubCategory: {},
-    }
-  );
+  const [state, setState] = useState({
+    showMainCategories: true,
+    showSubCategories: false,
+    showSteps: false,
+    activeCategory: {},
+    activeSubCategory: {},
+  });
 
   const backButtonHandler = () => {
     return BackHandler.addEventListener('hardwareBackPress', () => {
       if (showSubCategories) {
-        goToMainCategories()
+        goToMainCategories();
         return true;
       } else if (showSteps) {
         backFromSteps();
@@ -48,7 +47,7 @@ export default function Post(props) {
   };
 
   useEffect(() => {
-    console.log(activeCategory)
+    console.log(activeCategory);
     let backhandler = backButtonHandler();
     return () => {
       backhandler.remove();
@@ -56,13 +55,18 @@ export default function Post(props) {
   });
 
   const showSubCategoriesFun = category => {
-    setState({
-      ...state,
-      activeCategory: category,
-      showMainCategories: false,
-      showSubCategories: true,
-      showSteps: false,
-    });
+    if (userInfo._id) {
+      setState({
+        ...state,
+        activeCategory: category,
+        showMainCategories: false,
+        showSubCategories: true,
+        showSteps: false,
+      });
+    } else {
+      props.navigation.navigate('Login');
+      return;
+    }
   };
 
   const showStepsFun = subCategory => {
@@ -141,7 +145,7 @@ export default function Post(props) {
                   color="#000"
                   size={30}
                 />
-                <Text style={{ textAlign: "center" }}>{category.category}</Text>
+                <Text style={{ textAlign: 'center' }}>{category.category}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -161,11 +165,11 @@ export default function Post(props) {
               category={activeCategory.category}
               subCategory={activeSubCategory.name}
               navigation={props.navigation}
+              goToMainCategories={goToMainCategories}
             />
           </Provider>
         </View>
       )}
-
     </View>
   );
 }

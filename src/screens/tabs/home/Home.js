@@ -48,7 +48,7 @@ export default function Home(props) {
 
   const showCategorySkills = category => {
     props.navigation.navigate('SkillListView', {
-      title: !!category.category ? category.category : '',
+      title: category.category ? category.category : '',
       category: category,
     });
   };
@@ -63,9 +63,17 @@ export default function Home(props) {
       console.log(notificunsubscribe);
     }
     return () => {
-      if (notificunsubscribe) notificunsubscribe();
+      if (notificunsubscribe) {
+        notificunsubscribe();
+      }
     };
-  }, [userInfo]);
+  }, [
+    // appOpenedNotificationListener,
+    // dispatch,
+    // notificationListener,
+    // notificunsubscribe,
+    userInfo,
+  ]);
 
   const notificationListener = async () => {
     PushNotification.configure({

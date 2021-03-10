@@ -17,11 +17,11 @@ const theme = {
     ...DefaultTheme.colors,
     primary: 'white',
     accent: 'black',
-    text: 'black'
+    text: 'black',
   },
 };
 const App = () => {
-  console.disableYellowBox = true
+  console.disableYellowBox = true;
   window.console = console;
   return (
     <Provider store={store}>

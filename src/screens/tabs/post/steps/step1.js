@@ -46,10 +46,18 @@ const Step1 = props => {
 
   return (
     <View>
-      <Appbar.Header theme={DarkTheme}>
+      <Appbar.Header theme={DarkTheme} style={{ backgroundColor: "white" }}>
         <Appbar.BackAction onPress={props.backFromSteps} />
         <Appbar.Content title="Skill Details" />
       </Appbar.Header>
+      {/* <View>
+        <TouchableOpacity
+          onPress={props.backFromSteps}
+          style={styles.backButton}>
+          <Icon name="arrow-back" size={28} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.heading}>{"Skill Details"}</Text>
+      </View> */}
       <View style={styles.container}>
         <Formik
           initialValues={{

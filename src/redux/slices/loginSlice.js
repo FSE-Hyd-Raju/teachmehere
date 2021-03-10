@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { authLoginUrl } from '../urls';
-import { replace } from 'formik';
-import { storeAsyncData, clearAsyncData } from '../../components/common/asyncStorage';
+import {
+  storeAsyncData,
+  clearAsyncData,
+} from '../../components/common/asyncStorage';
 
 export const initialState = {
   loading: false,
@@ -13,7 +15,11 @@ export const initialState = {
   loginEmailError: '',
   loginError: '',
   devicetoken: '',
-  reqFavPostedCount: { coursedetailscount: 0, requestedcoursescount: 0, myfavoritescount: 0 }
+  reqFavPostedCount: {
+    coursedetailscount: 0,
+    requestedcoursescount: 0,
+    myfavoritescount: 0,
+  },
 };
 
 const loginSlice = createSlice({
@@ -66,7 +72,7 @@ const loginSlice = createSlice({
     },
     setReqFavPostedCount: (state, { payload }) => {
       state.reqFavPostedCount = payload;
-    }
+    },
   },
 });
 
@@ -81,7 +87,7 @@ export const {
   EmailIncorrect,
   loadUserInfo,
   logoutSuccess,
-  setReqFavPostedCount
+  setReqFavPostedCount,
 } = loginSlice.actions;
 
 export const loginSelector = state => state.login;
@@ -94,7 +100,7 @@ export function onLoginPressed(param) {
   return async (dispatch, getState) => {
     console.log(param.email);
     dispatch(loginStarted());
-    devicetokenValue = getState().login.devicetoken;
+    const devicetokenValue = getState().login.devicetoken;
     try {
       const response = await axios.post(authLoginUrl, {
         devicetoken: devicetokenValue,
@@ -103,12 +109,12 @@ export function onLoginPressed(param) {
       });
       console.log(response.data);
       if (response) {
-        if (response.data['status'] === '404') {
-          if (response.data['field'] == 'email') {
-            dispatch(EmailIncorrect(response.data['error']));
+        if (response.data.status === '404') {
+          if (response.data.field === 'email') {
+            dispatch(EmailIncorrect(response.data.error));
           }
-          if (response.data['field'] == 'password') {
-            dispatch(passwordIncorrect(response.data['error']));
+          if (response.data.field === 'password') {
+            dispatch(passwordIncorrect(response.data.error));
           }
         } else {
           dispatch(loginSuccess(response.data[0]));
@@ -125,14 +131,18 @@ export function onLoginPressed(param) {
   };
 }
 
-
 export function logOutUser(param) {
-
   param.onSuccess();
 
   return async (dispatch, getState) => {
-    dispatch(setReqFavPostedCount({ coursedetailscount: 0, requestedcoursescount: 0, myfavoritescount: 0 }))
+    dispatch(
+      setReqFavPostedCount({
+        coursedetailscount: 0,
+        requestedcoursescount: 0,
+        myfavoritescount: 0,
+      }),
+    );
     clearAsyncData();
     dispatch(logoutSuccess());
-  }
+  };
 }

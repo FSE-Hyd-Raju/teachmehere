@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AnimatedMultistep from '../stepper';
 
@@ -8,12 +8,14 @@ import Step3 from './step3';
 import Step4 from './step4';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
+import { Snackbar } from 'react-native-paper';
 
 import {
   fetchPost,
   postSelector,
   postNewSkill,
   postSkill,
+  postLoading,
 } from '../../../../redux/slices/post';
 import { loginSelector } from '../../../../redux/slices/loginSlice';
 
@@ -29,6 +31,8 @@ const Steps = props => {
   const { postResponse, isPostQueryActive, hasErrors } = useSelector(
     postSelector,
   );
+  const [visibleSnackbar, setVisibleSnackbar] = React.useState('');
+
   const { userInfo } = useSelector(loginSelector);
   const onNext = () => {
     console.log('Next');
@@ -65,11 +69,12 @@ const Steps = props => {
     } = state;
     dispatch(postSkill());
     if (userInfo._id) {
+      dispatch(postLoading());
       const postData = {
         uid: userInfo._id,
         coursename: skillName,
         courselevel: skillLevel,
-        content: contents || '',
+        content: contents || [],
         category: category,
         subcategory: subCategory,
         totalhours: parseInt(totalHours),
@@ -101,20 +106,52 @@ const Steps = props => {
         linkedinprofile: linkedInProfile,
         demo: availableForDemo,
       };
+      console.log(postData, 'postData');
       dispatch(
         postNewSkill({
           postData,
           onSuccess: () => {
-            props.navigation.reset({
-              index: 0,
-              routes: [{ name: 'PostedCourses' }],
-            });
+            setVisibleSnackbar('Skill posted successfully!');
+
+            // props.navigation.reset({
+            //   index: 1,
+            //   routes: [{ name: 'PostedCourses' }],
+            //   // actions: [
+            //   //   props.navigation.navigate({ routeName: 'Profile' }),
+            //   //   props.navigation.navigate({ routeName: 'PostedCourses' }),
+            //   // ],
+            // });
+            setTimeout(function() {
+              props.goToMainCategories();
+            }, 1000);
+            // props.navigation.navigate('PostedCourses');
           },
         }),
       );
     } else {
       props.navigation.navigate('Login');
     }
+  };
+
+  const snackComponent = () => {
+    return (
+      <Snackbar
+        visible={!!visibleSnackbar}
+        onDismiss={() => setVisibleSnackbar('')}
+        duration={2000}
+        action={{
+          label: 'Dismiss',
+          onPress: () => {
+            setVisibleSnackbar('');
+          },
+        }}
+        style={{ backgroundColor: 'white' }}
+        wrapperStyle={{ backgroundColor: 'white' }}>
+        <Text style={{ color: 'black', fontSize: 16, letterSpacing: 1 }}>
+          {visibleSnackbar}
+        </Text>
+      </Snackbar>
+    );
   };
 
   return (
@@ -127,6 +164,7 @@ const Steps = props => {
         onNext={onNext}
         backFromSteps={props.backFromSteps}
       />
+      {snackComponent()}
     </ScrollView>
   );
 };

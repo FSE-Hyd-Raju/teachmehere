@@ -5,7 +5,6 @@ import {
   TextInput,
   Text,
   Keyboard,
-  Icon,
 } from 'react-native';
 import styles from './styles';
 import { Formik } from 'formik';
@@ -26,6 +25,7 @@ import {
   DarkTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
+import { Icon } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
 import TextInputWithIcon from '../../../../components/common/TextInputWithIcon';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -94,7 +94,7 @@ const Step3 = props => {
 
   return (
     <View>
-      <Appbar.Header theme={DarkTheme}>
+      <Appbar.Header theme={DarkTheme} style={{ backgroundColor: "white" }}>
         <Appbar.BackAction onPress={props.back} />
         <Appbar.Content title="Plan Your Time" />
         <Text style={styles.skipButton} onPress={props.next}>

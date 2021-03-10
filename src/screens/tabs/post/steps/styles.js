@@ -45,7 +45,7 @@ export default StyleSheet.create({
   },
   skipButton: {
     fontSize: 15,
-    color: 'white',
+    color: 'black',
   },
   btnStyle: {
     width: '100%',
@@ -150,5 +150,16 @@ export default StyleSheet.create({
     color: '#444',
     padding: 3,
     marginTop: 1,
+  },
+  backButton: {
+    zIndex: 1,
+    position: 'absolute',
+    margin: 27,
+  },
+  heading: {
+    color: '#444',
+    fontSize: 20,
+    padding: 25,
+    textAlign: 'center',
   },
 });

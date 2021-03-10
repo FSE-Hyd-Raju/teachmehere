@@ -26,12 +26,12 @@ import Loader from '../../../../components/common/Loader';
 
 const Step4 = props => {
   const { getState, saveState } = props;
-  const { postResponse, isPostQueryActive, hasErrors } = useSelector(
+  const { postResponse, isPostQueryActive, hasErrors, loading } = useSelector(
     postSelector,
   );
   return (
     <View>
-      <Appbar.Header theme={DarkTheme}>
+      <Appbar.Header theme={DarkTheme} style={{ backgroundColor: 'white' }}>
         <Appbar.BackAction onPress={props.back} />
         <Appbar.Content title="Platform to Interact" />
       </Appbar.Header>
@@ -171,7 +171,7 @@ const Step4 = props => {
                   </Button>
                 </TouchableOpacity>
               </View>
-              <Loader loading={isPostQueryActive} />
+              <Loader loading={loading} />
             </View>
           )}
         </Formik>

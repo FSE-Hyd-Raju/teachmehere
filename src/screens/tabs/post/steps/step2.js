@@ -23,6 +23,8 @@ import {
   DarkTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
+import { Icon } from 'react-native-elements';
+
 import { withTheme } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Header } from 'react-native-elements';
@@ -59,7 +61,7 @@ const Step2 = props => {
       languagesToUpdate.splice(index, 1);
     } else {
       setLangError(true);
-      setTimeout(function() {
+      setTimeout(function () {
         setLangError(false);
       }, 3000);
     }
@@ -68,10 +70,18 @@ const Step2 = props => {
 
   return (
     <View>
-      <Appbar.Header theme={DarkTheme}>
+      <Appbar.Header theme={DarkTheme} style={{ backgroundColor: "white" }}>
         <Appbar.BackAction onPress={props.back} />
         <Appbar.Content title="Pricing" />
       </Appbar.Header>
+      {/* <View>
+        <TouchableOpacity
+          onPress={props.back}
+          style={styles.backButton}>
+          <Icon name="arrow-back" size={28} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.heading}>{"Pricing"}</Text>
+      </View> */}
       <View style={styles.container}>
         <Formik
           initialValues={{
