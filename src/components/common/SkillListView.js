@@ -138,7 +138,7 @@ export default function SkillListView({ route, navigation }) {
                     }
                     onPress={() => subCategoryClicked(item.name)}
                     selected={subCatSelected.indexOf(item.name) > -1}
-                  // selectedColor="green"
+                    // selectedColor="green"
                   >
                     {item.name}
                   </Chip>
@@ -165,10 +165,29 @@ export default function SkillListView({ route, navigation }) {
     );
   };
 
+  const getMoreData = () => {
+    // setPage(prevPage => prevPage + 1);
+  };
+
   const skillsListComponent = () => {
     return (
       <View>
-        {!!categorySkills &&
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          keyboardShouldPersistTaps="always"
+          // initialNumToRender={10}
+          onEndReached={getMoreData}
+          onEndReachedThreshold={0.5}
+          data={categorySkills}
+          renderItem={({ item }) => (
+            <CourseListCard
+              course={item}
+              courseClicked={() => showDetails(item)}
+              cardWidth={screenWidth - 50}
+            />
+          )}
+        />
+        {/* {!!categorySkills &&
           !!categorySkills.length &&
           categorySkills.map(skill => {
             return (
@@ -178,7 +197,7 @@ export default function SkillListView({ route, navigation }) {
                 cardWidth={screenWidth - 50}
               />
             );
-          })}
+          })} */}
         {loading && loadingComponent()}
         {(!categorySkills || (categorySkills && !categorySkills.length)) &&
           !loading &&
@@ -191,7 +210,7 @@ export default function SkillListView({ route, navigation }) {
   return (
     <View style={styles.container}>
       {headerComponent()}
-      <ScrollView style={{ padding: 5 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ padding: 0 }} showsVerticalScrollIndicator={false}>
         {subCategoriesComponent()}
         {skillsListComponent()}
       </ScrollView>
@@ -203,6 +222,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 13,
+    paddingBottom: 0,
+    // marginBottom: 10,
     backgroundColor: '#fff',
   },
   header: {

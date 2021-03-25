@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -12,24 +14,16 @@ import SkillFlatList from '../../../components/common/SkillFlatList';
 import CategoryWrapper from '../../../components/common/CategoryWrapper';
 import Carousel, { ParallaxImage } from 'react-native-snap-carousel';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { Icon } from 'react-native-elements';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { random_rgba } from '../../../utils/random_rgba';
-import CategoryFlatList from '../../../components/common/CategoryFlatList';
 import CategoryChipView from '../../../components/common/CategoryChipView';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  homeSelector,
-  fetchInitialDataWhenAppLoading,
-} from '../../../redux/slices/homeSlice';
+import { useSelector } from 'react-redux';
+import { homeSelector } from '../../../redux/slices/homeSlice';
 import messaging from '@react-native-firebase/messaging';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import PushNotification from 'react-native-push-notification';
-import firestore from '@react-native-firebase/firestore';
 
 export default function Home(props) {
-  const dispatch = useDispatch();
   const { homeData, loading } = useSelector(homeSelector);
   const { userInfo } = useSelector(loginSelector);
   const carouselRef = useRef(null);
@@ -54,8 +48,6 @@ export default function Home(props) {
   };
 
   useEffect(() => {
-    dispatch(fetchInitialDataWhenAppLoading());
-
     if (userInfo._id && !notificunsubscribe) {
       console.log(notificunsubscribe);
       notificationListener();
@@ -67,13 +59,7 @@ export default function Home(props) {
         notificunsubscribe();
       }
     };
-  }, [
-    // appOpenedNotificationListener,
-    // dispatch,
-    // notificationListener,
-    // notificunsubscribe,
-    userInfo,
-  ]);
+  }, [userInfo]);
 
   const notificationListener = async () => {
     PushNotification.configure({
@@ -131,14 +117,20 @@ export default function Home(props) {
   const headerComponent = () => {
     return (
       <View style={styles.logo}>
-        <View style={{ flex: 0.9, alignItems: 'center' }}>
+        <View
+          style={{
+            flex: 0.9,
+            alignItems: 'center',
+            paddingTop: 10,
+            marginLeft: 10,
+          }}>
           <Image
-            source={require('../../../assets/img/logo.png')}
-            style={{ height: 60, width: 150, flex: 0.8 }}
+            source={require('../../../assets/img/skillSchoolLogo.png')}
+            style={{ height: 60, width: 180, flex: 0.8, resizeMode: 'contain' }}
           />
         </View>
         <Icons
-          style={{ marginTop: 25 }}
+          style={{ marginTop: 0 }}
           name={'bell-outline'}
           size={27}
           onPress={() => props.navigation.navigate('Notification')}
@@ -279,6 +271,7 @@ export default function Home(props) {
 
 const carouselHeight = 210;
 const carouselImageHeight = carouselHeight - 60;
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -287,8 +280,12 @@ const styles = StyleSheet.create({
   loadingBar: {
     // marginTop: 40
     alignItems: 'center',
-    // justifyContent: "space-around",
-    flex: 1,
+    position: 'absolute',
+    justifyContent: 'center',
+    left: width / 2,
+    height: height,
+    // flex: 1,
+    // zIndex: 99,
   },
   logo: {
     alignItems: 'center',

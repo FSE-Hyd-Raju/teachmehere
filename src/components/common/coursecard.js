@@ -17,13 +17,12 @@ export default function CourseCard({
   cardWidth,
 }) {
   const userProfilePic =
-    (course && course.displaypic)
+    course && course.displaypic
       ? {
-        uri: course.displaypic,
-      }
-      :
-      // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-      require("../../assets/img/default-mask-avatar.png");
+          uri: course.displaypic,
+        }
+      : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
+        require('../../assets/img/default-mask-avatar.png');
   return (
     <View style={[styles.card, { width: cardWidth }]}>
       {/* <View style={styles.cardHeader}>
@@ -34,11 +33,13 @@ export default function CourseCard({
           }}
         />
       </View> */}
-      <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-evenly" }}>
-        <Image
-          style={styles.userImage}
-          source={userProfilePic}
-        />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}>
+        <Image style={styles.userImage} source={userProfilePic} />
         <View style={{ marginTop: 15 }}>
           <Text style={styles.position}>{course.username}</Text>
           <View style={{ flexDirection: 'row' }}>
@@ -56,10 +57,12 @@ export default function CourseCard({
 
       <View style={styles.cardFooter}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-
-          <Text style={styles.name}>{course.coursename}</Text>
+          <Text style={styles.name}> {course.coursename}</Text>
           {!!course && !!course.courselevel && (
-            <Text style={[styles.position, { width: 135 }]}>Level - {course.courselevel}</Text>)}
+            <Text style={[styles.position, { width: 135 }]}>
+              Level - {course.courselevel}
+            </Text>
+          )}
           <View style={{ marginTop: 10, width: 110 }}>
             <Price price={course.price} currency={course.currency} />
           </View>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,7 +23,7 @@ import SkillListView from './components/common/SkillListView';
 import SkillGridView from './components/common/SkillGridView';
 import forgotPassword from './screens/tabs/userauth/forgotPassword';
 import forgotPasswordOtpPage from './screens/tabs/userauth/forgotPasswordOtp';
-import { getAsyncData, stGetUser } from './components/common/asyncStorage';
+import { getAsyncData } from './components/common/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   loginSelector,
@@ -33,6 +34,7 @@ import {
   getRecentSearches,
   fetchTopCategories,
 } from './redux/slices/searchSlice';
+import { fetchInitialDataWhenAppLoading } from './redux/slices/homeSlice';
 import messaging from '@react-native-firebase/messaging';
 import SkillDetail from './components/SkillDetail';
 import NotificationPage from './screens/tabs/notification/notification';
@@ -47,7 +49,6 @@ const TabNavigation = props => {
   const { colors } = props.theme;
   const Stack = createStackNavigator();
   const Tab = createMaterialBottomTabNavigator();
-  const [Intialroutename, setIntialroutename] = React.useState('GuestPage');
   const { userInfo } = useSelector(loginSelector);
 
   useEffect(() => {
@@ -62,16 +63,14 @@ const TabNavigation = props => {
 
   const searchInitialData = () => {
     dispatch(getRecentSearches());
-    dispatch(fetchTopCategories());
+    // dispatch(fetchTopCategories());
+    dispatch(fetchInitialDataWhenAppLoading());
   };
 
   const getUserInfo = async () => {
     const userData = await getAsyncData('userInfo');
     if (userData) {
       dispatch(loadUserInfo(userData));
-      setIntialroutename('Profile');
-    } else {
-      setIntialroutename('GuestPage');
     }
   };
 
@@ -92,7 +91,7 @@ const TabNavigation = props => {
       console.log(fcmToken);
       // this.showAlert("Your Firebase Token is:", fcmToken);
     } else {
-      alert('Failed', 'No token received');
+      console.log('Failed', 'No token received');
     }
   };
 

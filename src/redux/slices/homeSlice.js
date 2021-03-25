@@ -36,7 +36,12 @@ export const homeSelector = state => state.home;
 export default homeSlice.reducer;
 
 export function fetchInitialDataWhenAppLoading() {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    const loading = getState().home.loading;
+    if (loading) {
+      return;
+    }
+    console.log('tag in');
     dispatch(fetchInitialData());
     try {
       const response = await axios.get(fetchInitialDataUrl);
@@ -44,6 +49,7 @@ export function fetchInitialDataWhenAppLoading() {
         dispatch(fetchInitialDataSuccuess(response.data));
       }
     } catch (error) {
+      console.log('fail');
       dispatch(fetchInitialDataFailure());
     }
   };
