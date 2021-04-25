@@ -13,3 +13,5 @@ export const changeProfileUrl = `${SERVER_URL}/updateUserDetailsWithId`;
 export const changePasswordUrl = `${SERVER_URL}/updateUserPassword`;
 export const resendOtpUrl = `${SERVER_URL}/forgotPassword`;
 export const fetchInitialDataUrl = `${SERVER_URL}/fetchInitialData`;
+export const fetchSkillsDataUrl = `${SERVER_URL}/getLatestCourses`;
+

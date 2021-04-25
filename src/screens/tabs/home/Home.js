@@ -8,6 +8,7 @@ import {
   Text,
   Image,
   Platform,
+  FlatList,
 } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import SkillFlatList from '../../../components/common/SkillFlatList';
@@ -22,9 +23,10 @@ import { homeSelector } from '../../../redux/slices/homeSlice';
 import messaging from '@react-native-firebase/messaging';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 import PushNotification from 'react-native-push-notification';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 export default function Home(props) {
-  const { homeData, loading } = useSelector(homeSelector);
+  const { homeData, loading, homeSkillsData } = useSelector(homeSelector);
   const { userInfo } = useSelector(loginSelector);
   const carouselRef = useRef(null);
   const [screenWidth, setScreenWidth] = useState(
@@ -36,7 +38,7 @@ export default function Home(props) {
   const showMore = group => {
     props.navigation.navigate('SkillListView', {
       title: group,
-      skills: homeData.dataGroups[group],
+      skills: homeSkillsData[group],
     });
   };
 
@@ -49,10 +51,10 @@ export default function Home(props) {
 
   useEffect(() => {
     if (userInfo._id && !notificunsubscribe) {
-      console.log(notificunsubscribe);
+      // console.log(notificunsubscribe);
       notificationListener();
       appOpenedNotificationListener();
-      console.log(notificunsubscribe);
+      // console.log(notificunsubscribe);
     }
     return () => {
       if (notificunsubscribe) {
@@ -185,7 +187,7 @@ export default function Home(props) {
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
         itemWidth={screenWidth - 125}
-        data={homeData.categories}
+        data={homeData.categories || []}
         firstItem={0}
         renderItem={renderItem}
         hasParallaxImages={true}
@@ -223,12 +225,12 @@ export default function Home(props) {
   };
 
   const dataGroupsComponent = () => {
+    const showData = !!homeSkillsData && !!Object.keys(homeSkillsData).length;
+
     return (
       <View style={{ marginTop: 10 }}>
-        {!!homeData &&
-          !!homeData.dataGroups &&
-          !!Object.keys(homeData.dataGroups).length &&
-          Object.keys(homeData.dataGroups).map(group => {
+        {showData &&
+          Object.keys(homeSkillsData).map(group => {
             return (
               <View style={{ marginTop: 18 }}>
                 <CategoryWrapper
@@ -237,13 +239,51 @@ export default function Home(props) {
                   onButtonPress={() => showMore(group)}
                 />
                 <SkillFlatList
-                  skills={homeData.dataGroups[group]}
+                  skills={homeSkillsData[group]}
                   categories={homeData.categories}
                 />
               </View>
             );
           })}
+        {/* {!showData && skeletonPlaceHolder()} */}
+        {!loading && !showData && (
+          <View style={{ marginLeft: 10 }}>
+            {skeletonFlatList()}
+            {skeletonFlatList()}
+          </View>
+        )}
       </View>
+    );
+  };
+
+  const skeletonFlatList = () => (
+    <>
+      {titleSkeletonPlaceHolder()}
+      <FlatList
+        data={[1, 2, 3, 4, 5]}
+        renderItem={({ item }) => skeletonPlaceHolder(item)}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+        ItemSeparatorComponent={() => <View style={{ margin: 4 }} />}
+      />
+    </>
+  );
+
+  const titleSkeletonPlaceHolder = () => {
+    return (
+      <SkeletonPlaceholder>
+        <View
+          style={{ width: '30%', height: 15, margin: 10, marginBottom: 5 }}
+        />
+      </SkeletonPlaceholder>
+    );
+  };
+
+  const skeletonPlaceHolder = () => {
+    return (
+      <SkeletonPlaceholder>
+        <View style={styles.card} />
+      </SkeletonPlaceholder>
     );
   };
 
@@ -273,6 +313,11 @@ const carouselHeight = 210;
 const carouselImageHeight = carouselHeight - 60;
 const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
+  card: {
+    height: 150,
+    width: 150,
+    margin: 10,
+  },
   container: {
     backgroundColor: 'white',
     flex: 1,

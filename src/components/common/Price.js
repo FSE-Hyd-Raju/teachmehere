@@ -6,7 +6,7 @@ const Price = props => {
   return (
     <View style={{ flexDirection: 'row' }}>
       <View>
-        <Text style={styles.priceLable}>1X1</Text>
+        <Text style={styles.priceLable}>Single</Text>
         <Text style={styles.price}>
           {props.currency}
           {oneonone}

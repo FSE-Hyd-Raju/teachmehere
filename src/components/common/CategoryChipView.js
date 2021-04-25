@@ -8,13 +8,23 @@ const CategoryChipView = props => {
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {data &&
-        data.map(item => {
+        data.map((item, index) => {
           return (
             <Chip
-              style={{ margin: 5, padding: 3, borderColor: "lightgrey", borderWidth: 0, backgroundColor: "rgba(243, 246, 252, 0.7)" }}
-              avatar={item.icon ? (<IconMaterialIcons name={item.icon} size={20} />) : null}
-              onPress={() => categoryClicked(item)}
-            >
+              key={index}
+              style={{
+                margin: 5,
+                padding: 3,
+                borderColor: 'lightgrey',
+                borderWidth: 0,
+                backgroundColor: 'rgba(243, 246, 252, 0.7)',
+              }}
+              avatar={
+                item.icon ? (
+                  <IconMaterialIcons name={item.icon} size={20} />
+                ) : null
+              }
+              onPress={() => categoryClicked(item)}>
               {item[keyProp]}
             </Chip>
           );

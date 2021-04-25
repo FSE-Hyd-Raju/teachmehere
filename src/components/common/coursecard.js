@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   StyleSheet,
@@ -41,7 +42,9 @@ export default function CourseCard({
         }}>
         <Image style={styles.userImage} source={userProfilePic} />
         <View style={{ marginTop: 15 }}>
-          <Text style={styles.position}>{course.username}</Text>
+          <Text style={styles.position} numberOfLines={1}>
+            {course.username}
+          </Text>
           <View style={{ flexDirection: 'row' }}>
             <Rating
               type="star"
@@ -50,16 +53,25 @@ export default function CourseCard({
               readonly
               style={{ marginTop: 5, marginBottom: 5 }}
             />
-            <Text style={styles.usersRated}>({course.usersrated})</Text>
+            <Text style={styles.usersRated} numberOfLines={1}>
+              ({course.usersrated})
+            </Text>
           </View>
         </View>
       </View>
 
       <View style={styles.cardFooter}>
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={styles.name}> {course.coursename}</Text>
+          <Text style={styles.name} numberOfLines={2}>
+            {course.coursename}
+          </Text>
           {!!course && !!course.courselevel && (
-            <Text style={[styles.position, { width: 135 }]}>
+            <Text
+              style={[
+                styles.position,
+                { width: 135, fontSize: 13, marginTop: 4 },
+              ]}
+              numberOfLines={1}>
               Level - {course.courselevel}
             </Text>
           )}
@@ -89,6 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexBasis: '46%',
     marginHorizontal: 5,
+    minHeight: 240,
   },
   list: {
     paddingHorizontal: 5,
@@ -130,16 +143,17 @@ const styles = StyleSheet.create({
     // elevation: 5,
   },
   name: {
-    fontSize: 18,
+    fontSize: 15,
     flex: 1,
     alignSelf: 'center',
     color: '#008080',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   position: {
     fontSize: 14,
     fontWeight: 'bold',
-    alignSelf: 'center',
+    // alignSelf: 'center',
     color: '#696969',
     textTransform: 'capitalize',
   },

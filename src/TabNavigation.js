@@ -34,7 +34,10 @@ import {
   getRecentSearches,
   fetchTopCategories,
 } from './redux/slices/searchSlice';
-import { fetchInitialDataWhenAppLoading } from './redux/slices/homeSlice';
+import {
+  fetchInitialDataWhenAppLoading,
+  fetchPostedSkills,
+} from './redux/slices/homeSlice';
 import messaging from '@react-native-firebase/messaging';
 import SkillDetail from './components/SkillDetail';
 import NotificationPage from './screens/tabs/notification/notification';
@@ -65,6 +68,7 @@ const TabNavigation = props => {
     dispatch(getRecentSearches());
     // dispatch(fetchTopCategories());
     dispatch(fetchInitialDataWhenAppLoading());
+    dispatch(fetchPostedSkills());
   };
 
   const getUserInfo = async () => {

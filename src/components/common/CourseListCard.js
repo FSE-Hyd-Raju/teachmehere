@@ -19,10 +19,10 @@ export default function CourseListCard({
   const userProfilePic =
     course && course.displaypic
       ? {
-        uri: course.displaypic,
-      }
+          uri: course.displaypic,
+        }
       : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-      require('../../assets/img/default-mask-avatar.png');
+        require('../../assets/img/default-mask-avatar.png');
   return (
     <TouchableOpacity onPress={courseClicked}>
       <View style={styles.card}>
@@ -42,9 +42,11 @@ export default function CourseListCard({
         </View>
         <View style={styles.courseDetails}>
           <View>
-            <Text style={styles.courseName}>{course.coursename}</Text>
+            <Text style={styles.courseName} numberOfLines={2}>
+              {course.coursename}
+            </Text>
             {!!course && !!course.courselevel && (
-              <Text style={[styles.textStyle, { width: 135 }]}>
+              <Text style={[styles.textStyle, { width: 135, fontSize: 13 }]}>
                 Level - {course.courselevel}
               </Text>
             )}
@@ -82,7 +84,8 @@ const styles = StyleSheet.create({
     width: 150,
   },
   courseDetails: {
-    paddingVertical: 8,
+    marginVertical: 8,
+    width: '60%',
     // paddingHorizontal: 16,
     // borderTopLeftRadius: 1,
     // borderTopRightRadius: 1,
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   courseName: {
-    fontSize: 18,
+    fontSize: 15,
     flex: 1,
     color: '#008080',
     fontWeight: 'bold',
@@ -136,17 +139,18 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     width: 90,
-    backgroundColor: 'rgba(152,73,166,0.1)',
-    borderColor: 'lightgrey',
-    borderWidth: 1,
+    // backgroundColor: 'rgba(152,73,166,0.1)',
+    // borderColor: 'lightgrey',
+    borderWidth: 0.1,
     padding: 3,
-    borderRadius: 2,
+    borderRadius: 10,
+    // elevation: 2
   },
   platformText: {
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'rgba(152,73,166,1)',
+    // color: 'rgba(152,73,166,1)',
   },
   usersRated: {
     fontSize: 12,
