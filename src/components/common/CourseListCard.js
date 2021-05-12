@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
     flexBasis: '46%',
     marginHorizontal: 5,
     flexDirection: 'row',
+    marginBottom: 10,
+    borderWidth: 0.5,
+    borderColor: "lightgrey",
+    // borderRadius: 5,
   },
   userDetails: {
     padding: 15,

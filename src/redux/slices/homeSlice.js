@@ -8,6 +8,7 @@ export const initialState = {
   skillsLoading: false,
   homeData: {},
   homeSkillsData: {},
+  endReached: {},
 };
 
 const homeSlice = createSlice({
@@ -36,6 +37,21 @@ const homeSlice = createSlice({
       state.skillsLoading = false;
       state.homeSkillsData = {};
     },
+    updateHomeSkillsData: (state, { payload }) => {
+      var modifiedData = state.homeSkillsData;
+      modifiedData[payload.type] = [
+        ...modifiedData[payload.type],
+        ...payload.data,
+      ];
+
+      console.log(modifiedData);
+      state.homeSkillsData = {
+        ...modifiedData,
+      };
+      if (!payload.data.length) {
+        state.endReached[payload.type] = true;
+      }
+    },
   },
 });
 
@@ -46,6 +62,7 @@ export const {
   fetchSkillsData,
   fetchSkillsDataSuccuess,
   fetchSkillsDataFailure,
+  updateHomeSkillsData,
 } = homeSlice.actions;
 
 export const homeSelector = state => state.home;
