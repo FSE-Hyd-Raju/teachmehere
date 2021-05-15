@@ -71,12 +71,15 @@ export default function SkillDetail({ route, navigation }) {
       .then(response => response.json())
       .then(responseJson => {
         console.log(JSON.stringify(responseJson));
-        if (responseJson && responseJson.length)
+        if (responseJson && responseJson.length) {
           dispatch(setRequestedSkills(responseJson));
+        }
         let reqObj = responseJson.filter(
           obj => obj.request_uid == userInfo._id,
         );
-        if (reqObj.length) setRequestedObj(reqObj[0]);
+        if (reqObj.length) {
+          setRequestedObj(reqObj[0]);
+        }
         setLoading(false);
       })
       .catch(error => {
@@ -219,11 +222,11 @@ export default function SkillDetail({ route, navigation }) {
             View profile
           </Button>
         </View>
-        <MaterialCommunityIcons
+        {/* <MaterialCommunityIcons
           style={{ marginLeft: '88%', position: 'absolute', padding: 10 }}
           name="heart"
           size={26}
-        />
+        /> */}
       </View>
     );
   };
@@ -310,7 +313,7 @@ export default function SkillDetail({ route, navigation }) {
               )}
             />
           )}
-          {!skill.content && !skill.content.length && (
+          {(!skill.content || !skill.content.length) && (
             <Text style={{ padding: 20, fontSize: 15 }}>
               Contents not mentioned
             </Text>

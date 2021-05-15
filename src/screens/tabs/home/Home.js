@@ -51,10 +51,8 @@ export default function Home(props) {
 
   useEffect(() => {
     if (userInfo._id && !notificunsubscribe) {
-      // console.log(notificunsubscribe);
       notificationListener();
       appOpenedNotificationListener();
-      // console.log(notificunsubscribe);
     }
     return () => {
       if (notificunsubscribe) {

@@ -30,10 +30,7 @@ import {
   loadUserInfo,
   setDeviceToken,
 } from './redux/slices/loginSlice';
-import {
-  getRecentSearches,
-  fetchTopCategories,
-} from './redux/slices/searchSlice';
+import { getRecentSearches } from './redux/slices/searchSlice';
 import {
   fetchInitialDataWhenAppLoading,
   fetchPostedSkills,
@@ -66,7 +63,6 @@ const TabNavigation = props => {
 
   const searchInitialData = () => {
     dispatch(getRecentSearches());
-    // dispatch(fetchTopCategories());
     dispatch(fetchInitialDataWhenAppLoading());
     dispatch(fetchPostedSkills());
   };
@@ -90,10 +86,8 @@ const TabNavigation = props => {
   const getFcmToken = async () => {
     var fcmToken = await messaging().getToken();
     if (fcmToken) {
-      // alert(fcmToken)
       dispatch(setDeviceToken(fcmToken));
       console.log(fcmToken);
-      // this.showAlert("Your Firebase Token is:", fcmToken);
     } else {
       console.log('Failed', 'No token received');
     }
