@@ -12,7 +12,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import {  Colors } from 'react-native-paper';
+import { Colors } from 'react-native-paper';
 import { Icon, Rating } from 'react-native-elements';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Price from './Price';
@@ -33,28 +33,57 @@ export default function SkillListView({ route, navigation }) {
   const { homeSkillsData, endReached } = useSelector(homeSelector);
 
   const { category, title } = route.params;
-  const skills = route.params.skills ? homeSkillsData[title] : [];
+  const skills = route.params.skills ? homeSkillsData[title] : null;
   const [subCatSelected, setSubCatSelected] = useState([]);
   const [categorySkills, setCategorySkills] = useState(skills);
   const [loading, setLoading] = useState(false);
   const [moreDataLoading, setMoreDataLoading] = useState(false);
+  const [catOnEndReached, setCatOnEndReached] = useState(false);
   const [offset, setOffset] = useState(10);
+  const [catOffset, setCatOffset] = useState(0);
 
   useEffect(() => {
-    if (!skills) fetchCategoryData();
-    else setCategorySkills(skills);
+    if (!skills) {
+      fetchCategoryData();
+    } else {
+      setCategorySkills(skills);
+    }
   }, [subCatSelected, skills]);
 
   const loadingComponent = () => {
     return (
-      <View style={styles.loadingBar}>
-        <ActivityIndicator size={35} animating={true} color={'black'} />
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          // flex: 1,
+          zIndex: 99,
+        }}>
+        <View style={styles.loadingBar}>
+          <ActivityIndicator
+            size={35}
+            animating={true}
+            color={'black'}
+            style={{ marginTop: 290 }}
+          />
+        </View>
       </View>
     );
   };
 
-  const fetchCategoryData = () => {
-    setLoading(true);
+  const fetchCategoryData = moreData => {
+    if (catOnEndReached) {
+      return;
+    }
+    if (!moreData) {
+      setCatOffset(0);
+      setLoading(true);
+    } else {
+      setMoreDataLoading(true);
+    }
     fetch('https://teachmeproject.herokuapp.com/getCourseDetailsByCategory', {
       method: 'POST',
       headers: {
@@ -64,16 +93,27 @@ export default function SkillListView({ route, navigation }) {
       body: JSON.stringify({
         category: category.category,
         subcategory: subCatSelected,
+        offset: catOffset,
       }),
     })
       .then(response => response.json())
       .then(requestedJson => {
-        setCategorySkills(requestedJson);
+        let response = requestedJson;
+        if (moreData) {
+          response = [...categorySkills, ...response];
+          setCatOffset(catOffset + 10);
+        }
+        setCategorySkills(response);
         setLoading(false);
+        setMoreDataLoading(false);
+        if (moreData && (!requestedJson || !requestedJson.length)) {
+          setCatOnEndReached(true);
+        }
       })
       .catch(error => {
         console.error(error);
         setLoading(false);
+        setMoreDataLoading(false);
       });
   };
 
@@ -104,8 +144,9 @@ export default function SkillListView({ route, navigation }) {
   const subCategoriesComponent = () => {
     const subCategoryClicked = item => {
       var ind = subCatSelected.indexOf(item);
-      if (ind === -1) setSubCatSelected([...subCatSelected, item]);
-      else {
+      if (ind === -1) {
+        setSubCatSelected([...subCatSelected, item]);
+      } else {
         subCatSelected.splice(ind, 1);
         setSubCatSelected([...subCatSelected]);
       }
@@ -136,6 +177,7 @@ export default function SkillListView({ route, navigation }) {
               category.subCategories.map((item, index) => {
                 return (
                   <Chip
+                    key={index}
                     style={{
                       color: 'black',
                       margin: 5,
@@ -171,7 +213,7 @@ export default function SkillListView({ route, navigation }) {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: 120,
+          // marginTop: 120,
         }}>
         <Text style={{ fontSize: 20, letterSpacing: 1 }}>No skills found!</Text>
       </View>
@@ -208,10 +250,12 @@ export default function SkillListView({ route, navigation }) {
   };
 
   const renderFooter = () => {
-    if (endReached[title]) {
+    const disableMoreLoad = !categorySkills || !categorySkills.length < 10;
+
+    if (disableMoreLoad || endReached[title] || !moreDataLoading) {
       return null;
     }
-    return <ActivityIndicator color={Colors.black} />;
+    return <ActivityIndicator color={Colors.black} style={{ marginTop: 10 }} />;
   };
 
   const onRefresh = () => {
@@ -220,29 +264,37 @@ export default function SkillListView({ route, navigation }) {
   };
 
   const skillsListComponent = () => {
+    const disableMoreLoad = !categorySkills || !categorySkills.length < 10;
     return (
-      <View>
-        <FlatList
-          onScrollBeginDrag={Keyboard.dismiss}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'handled'}
-          data={categorySkills}
-          keyExtractor={item => item._id}
-          renderItem={({ item }) => (
-            <CourseListCard
-              course={item}
-              courseClicked={() => showDetails(item)}
-              cardWidth={screenWidth - 50}
-            />
-          )}
-          ListFooterComponent={renderFooter}
-          onEndReachedThreshold={0.4}
-          onEndReached={handleLoadMore}
-          refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={onRefresh} />
-          }
-          contentContainerStyle={{ paddingBottom: 80 }}
-        />
+      <View style={{ flex: 1 }}>
+        {!!categorySkills && !!categorySkills.length && (
+          <FlatList
+            onScrollBeginDrag={Keyboard.dismiss}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps={'handled'}
+            data={categorySkills}
+            keyExtractor={item => item._id}
+            renderItem={({ item }) => (
+              <CourseListCard
+                course={item}
+                courseClicked={() => showDetails(item)}
+                cardWidth={screenWidth - 50}
+              />
+            )}
+            ListFooterComponent={renderFooter}
+            onEndReachedThreshold={0.5}
+            onEndReached={() => {
+              if (disableMoreLoad) {
+                return;
+              }
+              skills ? handleLoadMore() : fetchCategoryData(true);
+            }}
+            // refreshControl={
+            //   <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+            //}
+            contentContainerStyle={{ paddingBottom: 80 }}
+          />
+        )}
         {/* <FlatList
           keyExtractor={(item, index) => index.toString()}
           keyboardShouldPersistTaps="always"
@@ -269,7 +321,6 @@ export default function SkillListView({ route, navigation }) {
               />
             );
           })} */}
-        {loading && loadingComponent()}
         {(!categorySkills || (categorySkills && !categorySkills.length)) &&
           !loading &&
           !skills &&
@@ -283,6 +334,9 @@ export default function SkillListView({ route, navigation }) {
       {headerComponent()}
       {/* <ScrollView style={{ padding: 0 }} showsVerticalScrollIndicator={false}> */}
       {subCategoriesComponent()}
+
+      {!!loading && loadingComponent()}
+
       {skillsListComponent()}
       {/* </ScrollView> */}
     </View>
@@ -296,6 +350,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     // marginBottom: 10,
     backgroundColor: '#fff',
+    // zIndex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -331,7 +386,10 @@ const styles = StyleSheet.create({
   loadingBar: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    position: 'absolute',
+    textAlign: 'center',
+    alignContent: 'center',
+    marginTop: 190,
     flex: 1,
   },
 });

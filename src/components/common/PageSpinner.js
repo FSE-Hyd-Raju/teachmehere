@@ -10,7 +10,10 @@ class PageSpinner extends React.Component {
     return (
       <Modal transparent onRequestClose={onRequestClose} {...this.props}>
         <View style={styles.container}>
-          <ActivityIndicator size={Theme.specifications.activityIndicatorSize} color={Theme.gray.lightest} />
+          <ActivityIndicator
+            size={Theme.specifications.activityIndicatorSize}
+            color={Theme.gray.lightest}
+          />
         </View>
       </Modal>
     );
@@ -22,16 +25,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
 
 PageSpinner.propTypes = {
-  onRequestClose: PropTypes.func
+  onRequestClose: PropTypes.func,
 };
 
 PageSpinner.defaultProps = {
-  onRequestClose: () => {}
+  onRequestClose: () => {},
 };
 
 export default PageSpinner;
