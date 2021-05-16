@@ -39,21 +39,21 @@ export default function SkillDetail({ route, navigation }) {
   const { requestedSkills } = useSelector(profileSelector);
   const [visibleSnackbar, setVisibleSnackbar] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [requestedObj, setRequestedObj] = React.useState({});
+  const [requestedObj, setRequestedObj] = React.useState(null);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (
       userInfo._id
-      // && (!requestedSkills || !requestedSkills.length)
+      && (!requestedSkills || !requestedSkills.length)
     ) {
       getRequetedCourses(userInfo._id);
     }
-    // else if (userInfo._id) {
-    //   let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
-    //   if (reqObj.length) setRequestedObj(reqObj[0])
-    // }
+    else if (userInfo._id) {
+      let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
+      if (reqObj.length) setRequestedObj(reqObj[0])
+    }
   }, [userInfo]);
 
   const getRequetedCourses = uid => {
@@ -242,32 +242,32 @@ export default function SkillDetail({ route, navigation }) {
           <DataTable.Title>Other Info</DataTable.Title>
         </DataTable.Header>
         <DataTable.Row>
-          <DataTable.Cell>Skill Level</DataTable.Cell>
-          <DataTable.Cell>{skill.courselevel}</DataTable.Cell>
+          <DataTable.Cell style={{fontSize: 90}}>Skill Level</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}>{skill.courselevel}</Text></DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Speaking Languages</DataTable.Cell>
           <DataTable.Cell>
-            {skill.speakinglanguages.length > 0
+            - <Text style={styles.tableValues}>{skill.speakinglanguages.length > 0
               ? getSpeakingLanguages(skill.speakinglanguages)
-              : ''}
+              : ''}</Text>
           </DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Platform</DataTable.Cell>
-          <DataTable.Cell>{skill.platform}</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.platform} </Text></DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Country</DataTable.Cell>
-          <DataTable.Cell>{skill.country}</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.country}</Text></DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Demo available ?</DataTable.Cell>
-          <DataTable.Cell>{skill.demo ? 'Yes' : 'No'}</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.demo ? 'Yes' : 'No'}</Text></DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row>
           <DataTable.Cell>Posted</DataTable.Cell>
-          <DataTable.Cell>{moment(skill.createddate).fromNow()}</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {moment(skill.createddate).fromNow()} </Text></DataTable.Cell>
         </DataTable.Row>
         <DataTable.Row />
       </DataTable>
@@ -281,9 +281,9 @@ export default function SkillDetail({ route, navigation }) {
         <View style={{ width: '40%', padding: 20, paddingTop: 0 }}>
           <Price price={skill.price} currency={skill.currency} />
         </View>
-        <View style={[globalStyles.platform, { marginLeft: 15 }]}>
-          <Text style={globalStyles.platformText}>
-            Duration: {skill.totalhours}
+        <View style={[styles.platform, { marginLeft: 15 }]}>
+          <Text style={styles.platformText}>
+            {`Duration: ${skill.totalhours} Hours`}
           </Text>
         </View>
         {dataTableComponent()}
@@ -548,6 +548,18 @@ export default function SkillDetail({ route, navigation }) {
       navigation.navigate('ChatRoom', { thread: itemObj });
     }
 
+    if(loading) {
+      return (
+          <Button
+            disabled={true}
+            mode="contained"
+            color={'black'}
+            labelStyle={globalStyles.btnLabelStyle}>
+            {"Please Wait"}
+          </Button>
+      )
+    }
+
     return (
       <View>
         {/* <View style={globalStyles.btnStyle}> */}
@@ -602,7 +614,7 @@ export default function SkillDetail({ route, navigation }) {
           {contentComponent()}
           {descriptionComponent()}
         </View>
-        <PageSpinner visible={loading} />
+        {/* <PageSpinner visible={loading} /> */}
       </ScrollView>
       {snackComponent()}
     </View>
@@ -610,6 +622,14 @@ export default function SkillDetail({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  borderLine: {
+    borderRightWidth : 1, 
+    borderColor: "lightgrey"
+  },
+  tableValues: {
+    margin: 90,
+    padding: 90
+  },
   container: {
     flex: 1,
   },
@@ -627,18 +647,18 @@ const styles = StyleSheet.create({
   platform: {
     marginTop: 8,
     marginBottom: 20,
-    width: 90,
-    backgroundColor: 'rgba(243, 246, 252, 0.7)',
+    width: 150,
+    backgroundColor: '#f7f7f7',
     borderColor: 'lightgrey',
     borderWidth: 0.3,
-    padding: 3,
-    borderRadius: 2,
+    padding: 10,
+    borderRadius: 10,
   },
   platformText: {
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
-    color: 'black',
+    // color: 'black',
   },
   headerTitle: {
     fontSize: 19,

@@ -121,6 +121,7 @@ export default function SearchPage({ navigation }) {
         // placeholderStyle={{ fontSize: 256 }}
         onChangeText={searchFun}
         value={searchQuery}
+        style={{marginRight: 30}}
       />
     );
   };
@@ -173,6 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 30,
+    paddingRight: 0,
     paddingBottom: 0,
   },
   loadingBar: {

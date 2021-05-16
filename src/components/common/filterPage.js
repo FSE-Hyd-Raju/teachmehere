@@ -25,7 +25,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                 <Icon
                     name={"close"}
                     color="#fff"
-                    size={27}
+                    size={18}
                     style={{ textAlign: "left" }}
                     onPress={onFilterClose}
                 />
@@ -69,13 +69,13 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
 
                 <List.Accordion
                     title="Skill Level"
-                    titleStyle={{ color: "black", fontSize: 18 }}
+                    titleStyle={{ color: "black", fontSize: 16 }}
                     style={{ color: "black" }}
                     left={props => <FeatherIcons color={Colors.black} size={17} name="bar-chart-2" style={{ margin: 0 }} />}
                 >
                     <View style={{ paddingLeft: 62, marginRight: 30 }}>
                         {courseLevelItemComponent("Basic")}
-                        {courseLevelItemComponent("Medium")}
+                        {courseLevelItemComponent("Intermediate")}
                         {courseLevelItemComponent("Advanced")}
                     </View>
 
@@ -148,16 +148,16 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             <View style={{ justifyContent: "center", marginTop: 10, paddingLeft: 3 }}>
                 <List.Accordion
                     title="Skill Duration"
-                    titleStyle={{ color: "black", fontSize: 18 }}
+                    titleStyle={{ color: "black", fontSize: 15 }}
                     style={{ color: "black" }}
                     expanded={courseDuartionexpanded}
                     onPress={() => setCourseDuartionexpanded(!courseDuartionexpanded)}
-                    left={props => <IconMaterialIcons color={Colors.black} size={17} name="timer" style={{ margin: 0 }} />}
+                    left={props => <IconMaterialIcons color={Colors.black} size={16} name="timer" style={{ margin: 0 }} />}
                 >
                     <View style={styles.numericInputContainerView}>
                         <View style={styles.numericInputContainer}>
                             <View style={{ alignItems: "center", paddingRight: 10 }}>
-                                <Text style={{ paddingBottom: 10, fontSize: 14, color: "#rgb(79, 96, 56)" }}>{"Min Hours"}</Text>
+                                <Text style={{ paddingBottom: 10, fontSize: 12, color: "#rgb(79, 96, 56)" }}>{"Min Hours"}</Text>
                                 <NumericInput
                                     step={0.5}
                                     valueType='real'
@@ -170,7 +170,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                                     rounded onChange={value => setCourseDurationObj({ ...courseDurationObj, Min: value })} />
                             </View>
                             <View style={{ alignItems: "center" }}>
-                                <Text style={{ paddingBottom: 10, fontSize: 14, color: "#rgb(79, 96, 56)" }}>{"Max Hours"}</Text>
+                                <Text style={{ paddingBottom: 10, fontSize: 12, color: "#rgb(79, 96, 56)" }}>{"Max Hours"}</Text>
                                 <NumericInput
                                     step={0.5}
                                     valueType='real'
@@ -218,7 +218,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                         style={{ paddingVertical: 5, paddingHorizontal: 15 }}
                         onPress={() => remmoveRecentlyViewedCourses(item)}
                     />
-                    <Text style={{ marginTop: 5, fontSize: 17, letterSpacing: 1 }}> Price Range</Text>
+                    <Text style={{ marginTop: 5, fontSize: 16, letterSpacing: 1 }}> Price Range</Text>
 
                 </View>
 
@@ -304,17 +304,17 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             <View style={{ justifyContent: "center", marginTop: 10, paddingLeft: 3 }}>
                 <List.Accordion
                     title="Price Range"
-                    titleStyle={{ color: "black", fontSize: 18 }}
+                    titleStyle={{ color: "black", fontSize: 16 }}
                     style={{ color: "black" }}
                     expanded={priceRangeexpanded}
                     onPress={() => setPriceRangeexpanded(!priceRangeexpanded)}
-                    left={props => <IconMaterialIcons color={Colors.black} name="cash-multiple" size={17} style={{ margin: 0 }} />}
+                    left={props => <IconMaterialIcons color={Colors.black} name="cash-multiple" size={16} style={{ margin: 0 }} />}
                 >
                     <View style={styles.numericInputContainerView}>
 
                         <View style={styles.numericInputContainer}>
                             <View style={{ alignItems: "center", paddingRight: 10 }}>
-                                <Text style={{ paddingBottom: 10, fontSize: 14, color: "#rgb(79, 96, 56)" }}>{"Min"}</Text>
+                                <Text style={{ paddingBottom: 10, fontSize: 12, color: "#rgb(79, 96, 56)" }}>{"Min"}</Text>
                                 <NumericInput
                                     step={0.5}
                                     valueType='real'
@@ -328,7 +328,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                                     rounded onChange={value => setPriceRangeObj({ ...priceRangeObj, Min: value })} />
                             </View>
                             <View style={{ alignItems: "center" }}>
-                                <Text style={{ paddingBottom: 10, fontSize: 14, color: "#rgb(79, 96, 56)" }}>{"Max"}</Text>
+                                <Text style={{ paddingBottom: 10, fontSize: 12, color: "#rgb(79, 96, 56)" }}>{"Max"}</Text>
                                 <NumericInput
                                     step={0.5}
                                     valueType='real'
@@ -360,10 +360,10 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                 <View style={{ flexDirection: 'row', marginTop: 25, alignItems: "center", flexWrap: "wrap" }}>
                     <IconMaterialIcons
                         name={icon}
-                        size={18}
+                        size={16}
                         style={{ paddingVertical: 5, paddingLeft: 10, paddingRight: 7 }}
                     />
-                    <Text style={{ fontSize: 18, width: "55%" }}> {title} </Text>
+                    <Text style={{ fontSize: 15, width: "55%" }}> {title} </Text>
                     <Switch value={value} onValueChange={(value) => onchange(value)} />
                 </View>
             </TouchableOpacity>
@@ -389,13 +389,13 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             <View style={{ justifyContent: "center", marginTop: 30, paddingLeft: 3 }}>
                 <List.Accordion
                     title="Minimum Rating"
-                    titleStyle={{ color: "black", fontSize: 18 }}
+                    titleStyle={{ color: "black", fontSize: 16 }}
                     style={{ color: "black" }}
-                    left={props => <IconMaterialIcons color={Colors.black} size={17} name="heart-outline" style={{ margin: 0 }} />}
+                    left={props => <IconMaterialIcons color={Colors.black} size={16} name="heart-outline" style={{ margin: 0 }} />}
                 >
                     <View style={styles.recentSearchsItem}                    >
                         <View style={{ flexDirection: 'row', justifyContent: "space-between", paddingRight: 16 }}>
-                            <Rating type='star' ratingTextColor="black" showRating imageSize={20} startingValue={minRatingObj} style={styles.rating} onFinishRating={(rating) => setMinRatingObj(rating)} />
+                            <Rating type='star' ratingTextColor="black" showRating imageSize={20} startingValue={minRatingObj} style={{height: 30}} onFinishRating={(rating) => setMinRatingObj(rating)} />
                         </View>
                     </View>
                 </List.Accordion>
@@ -474,11 +474,10 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
             <View style={{ marginTop: 50, marginBottom: 130 }}>
                 <View style={{ flexDirection: 'row', justifyContent: "space-evenly", alignItems: "center", flexWrap: "wrap" }}>
                     <FAB
-                        style={styles.fab}
                         small={true}
                         icon="close"
                         label="Clear"
-                        style={{ backgroundColor: "white" }}
+                        style={{ backgroundColor: "white"}}
                         color="rgb(0, 150, 136)"
                         onPress={() => clearFilterObj()}
                     />
@@ -487,8 +486,10 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
                         small={true}
                         icon="check"
                         label="Apply"
-                        color="white"
+                        // color="white"
                         disabled={disableApply()}
+                        style={{ backgroundColor: "white" }}
+                        color="rgb(0, 150, 136)"
                         // style={{ backgroundColor: disableApply() ? "" : "rgb(0, 150, 136)" }}
                         onPress={buildFilterObj}
                     />
@@ -526,7 +527,7 @@ export default function FilterPage({ onFilterClose, applyFilter, clearFilter }) 
 const styles = StyleSheet.create({
     courseLevelItemText: {
         marginTop: 5,
-        fontSize: 17,
+        fontSize: 15,
         letterSpacing: 1
     },
     courseLevelItemContainer: {
@@ -547,10 +548,11 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         color: "white",
-        fontSize: 20,
+        fontSize: 18,
         letterSpacing: 1,
         fontFamily: "sans-serif",
-        paddingLeft: 40
+        paddingLeft: 40,
+        alignItems:"center"
     },
     headerComponent: {
         // flex: 1,

@@ -136,7 +136,7 @@ export default function SearchResultsPage({ filterclicked, navigation }) {
               refreshControl={
                 <RefreshControl refreshing={loading} onRefresh={onRefresh} />
               }
-              contentContainerStyle={{ paddingBottom: 80 }}
+              contentContainerStyle={{ paddingBottom: 80, marginRight: 30 }}
             />
           </View>
         </View>

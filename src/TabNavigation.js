@@ -169,6 +169,16 @@ const TabNavigation = props => {
     );
   }
 
+  function SearchStackScreen() {
+    return (
+      <Stack.Navigator headerMode={'none'} initialRouteName={'Search'}>
+        <Stack.Screen name="SearchPage" component={Search} />
+        <Stack.Screen name="SkillDetail" component={SkillDetail} />
+        <Stack.Screen name="UserDetailsPage" component={UserDetailsPage} />
+      </Stack.Navigator>
+    );
+  }
+
   function MyTabs() {
     return (
       <Tab.Navigator
@@ -193,7 +203,7 @@ const TabNavigation = props => {
         />
         <Tab.Screen
           name="Search"
-          component={Search}
+          component={SearchStackScreen}
           options={{
             tabBarLabel: 'Search',
             tabBarIcon: ({ color }) => (
