@@ -38,7 +38,12 @@ export default function NewChat({ navigation }) {
         }).then((response) => response.json())
             .then((requestedJson) => {
                 if (requestedJson.length) {
-                    let userslist = requestedJson.filter((ele, ind) => (ele.status == "ACCEPTED") && (ind === requestedJson.findIndex(elem => elem.userinfo._id === ele.userinfo._id)))
+                    let userslist = requestedJson.filter((ele, ind) => {
+                        let status = ele.status == "ACCEPTED";
+                        let matchInd = requestedJson.findIndex(elem => (elem.userinfo._id === ele.userinfo._id) && (elem.status == "ACCEPTED"))
+                        let duplicate = ind === matchInd
+                        return status && duplicate
+                    })
                     dispatch(setNewChatList(userslist))
                 }
 
@@ -263,11 +268,12 @@ export default function NewChat({ navigation }) {
     const loadingComponent = () => {
         return (
             <View style={styles.loadingBar}>
-                {/* <ActivityIndicator size={35} animating={true} color={Colors.black} /> */}
-                <Image
+                <ActivityIndicator size={35} animating={true} color={Colors.black} />
+                {/* <Image
                     source={require('../../../assets/img/loading_gif.gif')}
                     size={5}
-                />
+                    style={{ }}
+                /> */}
             </View>
         )
     }
@@ -395,7 +401,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
-        marginTop: 100
+        marginTop: 100,
+        
     },
     icon: {
         fontSize: 36
