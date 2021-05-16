@@ -560,12 +560,9 @@ export default function SkillDetail({ route, navigation }) {
       )
     }
 
-    return (
-      <View>
-        {/* <View style={globalStyles.btnStyle}> */}
-        {/* <Text>{JSON.stringify(requestedObj)}</Text> */}
-        {!requestedObj.request_status && (
-          <Button
+    if(!requestedObj || !requestedObj.request_status) {
+      return (
+        <Button
             mode="contained"
             color={'black'}
             labelStyle={globalStyles.btnLabelStyle}
@@ -573,7 +570,13 @@ export default function SkillDetail({ route, navigation }) {
             {' '}
             Request
           </Button>
-        )}
+      )
+    }
+
+    return (
+      <View>
+        {/* <View style={globalStyles.btnStyle}> */}
+        {/* <Text>{JSON.stringify(requestedObj)}</Text> */}
         {(requestedObj.request_status == 'REJECTED' ||
           requestedObj.request_status == 'PENDING') && (
           <Button
@@ -605,12 +608,12 @@ export default function SkillDetail({ route, navigation }) {
         <View style={styles.skillDetailView}>
           {imageComponent()}
           {bodyComponent()}
-          {!requestedObj ||
+          {(!requestedObj ||
             !userInfo ||
             (requestedObj &&
               userInfo &&
-              requestedObj.courseuid != userInfo._id &&
-              requestButtonComponent())}
+              requestedObj.courseuid != userInfo._id)) &&
+              requestButtonComponent()}
           {contentComponent()}
           {descriptionComponent()}
         </View>

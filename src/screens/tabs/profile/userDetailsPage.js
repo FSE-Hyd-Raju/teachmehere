@@ -24,6 +24,10 @@ export default function UserDetailsPage({ route, navigation }) {
   }, []);
 
   const getPostedCourses = uid => {
+    if(!uid) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     fetch('https://teachmeproject.herokuapp.com/getCourseDetailsById', {
       method: 'POST',
@@ -37,12 +41,12 @@ export default function UserDetailsPage({ route, navigation }) {
     })
       .then(response => response.json())
       .then(responseJson => {
-        console.log(JSON.stringify(responseJson));
+        // console.log(JSON.stringify(responseJson));
         setCourseData(responseJson);
         setLoading(false);
       })
       .catch(error => {
-        console.error(error);
+        // console.error(error);
         setLoading(false);
       });
   };

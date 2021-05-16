@@ -620,8 +620,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const goToProfile = (thread) => {
         if (!thread.support) {
-            thread.userid = senderObj.id;
-            navigation.navigate("UserDetailsPage", { userinfo: thread })
+            navigation.navigate("UserDetailsPage", { userinfo: {...thread, uid: senderObj.id} })
         }
     }
 
