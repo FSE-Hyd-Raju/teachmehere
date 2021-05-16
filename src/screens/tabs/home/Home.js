@@ -125,7 +125,7 @@ export default function Home(props) {
             marginLeft: 10,
           }}>
           <Image
-            source={require('../../../assets/img/skillSchoolLogo.png')}
+            source={require('../../../assets/img/tagSkills.png')}
             style={{ height: 60, width: 180, flex: 0.8, resizeMode: 'contain' }}
           />
         </View>
@@ -334,9 +334,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    backgroundColor: "#f7f7f7",
+    paddingBottom: 15,
   },
   carouselContainer: {
-    marginTop: 25,
+    // marginTop: 25,
   },
   imageContainer: {
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
