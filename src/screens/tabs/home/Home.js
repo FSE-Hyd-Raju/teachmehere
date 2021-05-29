@@ -125,7 +125,7 @@ export default function Home(props) {
             marginLeft: 10,
           }}>
           <Image
-            source={require('../../../assets/img/tagSkills.png')}
+            source={require('../../../assets/img/tagSkillsLogo1.png')}
             style={{ height: 60, width: 180, flex: 0.8, resizeMode: 'contain' }}
           />
         </View>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    backgroundColor: "#f7f7f7",
+    // backgroundColor: "#f7f7f7",
     paddingBottom: 15,
   },
   carouselContainer: {

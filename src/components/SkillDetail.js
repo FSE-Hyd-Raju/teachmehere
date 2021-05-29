@@ -44,15 +44,15 @@ export default function SkillDetail({ route, navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (
-      userInfo._id
-      && (!requestedSkills || !requestedSkills.length)
-    ) {
+    if (userInfo._id && (!requestedSkills || !requestedSkills.length)) {
       getRequetedCourses(userInfo._id);
-    }
-    else if (userInfo._id) {
-      let reqObj = requestedSkills.filter(obj => obj.request_uid == userInfo._id)
-      if (reqObj.length) setRequestedObj(reqObj[0])
+    } else if (userInfo._id) {
+      let reqObj = requestedSkills.filter(
+        obj => obj._id == skill._id,
+      );
+      if (reqObj.length) {
+        setRequestedObj(reqObj[0]);
+      }
     }
   }, [userInfo]);
 
@@ -75,7 +75,7 @@ export default function SkillDetail({ route, navigation }) {
           dispatch(setRequestedSkills(responseJson));
         }
         let reqObj = responseJson.filter(
-          obj => obj.request_uid == userInfo._id,
+          obj => obj.uid == skill._id,
         );
         if (reqObj.length) {
           setRequestedObj(reqObj[0]);
@@ -100,7 +100,12 @@ export default function SkillDetail({ route, navigation }) {
             setVisibleSnackbar('');
           },
         }}
-        style={{ backgroundColor: 'white' }}
+        style={{
+          backgroundColor: 'white',
+          borderRadius: 20,
+          borderWidth: 0.4,
+          borderColor: 'grey',
+        }}
         wrapperStyle={{ backgroundColor: 'white' }}>
         <Text style={{ color: 'black', fontSize: 16, letterSpacing: 1 }}>
           {visibleSnackbar}
@@ -238,39 +243,39 @@ export default function SkillDetail({ route, navigation }) {
   const dataTableComponent = () => {
     return (
       <DataTable>
-        <DataTable.Header>
-          <DataTable.Title>Other Info</DataTable.Title>
-        </DataTable.Header>
-        <DataTable.Row>
-          <DataTable.Cell style={{fontSize: 90}}>Skill Level</DataTable.Cell>
-          <DataTable.Cell>- <Text style={styles.tableValues}>{skill.courselevel}</Text></DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
-          <DataTable.Cell>Speaking Languages</DataTable.Cell>
-          <DataTable.Cell>
-            - <Text style={styles.tableValues}>{skill.speakinglanguages.length > 0
-              ? getSpeakingLanguages(skill.speakinglanguages)
-              : ''}</Text>
-          </DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
-          <DataTable.Cell>Platform</DataTable.Cell>
-          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.platform} </Text></DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
-          <DataTable.Cell>Country</DataTable.Cell>
-          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.country}</Text></DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
-          <DataTable.Cell>Demo available ?</DataTable.Cell>
-          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.demo ? 'Yes' : 'No'}</Text></DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row>
-          <DataTable.Cell>Posted</DataTable.Cell>
-          <DataTable.Cell>- <Text style={styles.tableValues}> {moment(skill.createddate).fromNow()} </Text></DataTable.Cell>
-        </DataTable.Row>
-        <DataTable.Row />
-      </DataTable>
+      <DataTable.Header>
+        <DataTable.Title>Other Info</DataTable.Title>
+      </DataTable.Header>
+      <DataTable.Row>
+        <DataTable.Cell style={{fontSize: 90}}>Skill Level</DataTable.Cell>
+        <DataTable.Cell>- <Text style={styles.tableValues}>{skill.courselevel}</Text></DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row>
+        <DataTable.Cell>Speaking Languages</DataTable.Cell>
+        <DataTable.Cell>
+          - <Text style={styles.tableValues}>{skill.speakinglanguages.length > 0
+            ? getSpeakingLanguages(skill.speakinglanguages)
+            : ''}</Text>
+        </DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row>
+        <DataTable.Cell>Platform</DataTable.Cell>
+        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.platform} </Text></DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row>
+        <DataTable.Cell>Country</DataTable.Cell>
+        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.country}</Text></DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row>
+        <DataTable.Cell>Demo available ?</DataTable.Cell>
+        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.demo ? 'Yes' : 'No'}</Text></DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row>
+        <DataTable.Cell>Posted</DataTable.Cell>
+        <DataTable.Cell>- <Text style={styles.tableValues}> {moment(skill.createddate).fromNow()} </Text></DataTable.Cell>
+      </DataTable.Row>
+      <DataTable.Row />
+    </DataTable>
     );
   };
 
@@ -441,7 +446,7 @@ export default function SkillDetail({ route, navigation }) {
           var itemObj = {};
           querySnapshot.forEach(documentSnapshot => {
             var data = documentSnapshot.data();
-            if (data['ids'].indexOf(skill.uid) > -1) {
+            if (data.ids.indexOf(skill.uid) > -1) {
               exists = true;
 
               var messageObj = {
@@ -548,29 +553,29 @@ export default function SkillDetail({ route, navigation }) {
       navigation.navigate('ChatRoom', { thread: itemObj });
     }
 
-    if(loading) {
-      return (
-          <Button
-            disabled={true}
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}>
-            {"Please Wait"}
-          </Button>
-      )
-    }
-
-    if(!requestedObj || !requestedObj.request_status) {
+    // alert(JSON.stringify(requestedObj))
+    if (loading) {
       return (
         <Button
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}
-            onPress={requestBtn}>
-            {' '}
-            Request
-          </Button>
-      )
+          disabled={true}
+          mode="contained"
+          color={'black'}
+          labelStyle={globalStyles.btnLabelStyle}>
+          {'Please Wait'}
+        </Button>
+      );
+    }
+    if (!requestedObj || !requestedObj.request_status) {
+      return (
+        <Button
+          mode="contained"
+          color={'black'}
+          labelStyle={globalStyles.btnLabelStyle}
+          onPress={requestBtn}>
+          {' '}
+          Request
+        </Button>
+      );
     }
 
     return (
@@ -613,7 +618,7 @@ export default function SkillDetail({ route, navigation }) {
             (requestedObj &&
               userInfo &&
               requestedObj.courseuid != userInfo._id)) &&
-              requestButtonComponent()}
+            requestButtonComponent()}
           {contentComponent()}
           {descriptionComponent()}
         </View>
@@ -626,12 +631,12 @@ export default function SkillDetail({ route, navigation }) {
 
 const styles = StyleSheet.create({
   borderLine: {
-    borderRightWidth : 1, 
-    borderColor: "lightgrey"
+    borderRightWidth: 1,
+    borderColor: 'lightgrey',
   },
   tableValues: {
     margin: 90,
-    padding: 90
+    padding: 90,
   },
   container: {
     flex: 1,

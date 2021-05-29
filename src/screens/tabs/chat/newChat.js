@@ -216,12 +216,12 @@ export default function NewChat({ navigation }) {
                 //         }
                 //     }
                 // })
+                setLoading(false);
                 if (!exists) {
                     sendMessage(item)
                 } else {
                     // navigation.popToTop();
                     navigation.navigate('ChatRoom', { thread: item });
-                    // setLoading(false);
                 }
             });
 

@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
   },
   courseDetails: {
     marginVertical: 8,
-    width: '60%',
+    // width: '60%',
+    flex: 0.95
     // paddingHorizontal: 16,
     // borderTopLeftRadius: 1,
     // borderTopRightRadius: 1,
