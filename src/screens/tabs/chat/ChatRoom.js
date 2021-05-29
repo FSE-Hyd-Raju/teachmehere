@@ -10,6 +10,8 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
 import { chatSelector, setLoading, setCurrentOpenedChat } from '../../../redux/slices/chatSlice';
+
+
 export default function ChatRoom({ route, navigation }) {
     console.log("in chatroom ")
     const { userInfo } = useSelector(loginSelector)
@@ -24,19 +26,21 @@ export default function ChatRoom({ route, navigation }) {
     const { thread } = route.params;
     const [newChat, setNewChat] = useState(thread.newChat);
     const [senderObj, setSenderObj] = useState(thread.userDetails.find(o => o.id != userInfo._id))
-    console.log("asdfasdfadsfasdfasdfadsdfasdfsdfdsafasfasfsdfsd")
 
-    console.log(thread.userDetails.find(o => o.id != userInfo._id))
 
     const backButtonHandler = () => {
         return BackHandler.addEventListener(
             'hardwareBackPress',
-            function () {
+            () => {
                 checkToRemoveChat();
                 return true;
             },
         );
     }
+
+    let messagesListener = null;
+    let threadListener = null;
+    let backhandler = null;
 
     useEffect(() => {
         dispatch(setCurrentOpenedChat(thread))
@@ -47,11 +51,15 @@ export default function ChatRoom({ route, navigation }) {
             setDidBlock(true)
         }
 
-        console.log("in useeffect ")
+        console.log("in useeffect ", messages)
 
-        let backhandler = backButtonHandler()
-        const messagesListener = getMessages();
-        const threadListener = listenForThread();
+        if (!backhandler) {
+            backhandler = backButtonHandler()
+        }
+        if (!messagesListener)
+            messagesListener = getMessages();
+        if (!threadListener)
+            threadListener = listenForThread();
 
         // dispatch(setLoading(false));
 
@@ -63,7 +71,7 @@ export default function ChatRoom({ route, navigation }) {
             threadListener();
             // dispatch(setCurrentOpenedChat({}))
         };
-    }, []);
+    }, [messages]);
 
     const checkToRemoveChat = () => {
         if (newChat && (!messages || !messages.length)) {
@@ -130,7 +138,9 @@ export default function ChatRoom({ route, navigation }) {
                     // });
                 }
                 console.log("updagteig masgs", JSON.stringify(messagesArr))
-                setMessages(messagesArr);
+                if (messages.length != messagesArr.length) {
+                    setMessages(messagesArr);
+                }
             });
     }
 
@@ -620,7 +630,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const goToProfile = (thread) => {
         if (!thread.support) {
-            navigation.navigate("UserDetailsPage", { userinfo: {...thread, uid: senderObj.id} })
+            navigation.navigate("UserDetailsPage", { userinfo: { ...thread, uid: senderObj.id } })
         }
     }
 

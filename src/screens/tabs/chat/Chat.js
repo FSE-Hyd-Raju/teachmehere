@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Button, Text, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Button, Text, Image, Dimensions, RefreshControl } from 'react-native';
 import { List, Divider, Searchbar, FAB, ActivityIndicator, Colors } from 'react-native-paper';
 import { Avatar } from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
@@ -65,9 +65,7 @@ export default function Chat({ navigation }) {
         loadingComponent()
       }
       {!loading && !!searchChatResults.length &&
-        <View>
-
-
+        <View style={{flex: 1}}>
           <FlatList
             data={searchChatResults}
             keyExtractor={item => item._id}
@@ -95,6 +93,12 @@ export default function Chat({ navigation }) {
                 />
               </TouchableOpacity>
             )}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={() => getChats()}
+              />
+            }
           />
         </View>
       }

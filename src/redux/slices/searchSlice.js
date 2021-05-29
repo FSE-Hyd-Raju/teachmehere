@@ -17,6 +17,7 @@ export const initialState = {
   topCategories: [],
   filterObj: {},
   isRefreshing: false,
+  topCategoriesLoading: false,
 };
 
 const searchSlice = createSlice({
@@ -34,9 +35,15 @@ const searchSlice = createSlice({
     },
     getTopCategories: state => {
       state.topCategories = [];
+      state.topCategoriesLoading = true;
     },
     getTopCategoriesSuccess: (state, { payload }) => {
+      state.topCategoriesLoading = false;
       state.topCategories = payload;
+    },
+    getTopCategoriesFailure: (state, { payload }) => {
+      state.topCategoriesLoading = false;
+      state.topCategories = [];
     },
     getSearchResults: state => {
       state.loading = true;
@@ -72,6 +79,7 @@ export const {
   setIsRefreshing,
   getTopCategories,
   getTopCategoriesSuccess,
+  getTopCategoriesFailure,
   getSearchResults,
   getSearchResultsSuccess,
   getSearchResultsFailure,
@@ -94,7 +102,7 @@ export function fetchTopCategories() {
         dispatch(getTopCategoriesSuccess(response.data));
       }
     } catch (error) {
-      dispatch(getTopCategories());
+      dispatch(getTopCategoriesFailure());
     }
   };
 }

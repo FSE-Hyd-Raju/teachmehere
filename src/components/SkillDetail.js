@@ -48,7 +48,7 @@ export default function SkillDetail({ route, navigation }) {
       getRequetedCourses(userInfo._id);
     } else if (userInfo._id) {
       let reqObj = requestedSkills.filter(
-        obj => obj._id == skill._id,
+        obj => obj.courseuid == skill.uid,
       );
       if (reqObj.length) {
         setRequestedObj(reqObj[0]);
@@ -75,7 +75,7 @@ export default function SkillDetail({ route, navigation }) {
           dispatch(setRequestedSkills(responseJson));
         }
         let reqObj = responseJson.filter(
-          obj => obj.uid == skill._id,
+          obj => obj.courseuid == skill.uid,
         );
         if (reqObj.length) {
           setRequestedObj(reqObj[0]);
@@ -554,6 +554,8 @@ export default function SkillDetail({ route, navigation }) {
     }
 
     // alert(JSON.stringify(requestedObj))
+    // alert(userInfo._id)
+    if(skill.uid == userInfo._id) return;
     if (loading) {
       return (
         <Button

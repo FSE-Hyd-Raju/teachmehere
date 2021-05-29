@@ -34,6 +34,7 @@ export default function Home(props) {
   );
   var notificunsubscribe = null;
   var focusNotiMsg = null;
+  var lastMessageId = "";
 
   const showMore = group => {
     props.navigation.navigate('SkillListView', {
@@ -63,7 +64,7 @@ export default function Home(props) {
 
   const notificationListener = async () => {
     PushNotification.configure({
-      onNotification: function(notification) {
+      onNotification: function (notification) {
         console.log('notificationListener');
 
         if (
@@ -96,19 +97,23 @@ export default function Home(props) {
       console.log(remoteMessage);
 
       focusNotiMsg = remoteMessage;
-      PushNotification.localNotification({
-        // largeIcon: "ic_foreground",
-        smallIcon: 'ic_foreground',
-        autoCancel: true,
-        bigText: remoteMessage.data.body,
-        // subText: remoteMessage.data.body,
-        title: remoteMessage.data.title,
-        message: remoteMessage.data.body,
-        vibrate: true,
-        vibration: 300,
-        playSound: true,
-        soundName: 'default',
-      });
+      if (remoteMessage.messageId !== lastMessageId) {
+        lastMessageId = remoteMessage.messageId
+        PushNotification.localNotification({
+          // largeIcon: "ic_foreground",
+          smallIcon: 'ic_foreground',
+          autoCancel: true,
+          bigText: remoteMessage.data.body,
+          // subText: remoteMessage.data.body,
+          title: remoteMessage.data.title,
+          message: remoteMessage.data.body,
+          vibrate: true,
+          vibration: 300,
+          playSound: true,
+          soundName: 'default',
+        });
+      }
+
 
       // alert('A new FCM message arrived!' + JSON.stringify(remoteMessage));
     });
@@ -122,11 +127,11 @@ export default function Home(props) {
             flex: 0.9,
             alignItems: 'center',
             paddingTop: 10,
-            marginLeft: 10,
+            marginLeft: 25,
           }}>
           <Image
             source={require('../../../assets/img/tagSkillsLogo1.png')}
-            style={{ height: 60, width: 180, flex: 0.8, resizeMode: 'contain' }}
+            style={{ height: 50, width: 160, flex: 0.8, resizeMode: 'contain' }}
           />
         </View>
         <Icons
@@ -149,7 +154,9 @@ export default function Home(props) {
             borderRadius: 5,
             borderWidth: 0.5,
             backgroundColor: 'rgba(243, 246, 252, 0.7)',
-          }}>
+          }}
+          key={index}
+        >
           <ParallaxImage
             source={{ uri: item.illustration }}
             containerStyle={styles.imageContainer}
@@ -207,8 +214,8 @@ export default function Home(props) {
           <CategoryWrapper
             title={'Top Categories'}
             hideBtn={true}
-            // btnText={''}
-            // onButtonPress={() => showMore({})}
+          // btnText={''}
+          // onButtonPress={() => showMore({})}
           />
           <View style={{ marginLeft: 15 }}>
             <CategoryChipView
@@ -228,9 +235,9 @@ export default function Home(props) {
     return (
       <View style={{ marginTop: 10 }}>
         {showData &&
-          Object.keys(homeSkillsData).map(group => {
+          Object.keys(homeSkillsData).map((group, index) => {
             return (
-              <View style={{ marginTop: 18 }}>
+              <View style={{ marginTop: 18 }} key={index}>
                 <CategoryWrapper
                   title={group}
                   btnText={'See All'}

@@ -32,19 +32,20 @@ export default function NotificationPage({ navigation }) {
             .collection('NOTIFICATIONS')
             .where(
                 "receiverId", "==", userInfo._id
-            ).get()
+            )
+            .get()
             .then(snapshot => {
                 let notificationsArr = []
                 snapshot.forEach(documentSnapshot => {
                     const data = {
                         _id: documentSnapshot.id,
                         text: '',
-                        createdAt: new Date().getTime(),
                         ...documentSnapshot.data()
                     };
 
                     notificationsArr.push(data)
                 });
+                notificationsArr.sort((a, b) => b.createdAt - a.createdAt);
                 dispatch(setNotificationsList(notificationsArr));
                 setInfoNotificationsList(notificationsArr.filter(ele => ele.type != "REQUEST"))
                 setRequestNotificationsList(notificationsArr.filter(ele => ele.type == "REQUEST"))
@@ -147,7 +148,7 @@ export default function NotificationPage({ navigation }) {
                 .then((responseJson) => {
                     console.log(responseJson)
                     setLoading(false);
-                    sendNotification(item, notifyobj)
+                    // sendNotification(item, notifyobj)
                     navigation.goBack();
                 }).catch((error) => {
                     setLoading(false);
@@ -200,6 +201,7 @@ export default function NotificationPage({ navigation }) {
         return (
             <View>
                 {!!requestNotificationsList.length && <FlatList
+                    showsVerticalScrollIndicator={false}
                     data={requestNotificationsList}
                     keyExtractor={item => item._id}
                     refreshControl={
@@ -264,6 +266,7 @@ export default function NotificationPage({ navigation }) {
         return (
             <View>
                 {!!infoNotificationsList.length && <FlatList
+                    showsVerticalScrollIndicator={false}
                     data={infoNotificationsList}
                     keyExtractor={item => item._id}
                     refreshControl={
@@ -390,7 +393,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        paddingBottom: 80,
     },
     listTitle: {
         fontSize: 22

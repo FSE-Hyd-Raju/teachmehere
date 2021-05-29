@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,7 +7,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import { Chip } from 'react-native-paper';
+import { ActivityIndicator, Chip, Colors } from 'react-native-paper';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import CourseListCard from '../../../components/common/CourseListCard';
@@ -24,7 +24,15 @@ export default function SearchLandingPage({ searchChipSelected, navigation }) {
     recentlySearchedText,
     recentlyViewedCourses,
     topCategories,
+    topCategoriesLoading
   } = useSelector(searchSelector);
+
+  useEffect(() => {
+    if (!topCategories || !topCategories.length)
+      dispatch(fetchTopCategories())
+
+  }, []);
+
 
   const showCategorySkills = category => {
     navigation.navigate('SkillListView', {
@@ -151,12 +159,21 @@ export default function SearchLandingPage({ searchChipSelected, navigation }) {
     );
   };
 
+  const loadingComponent = () => {
+    return (
+      <View style={styles.loadingBar}>
+        <ActivityIndicator size={35} animating={true} color={Colors.red800} />
+      </View>
+    );
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={styles.SearchDefaultPageContainer}>
         {recentSearches()}
         {showTopCategories()}
         {recentlyViewedCoursesComponent()}
+        {topCategoriesLoading && loadingComponent()}
       </View>
     </ScrollView>
   );
@@ -176,13 +193,14 @@ const styles = StyleSheet.create({
   SearchDefaultPageContainer: {
     marginBottom: 100,
     marginTop: 50,
+    flex: 1,
   },
   category: {
     minWidth: 140,
     borderRightWidth: 0.8,
     borderBottomWidth: 0.8,
     borderColor: '#C0C0C0',
-    padding: 15,
+    paddingVertical: 15,
     alignItems: 'center',
   },
   IconAndName: {
@@ -210,5 +228,8 @@ const styles = StyleSheet.create({
     margin: 10,
     marginLeft: 0,
     marginRight: 0,
+  },
+  loadingBar: {
+    marginTop: 80,
   },
 });
