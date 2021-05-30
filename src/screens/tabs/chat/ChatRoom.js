@@ -9,7 +9,7 @@ import { loginSelector } from '../../../redux/slices/loginSlice';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import OptionsMenu from "react-native-options-menu";
-import { chatSelector, setLoading, setCurrentOpenedChat } from '../../../redux/slices/chatSlice';
+import { chatSelector, setLoading, setCurrentOpenedChat, fetchChats } from '../../../redux/slices/chatSlice';
 
 
 export default function ChatRoom({ route, navigation }) {
@@ -19,11 +19,13 @@ export default function ChatRoom({ route, navigation }) {
     const [didBlock, setDidBlock] = useState(false);
     const [gotBlocked, setGotBlocked] = useState(false);
 
-    const { loading } = useSelector(chatSelector)
+    const { chatResults, getChatsEventCalled } = useSelector(chatSelector)
+    const loading = false
     const dispatch = useDispatch()
 
     const { thread } = route.params || {};
     const [newChat, setNewChat] = useState(thread.newChat);
+    const [fetchedChatData, setFetchedChatData] = useState(false);
     const [senderObj, setSenderObj] = useState(thread.userDetails.find(o => o.id != userInfo._id))
 
 
@@ -42,6 +44,23 @@ export default function ChatRoom({ route, navigation }) {
     let backhandler = null;
 
     useEffect(() => {
+        if (!fetchedChatData && thread.fromNotification && !senderObj.displaypic && chatResults && chatResults.length) {
+            const currentChat = chatResults.filter(chat => chat._id == thread._id)
+            setFetchedChatData(true)
+            const senderInfo = currentChat[0].userDetails.find(o => o.id != userInfo._id)
+            setSenderObj({
+                ...senderObj,
+                displaypic: senderInfo.displaypic
+            })
+        }
+
+    }, [chatResults]);
+
+
+    useEffect(() => {
+        if (thread.fromNotification && !getChatsEventCalled) {
+            dispatch(fetchChats(userInfo))
+        }
         dispatch(setCurrentOpenedChat(thread))
         if (thread.blockedIds && thread.blockedIds.length && (thread.blockedIds.indexOf(userInfo._id) > -1)) {
             setGotBlocked(true)
@@ -61,8 +80,6 @@ export default function ChatRoom({ route, navigation }) {
             threadListener = listenForThread();
 
         // dispatch(setLoading(false));
-
-
         // Stop listening for updates whenever the component unmounts
         return () => {
             backhandler.remove();
@@ -640,7 +657,7 @@ export default function ChatRoom({ route, navigation }) {
 
     const goToProfile = (thread) => {
         if (!thread.support) {
-            navigation.navigate("UserDetailsPage", { userinfo: { ...thread, uid: senderObj.id } })
+            navigation.navigate("UserDetailsPage", { userinfo: { ...thread, uid: senderObj.id, displaypic: senderObj.displaypic } })
         }
     }
 

@@ -65,7 +65,7 @@ export default function Chat({ navigation }) {
         loadingComponent()
       }
       {!loading && !!searchChatResults.length &&
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={searchChatResults}
             keyExtractor={item => item._id}

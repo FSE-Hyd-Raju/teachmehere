@@ -11,7 +11,8 @@ export const initialState = {
     loading: false,
     hasErrors: false,
     newChatList: [],
-    currentOpenedChat: {}
+    currentOpenedChat: {},
+    getChatsEventCalled: false,
 };
 
 const chatSlice = createSlice({
@@ -22,6 +23,7 @@ const chatSlice = createSlice({
             state.loading = true;
             state.chatResults = [];
             state.searchChatResults = [];
+            state.getChatsEventCalled = true
         },
         getChatsSuccess: (state, { payload }) => {
             state.chatResults = payload;
@@ -42,6 +44,7 @@ const chatSlice = createSlice({
             state.loading = false;
             state.chatResults = [];
             state.searchChatResults = [];
+            state.getChatsEventCalled = false
         },
         setLoading: (state, { payload }) => {
             state.loading = payload;
@@ -51,7 +54,7 @@ const chatSlice = createSlice({
         },
         setCurrentOpenedChat: (state, { payload }) => {
             state.currentOpenedChat = payload
-        }
+        },
     },
 });
 
@@ -70,7 +73,9 @@ export const chatSelector = state => state.chat;
 export default chatSlice.reducer;
 
 export function fetchChats(userInfo) {
-    return async dispatch => {
+    return async (dispatch, getState) => {
+        if (getState().chat.getChatsEventCalled) return;
+
         dispatch(getChats());
         try {
             firestore()

@@ -497,7 +497,8 @@ export default function SkillDetail({ route, navigation }) {
             console.log('elseeeeeeeeeeeeeeeeeeeeeee');
             console.log(itemObj);
             setLoading(false);
-            navigation.navigate('ChatRoom', { thread: itemObj });
+            // navigation.navigate('ChatRoom', { thread: itemObj });
+            navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: itemObj } })
           }
         });
     };
@@ -553,7 +554,9 @@ export default function SkillDetail({ route, navigation }) {
       };
       // navigation.popToTop();
       setLoading(false);
-      navigation.navigate('ChatRoom', { thread: itemObj });
+      // navigation.navigate('ChatRoom', { thread: itemObj });
+      navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: itemObj } })
+
     }
 
     // alert(JSON.stringify(requestedObj))

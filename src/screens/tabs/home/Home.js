@@ -81,6 +81,7 @@ export default function Home(props) {
           // props.navigation.push('ChatRoom', {
           //   thread: JSON.parse(focusNotiMsg.data.data),
           // });
+          focusNotiMsg.data.data.fromNotification = true
           props.navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: JSON.parse(focusNotiMsg.data.data) } })
 
         } else if (
@@ -88,7 +89,7 @@ export default function Home(props) {
           notification.data &&
           notification.data.type == 'CHAT'
         ) {
-          notification.fromNotification = true
+          notification.data.fromNotification = true
           props.navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: notification.data } })
           // props.navigation.push('ChatRoom', { thread: notification.data });
           // props.navigation.reset({
