@@ -81,6 +81,7 @@ export default function Home(props) {
           notification.data &&
           notification.data.type == 'CHAT'
         ) {
+          notification.fromNotification = true
           props.navigation.push('ChatRoom', { thread: notification.data });
         } else {
           props.navigation.push('Notification');

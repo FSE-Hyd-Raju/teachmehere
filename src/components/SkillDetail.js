@@ -44,16 +44,19 @@ export default function SkillDetail({ route, navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userInfo._id && (!requestedSkills || !requestedSkills.length)) {
+    if (userInfo._id
+      // && (!requestedSkills || !requestedSkills.length)
+    ) {
       getRequetedCourses(userInfo._id);
-    } else if (userInfo._id) {
-      let reqObj = requestedSkills.filter(
-        obj => obj.courseuid == skill.uid,
-      );
-      if (reqObj.length) {
-        setRequestedObj(reqObj[0]);
-      }
     }
+    // else if (userInfo._id) {
+    //   let reqObj = requestedSkills.filter(
+    //     obj => obj.courseuid == skill.uid,
+    //   );
+    //   if (reqObj.length) {
+    //     setRequestedObj(reqObj[0]);
+    //   }
+    // }
   }, [userInfo]);
 
   const getRequetedCourses = uid => {
@@ -187,7 +190,7 @@ export default function SkillDetail({ route, navigation }) {
                 ? { uri: skill.displaypic }
                 : require('../assets/img/default-mask-avatar.png')
             }
-            // source={require('../assets/img/defaultAvatar.png')}
+          // source={require('../assets/img/defaultAvatar.png')}
           />
           <Text
             style={{
@@ -243,39 +246,39 @@ export default function SkillDetail({ route, navigation }) {
   const dataTableComponent = () => {
     return (
       <DataTable>
-      <DataTable.Header>
-        <DataTable.Title>Other Info</DataTable.Title>
-      </DataTable.Header>
-      <DataTable.Row>
-        <DataTable.Cell style={{fontSize: 90}}>Skill Level</DataTable.Cell>
-        <DataTable.Cell>- <Text style={styles.tableValues}>{skill.courselevel}</Text></DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Speaking Languages</DataTable.Cell>
-        <DataTable.Cell>
-          - <Text style={styles.tableValues}>{skill.speakinglanguages.length > 0
-            ? getSpeakingLanguages(skill.speakinglanguages)
-            : ''}</Text>
-        </DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Platform</DataTable.Cell>
-        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.platform} </Text></DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Country</DataTable.Cell>
-        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.country}</Text></DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Demo available ?</DataTable.Cell>
-        <DataTable.Cell>- <Text style={styles.tableValues}> {skill.demo ? 'Yes' : 'No'}</Text></DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row>
-        <DataTable.Cell>Posted</DataTable.Cell>
-        <DataTable.Cell>- <Text style={styles.tableValues}> {moment(skill.createddate).fromNow()} </Text></DataTable.Cell>
-      </DataTable.Row>
-      <DataTable.Row />
-    </DataTable>
+        <DataTable.Header>
+          <DataTable.Title>Other Info</DataTable.Title>
+        </DataTable.Header>
+        <DataTable.Row>
+          <DataTable.Cell style={{ fontSize: 90 }}>Skill Level</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}>{skill.courselevel}</Text></DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Speaking Languages</DataTable.Cell>
+          <DataTable.Cell>
+            - <Text style={styles.tableValues}>{skill.speakinglanguages.length > 0
+              ? getSpeakingLanguages(skill.speakinglanguages)
+              : ''}</Text>
+          </DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Platform</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.platform} </Text></DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Country</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.country}</Text></DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Demo available ?</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {skill.demo ? 'Yes' : 'No'}</Text></DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row>
+          <DataTable.Cell>Posted</DataTable.Cell>
+          <DataTable.Cell>- <Text style={styles.tableValues}> {moment(skill.createddate).fromNow()} </Text></DataTable.Cell>
+        </DataTable.Row>
+        <DataTable.Row />
+      </DataTable>
     );
   };
 
@@ -537,7 +540,7 @@ export default function SkillDetail({ route, navigation }) {
             createdAt: Date.now(),
             system: true,
           })
-          .then(() => {});
+          .then(() => { });
       });
 
       var itemObj = {
@@ -555,7 +558,7 @@ export default function SkillDetail({ route, navigation }) {
 
     // alert(JSON.stringify(requestedObj))
     // alert(userInfo._id)
-    if(skill.uid == userInfo._id) return;
+    if (skill.uid == userInfo._id) return;
     if (loading) {
       return (
         <Button
@@ -586,14 +589,14 @@ export default function SkillDetail({ route, navigation }) {
         {/* <Text>{JSON.stringify(requestedObj)}</Text> */}
         {(requestedObj.request_status == 'REJECTED' ||
           requestedObj.request_status == 'PENDING') && (
-          <Button
-            disabled={true}
-            mode="contained"
-            color={'black'}
-            labelStyle={globalStyles.btnLabelStyle}>
-            {requestedObj.request_status}
-          </Button>
-        )}
+            <Button
+              disabled={true}
+              mode="contained"
+              color={'black'}
+              labelStyle={globalStyles.btnLabelStyle}>
+              {requestedObj.request_status}
+            </Button>
+          )}
         {requestedObj.request_status == 'ACCEPTED' && (
           <Button
             mode="contained"

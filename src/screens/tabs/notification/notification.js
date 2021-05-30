@@ -321,7 +321,7 @@ export default function NotificationPage({ navigation }) {
     const headerComponent = () => {
         return (
             <View style={styles.headerComponent}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                <TouchableOpacity onPress={() => navigation.canGoBack() ? navigation.goBack() : null}>
                     <Icons
                         name={"keyboard-backspace"}
                         size={27}
