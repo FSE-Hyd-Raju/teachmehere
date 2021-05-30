@@ -73,16 +73,28 @@ export default function Home(props) {
           focusNotiMsg.data.data &&
           JSON.parse(focusNotiMsg.data.data).type == 'CHAT'
         ) {
-          props.navigation.push('ChatRoom', {
-            thread: JSON.parse(focusNotiMsg.data.data),
-          });
+          // props.navigation.reset({
+          //   index: 1,
+          //   routes: [{ name: 'ChatPage' }, { name: 'ChatRoom' }],
+          // });
+          // props.navigation.navigate('Chat')
+          // props.navigation.push('ChatRoom', {
+          //   thread: JSON.parse(focusNotiMsg.data.data),
+          // });
+          props.navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: JSON.parse(focusNotiMsg.data.data) } })
+
         } else if (
           notification &&
           notification.data &&
           notification.data.type == 'CHAT'
         ) {
           notification.fromNotification = true
-          props.navigation.push('ChatRoom', { thread: notification.data });
+          props.navigation.navigate('Chat', { screen: 'ChatRoom', params: { thread: notification.data } })
+          // props.navigation.push('ChatRoom', { thread: notification.data });
+          // props.navigation.reset({
+          //   index: 1,
+          //   routes: [{ name: 'ChatPage' }, { name: 'ChatRoom' }],
+          // });
         } else {
           props.navigation.push('Notification');
         }

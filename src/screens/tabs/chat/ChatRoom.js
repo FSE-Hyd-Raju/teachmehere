@@ -22,8 +22,7 @@ export default function ChatRoom({ route, navigation }) {
     const { loading } = useSelector(chatSelector)
     const dispatch = useDispatch()
 
-
-    const { thread } = route.params;
+    const { thread } = route.params || {};
     const [newChat, setNewChat] = useState(thread.newChat);
     const [senderObj, setSenderObj] = useState(thread.userDetails.find(o => o.id != userInfo._id))
 
@@ -85,7 +84,13 @@ export default function ChatRoom({ route, navigation }) {
                         // if (!thread.support)
                         //     navigation.popToTop()
                         // else
-                        navigation.goBack()
+                        // navigation.goBack()
+                        // navigation.navigate('Chat');
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'ChatPage' }],
+                        });
+
                     }, 100)
                 })
         }
@@ -95,7 +100,12 @@ export default function ChatRoom({ route, navigation }) {
             // if (!thread.support)
             //     navigation.popToTop()
             // else
-            navigation.goBack()
+            // navigation.goBack()
+            // navigation.navigate('Chat');
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'ChatPage' }],
+            });
         }
     }
 
