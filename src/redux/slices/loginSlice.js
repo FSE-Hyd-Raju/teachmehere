@@ -29,8 +29,9 @@ const loginSlice = createSlice({
     setDeviceToken: (state, { payload }) => {
       state.devicetoken = payload;
     },
-    loginStarted: state => {
+    loginStarted: (state, { payload })  => {
       state.loading = true;
+      state.loginEmail= payload;
     },
     loginSuccess: (state, { payload }) => {
       state.userInfo = payload;
@@ -99,7 +100,7 @@ export function onLoginPressed(param) {
 
   return async (dispatch, getState) => {
     console.log(param.email);
-    dispatch(loginStarted());
+    dispatch(loginStarted(param.email));
     const devicetokenValue = getState().login.devicetoken;
     try {
       const response = await axios.post(authLoginUrl, {

@@ -23,12 +23,15 @@ import { postSelector } from '../../../redux/slices/post';
 
 export default function LoginPage({ navigation }) {
   const dispatch = useDispatch();
-  const { loading, loginPasswordError, loginEmailError } = useSelector(
+
+  const { loading, loginPasswordError, loginEmailError, loginEmail } = useSelector(
     loginSelector,
   );
   const { isPostQueryActive } = useSelector(postSelector);
   const [hidePassword, sethidePassword] = React.useState(true);
   const [eyeicon, seteyeicon] = React.useState('eye');
+
+
 
   const toggleEyeIcon = () => {
     if (eyeicon === 'eye') {
@@ -74,8 +77,10 @@ export default function LoginPage({ navigation }) {
     };
     return (
       <Formik
-        initialValues={{ Email: '', Password: '' }}
-        onSubmit={values => onSigninClicked(values)}
+        initialValues={{ Email: loginEmail, Password: '' }}
+        onSubmit={values => {
+          onSigninClicked(values)
+        }}
         validationSchema={yup.object().shape({
           Email: yup
             .string()
@@ -153,7 +158,7 @@ export default function LoginPage({ navigation }) {
                     textAlign: 'center',
                     marginTop: -15,
                   }}>
-                  {errors.Password}
+                  {errors.Password && !loginPasswordError}
                 </Text>
               )}
             </View>
