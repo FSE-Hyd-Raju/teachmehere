@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexBasis: '46%',
     marginHorizontal: 5,
-    minHeight: 240,
+    minHeight: 270,
     borderWidth: 0.7,
     borderColor: 'lightgrey',
     borderRadius: 10,
