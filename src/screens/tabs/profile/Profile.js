@@ -206,15 +206,15 @@ export default function Profile({ navigation }) {
     const userStatsContainer = () => {
         return (
             <View style={styles.userStatsContainer}>
-                <View style={[styles.stat, { width: '35%' }]}>
+                <View style={[styles.stat, { width: '50%' }]}>
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
-                        <Surface style={styles.surface}>
+                        <Surface style={styles.surfaceReq}>
                             <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
                             <Text style={styles.statText}>Requested {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.stat, { width: '30%' }}>
+                <View style={styles.stat, { width: '45%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
@@ -222,14 +222,14 @@ export default function Profile({ navigation }) {
                         </Surface>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.stat, { width: '30%' }}>
+                {/* <View style={styles.stat, { width: '30%' }}>
                     <TouchableOpacity onPress={() => navigation.navigate('WishlistCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.myfavoritescount}</Text>
                             <Text style={styles.statText}>Wishlist {'\n'}Skills</Text>
                         </Surface>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
         );
     };
@@ -299,6 +299,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderColor: "rgb(225, 225, 225)",
     },
+    surfaceReq: {
+        // padding: 5,
+        height: 80,
+        width: 90,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderColor: "rgb(225, 225, 225)",
+    },
     accountsText: {
         letterSpacing: 1,
         textAlign: "center",
@@ -333,7 +342,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexWrap: 'wrap',
         width: '25%',
-        paddingLeft: '1%',
+        paddingLeft: '4%',
     },
     userStatsContainer: {
         alignItems: 'center',

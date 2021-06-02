@@ -91,39 +91,39 @@ export default function ChatRoom({ route, navigation }) {
 
     const checkToRemoveChat = () => {
         if (newChat && (!messages || !messages.length)) {
-            console.log("in if", newChat)
-            console.log("in if", messages)
+            console.log("in checkToRemoveChat If", newChat)
+            console.log("in  checkToRemoveChat if", messages)
 
             firestore()
                 .collection('THREADS')
                 .doc(thread._id).delete().then(() => {
                     if (navigation.canGoBack()) setTimeout(() => {
-                        // if (!thread.support)
-                        //     navigation.popToTop()
-                        // else
+                        if (thread.support)
+                            navigation.pop()
+                        else
                         // navigation.goBack()
                         // navigation.navigate('Chat');
-                        navigation.reset({
-                            index: 0,
-                            routes: [{ name: 'ChatPage' }],
-                        });
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'ChatPage' }],
+                            });
 
-                    }, 100)
+                        }, 100)
                 })
         }
         else if (navigation.canGoBack()) {
             console.log("in else if", thread.support)
 
-            // if (!thread.support)
-            //     navigation.popToTop()
-            // else
+            if (thread.support)
+                navigation.pop()
+            else
             // navigation.goBack()
             // navigation.navigate('Chat');
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'ChatPage' }],
-            });
-        }
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'ChatPage' }],
+                });
+            }
     }
 
 

@@ -205,7 +205,7 @@ const Step3 = props => {
                   testID="dateTimePicker"
                   value={date}
                   mode={mode}
-                  maximumDate={new Date()}
+                  minimumDate={new Date()}
                   display="spinner"
                   onChange={(event, selectedValue) =>
                     handleDateTimeChange(event, selectedValue)
