@@ -20,10 +20,10 @@ export default function CourseCard({
   const userProfilePic =
     course && course.displaypic
       ? {
-          uri: course.displaypic,
-        }
+        uri: course.displaypic,
+      }
       : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-        require('../../assets/img/default-mask-avatar.png');
+      require('../../assets/img/default-mask-avatar.png');
   return (
     <View style={[styles.card, { width: cardWidth }]}>
       {/* <View style={styles.cardHeader}>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 15,
-    flex: 1,
+    // flex: 1,
     alignSelf: 'center',
     color: '#008080',
     fontWeight: 'bold',

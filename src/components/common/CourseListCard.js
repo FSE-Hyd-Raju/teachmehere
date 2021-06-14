@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Card, Avatar, Badge, Icon, Rating } from 'react-native-elements';
 import Price from '../common/Price';
+import moment from 'moment'
 
 export default function CourseListCard({
   course,
@@ -19,16 +20,16 @@ export default function CourseListCard({
   const userProfilePic =
     course && course.displaypic
       ? {
-          uri: course.displaypic,
-        }
+        uri: course.displaypic,
+      }
       : // { uri: "https://bootdey.com/img/Content/avatar/avatar7.png" }
-        require('../../assets/img/default-mask-avatar.png');
+      require('../../assets/img/default-mask-avatar.png');
   return (
     <TouchableOpacity onPress={courseClicked}>
       <View style={styles.card}>
         <View style={styles.userDetails}>
           <Image style={styles.userImage} source={userProfilePic} />
-          <Text style={styles.textStyle}>{course.username}</Text>
+          <Text style={{ ...styles.textStyle, alignSelf: 'center' }}>{course.username}</Text>
           <View style={{ flexDirection: 'row', alignSelf: 'center' }}>
             <Rating
               type="star"
@@ -38,6 +39,10 @@ export default function CourseListCard({
               style={{ marginTop: 5, marginBottom: 5 }}
             />
             <Text style={styles.usersRated}>({course.usersrated})</Text>
+
+          </View>
+          <View style={{ alignItems: 'center' }}>
+            <Text style={{ fontSize: 10, }}>{moment(course.updateddate).fromNow()}</Text>
           </View>
         </View>
         <View style={styles.courseDetails}>
@@ -56,6 +61,7 @@ export default function CourseListCard({
             <View style={styles.platform}>
               <Text style={styles.platformText}>{course.totalhours} Hours</Text>
             </View>
+
           </View>
         </View>
       </View>
@@ -118,7 +124,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#696969',
-    alignSelf: 'center',
     textTransform: 'capitalize',
   },
   followButton: {

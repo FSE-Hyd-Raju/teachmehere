@@ -94,7 +94,7 @@ export default function PostedCoursesPage({ navigation }) {
                 onRefresh={() => getPostedCourses(userInfo._id)}
               />
             }
-            // style={{ marginBottom: 80 }}
+          // style={{ marginBottom: 80 }}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -164,8 +164,8 @@ export default function PostedCoursesPage({ navigation }) {
       {loading
         ? loadingComponent()
         : postedSkills.length
-        ? cardListComponent()
-        : noDataFoundComponent()}
+          ? cardListComponent()
+          : noDataFoundComponent()}
     </View>
   );
 }
@@ -173,6 +173,7 @@ export default function PostedCoursesPage({ navigation }) {
 const styles = StyleSheet.create({
   cardListComponent: {
     paddingTop: 15,
+    marginBottom: 35,
     // paddingBottom: 80
   },
   loadingBar: {

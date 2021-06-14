@@ -21,6 +21,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLocale } from 'yup';
 import { homeSelector } from '../redux/slices/homeSlice';
 import { loginSelector } from '../redux/slices/loginSlice';
+import IconMaterialIcons from 'react-native-vector-icons/FontAwesome';
+
 import {
   profileSelector,
   setRequestedSkills,
@@ -240,7 +242,7 @@ export default function SkillDetail({ route, navigation }) {
   };
 
   const getSpeakingLanguages = lang => {
-    return lang.join('');
+    return lang.join(' , ');
   };
 
   const dataTableComponent = () => {
@@ -285,7 +287,17 @@ export default function SkillDetail({ route, navigation }) {
   const bodyComponent = () => {
     return (
       <View>
-        <Text style={styles.skillName}>{skill.coursename}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Text style={styles.skillName}>{skill.coursename}</Text>
+          <TouchableOpacity onPress={() => { navigation.navigate('PostPage', { editingSkill: skill }) }} style={{ alignItems: 'flex-end', padding: 15 }}>
+            <IconMaterialIcons
+              name={'edit'}
+              color="black"
+              size={20}
+              style={{ height: 20 }}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={{ width: '40%', padding: 20, paddingTop: 0 }}>
           <Price price={skill.price} currency={skill.currency} />
         </View>

@@ -206,7 +206,7 @@ export default function Profile({ navigation }) {
     const userStatsContainer = () => {
         return (
             <View style={styles.userStatsContainer}>
-                <View style={[styles.stat, { width: '50%' }]}>
+                <View style={[styles.stat]}>
                     <TouchableOpacity onPress={() => navigation.navigate('RequestedCourses')}>
                         <Surface style={styles.surfaceReq}>
                             <Text style={styles.statValue}>{reqFavPostedCount.requestedcoursescount}</Text>
@@ -214,7 +214,7 @@ export default function Profile({ navigation }) {
                         </Surface>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.stat, { width: '45%' }}>
+                <View style={styles.stat}>
                     <TouchableOpacity onPress={() => navigation.navigate('PostedCourses')}>
                         <Surface style={styles.surface}>
                             <Text style={styles.statValue}>{reqFavPostedCount.coursedetailscount}</Text>
@@ -341,17 +341,15 @@ const styles = StyleSheet.create({
     stat: {
         alignItems: 'center',
         flexWrap: 'wrap',
-        width: '25%',
-        paddingLeft: '4%',
     },
     userStatsContainer: {
         alignItems: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
         marginHorizontal: 0,
-        marginLeft: '5%',
         marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
     },
     userDesc: {
         borderRadius: 20,
