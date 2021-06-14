@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { postSkillUrl } from '../urls';
+import { postSkillUrl, updateSkillUrl } from '../urls';
 
 export const initialState = {
   isPostQueryActive: false,
@@ -47,6 +47,20 @@ export function postNewSkill(param) {
   return async dispatch => {
     try {
       const response = await axios.post(postSkillUrl, param.postData);
+      if (response) {
+        dispatch(postSkillSuccess());
+        param.onSuccess();
+      }
+    } catch (error) {
+      dispatch(postSkillFailure());
+    }
+  };
+}
+
+export function updateSkill(param) {
+  return async dispatch => {
+    try {
+      const response = await axios.post(updateSkillUrl, param.postData);
       if (response) {
         dispatch(postSkillSuccess());
         param.onSuccess();

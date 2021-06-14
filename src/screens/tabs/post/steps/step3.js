@@ -263,8 +263,9 @@ const Step3 = props => {
                 <Text style={{ fontSize: 13, margin: 5 }}>
                   My schedule is Tentetive
                 </Text>
+
                 <Switch
-                  value={getState().isTentativeSchedule}
+                  value={!!getState().isTentativeSchedule}
                   onValueChange={() =>
                     saveState({
                       isTentativeSchedule: !getState().isTentativeSchedule,

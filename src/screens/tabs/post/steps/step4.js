@@ -52,7 +52,7 @@ const Step4 = props => {
           }}>
           {formProps => (
             <View style={styles.container}>
-              <Text style={styles.label}>Platform*</Text>
+              <Text style={styles.label}>Platform</Text>
               <TextInput
                 placeholder="Platform. ex: Skype, Teams, etc."
                 placeholderTextColor={'#7777'}
@@ -167,7 +167,7 @@ const Step4 = props => {
                     color={'black'}
                     labelStyle={styles.btnLabelStyle}
                     onPress={formProps.handleSubmit}>
-                    Post My Skill
+                    <Text>{getState()._id ? "Update Skill" : "Post My Skill"}</Text>
                   </Button>
                 </TouchableOpacity>
               </View>

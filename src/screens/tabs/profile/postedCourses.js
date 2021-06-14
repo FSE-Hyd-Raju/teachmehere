@@ -25,7 +25,7 @@ export default function PostedCoursesPage({ navigation }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userInfo && userInfo._id && postedSkills && !postedSkills.length)
+    if (userInfo && userInfo._id)
       getPostedCourses(userInfo._id);
   }, []);
 

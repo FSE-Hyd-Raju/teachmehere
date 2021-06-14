@@ -16,6 +16,7 @@ import {
   postNewSkill,
   postSkill,
   postLoading,
+  updateSkill,
 } from '../../../../redux/slices/post';
 import { loginSelector } from '../../../../redux/slices/loginSlice';
 
@@ -107,6 +108,20 @@ const Steps = props => {
         demo: availableForDemo,
       };
       console.log(postData, 'postData');
+
+      if (state._id) {
+        postData._id = state._id
+        dispatch(
+          updateSkill({
+            postData,
+            onSuccess: () => {
+              setVisibleSnackbar('Skill updated successfully!');
+              props.navigation.navigate('PostedCourses')
+            },
+          }),
+        );
+        return;
+      }
       dispatch(
         postNewSkill({
           postData,
@@ -121,9 +136,11 @@ const Steps = props => {
             //   //   props.navigation.navigate({ routeName: 'PostedCourses' }),
             //   // ],
             // });
-            setTimeout(function() {
-              props.goToMainCategories();
-            }, 1000);
+            props.navigation.navigate('Profile', { screen: 'PostedCourses' })
+
+            // setTimeout(function() {
+            //   props.goToMainCategories();
+            // }, 1000);
             // props.navigation.navigate('PostedCourses');
           },
         }),
@@ -163,6 +180,7 @@ const Steps = props => {
         onBack={onBack}
         onNext={onNext}
         backFromSteps={props.backFromSteps}
+        editingSkill={props.editingSkill}
       />
       {snackComponent()}
     </ScrollView>

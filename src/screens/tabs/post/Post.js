@@ -20,15 +20,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { homeSelector } from '../../../redux/slices/homeSlice';
 import { loginSelector } from '../../../redux/slices/loginSlice';
 
-export default function Post(props) {
+export default function Post({ route, navigation }) {
   const { homeData } = useSelector(homeSelector);
   const categories = homeData['categories'];
   const { userInfo } = useSelector(loginSelector);
-
+  const [editingSkill, setEditingSkill] = useState(route.params?.editingSkill || null)
   const [state, setState] = useState({
-    showMainCategories: true,
+    showMainCategories: editingSkill ? false : true,
     showSubCategories: false,
-    showSteps: false,
+    showSteps: editingSkill ? true : false,
     activeCategory: {},
     activeSubCategory: {},
   });
@@ -38,10 +38,11 @@ export default function Post(props) {
       if (showSubCategories) {
         goToMainCategories();
         return true;
-      } else if (showSteps) {
-        backFromSteps();
-        return true;
       }
+      // else if (showSteps) {
+      //   backFromSteps();
+      //   return true;
+      // }
       return false;
     });
   };
@@ -64,18 +65,24 @@ export default function Post(props) {
         showSteps: false,
       });
     } else {
-      props.navigation.navigate('Login');
+      navigation.navigate('Login');
       return;
     }
   };
 
-  const showStepsFun = subCategory => {
+  const showStepsFun = (subCategory, isOthers) => {
+    const others = {
+      "id": "others",
+      "name": "Other",
+      "hidden": false
+    }
     setState({
       ...state,
       showMainCategories: false,
       showSubCategories: false,
       showSteps: true,
-      activeSubCategory: subCategory,
+      activeSubCategory: isOthers ? others : subCategory,
+      activeCategory: isOthers ? subCategory : state.activeCategory,
     });
   };
 
@@ -99,11 +106,16 @@ export default function Post(props) {
   };
 
   const backFromSteps = () => {
+    if (editingSkill && editingSkill._id) {
+      navigation.goBack()
+      return;
+    }
+    const isOthers = state.activeCategory.category == 'Others'
     setState({
       ...state,
       showSteps: false,
-      showMainCategories: false,
-      showSubCategories: true,
+      showMainCategories: isOthers ? true : false,
+      showSubCategories: isOthers ? false : true,
     });
   };
 
@@ -138,7 +150,14 @@ export default function Post(props) {
             <TouchableOpacity
               key={category.id}
               style={styles.category}
-              onPress={() => showSubCategoriesFun(category)}>
+              onPress={() => {
+                if (category.category == 'Others') {
+                  showStepsFun(category, true)
+                  return;
+                }
+                showSubCategoriesFun(category)
+              }
+              } >
               <View key={category.id} style={styles.IconAndName}>
                 <IconMaterialIcons
                   name={category.icon}
@@ -164,8 +183,9 @@ export default function Post(props) {
               backFromSteps={backFromSteps}
               category={activeCategory.category}
               subCategory={activeSubCategory.name}
-              navigation={props.navigation}
+              navigation={navigation}
               goToMainCategories={goToMainCategories}
+              editingSkill={editingSkill}
             />
           </Provider>
         </View>

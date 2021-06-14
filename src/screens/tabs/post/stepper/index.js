@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as Animatable from 'react-native-animatable';
+import { BackHandler } from 'react-native';
 
 const defaultInOnNext = '';
 const defaultOutOnNext = '';
@@ -22,11 +23,60 @@ export class index extends Component {
   componentWillMount() {
     const { comeInOnNext = defaultInOnNext } = this.props;
     this.setState({ action: comeInOnNext });
+    this.updateEditedValues()
   }
 
   componentDidMount() {
     const { steps = 0 } = this.props;
     this.setState({ totalSteps: steps.length - 1 });
+    this.backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        this.back();
+        return true;
+      },
+    );
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
+  updateEditedValues = () => {
+    if (!this.props.editingSkill) return;
+    const { coursename, courselevel, content, category, subCategory, totalhours, country, currency, price, speakinglanguages, availability, platform, tags, experience, profilesummary, linkedinprofile, demo, _id } = this.props.editingSkill || {}
+    const enteredValues = {
+      skillName: coursename,
+      skillLevel: courselevel,
+      contents: content || [],
+      category: category,
+      subcategory: subCategory,
+      totalHours: totalhours.toString(),
+      country: { name: country, currency: { symbol: currency } },
+      individualPrice: (price.oneonone).toString(),
+      noOfPeople: price.group.members ? (price.group.members).toString() : null,
+      groupPrice: price.group.price ? (price.group.price).toString() : null,
+      isGroupSelected: price.group.price ? true : false,
+      languages: speakinglanguages,
+      startDate: availability.coursestartdate,
+      endDate: availability.courseenddate,
+      onDays: availability.ondays.availableon,
+      daysofweek: availability.ondays.daysofweek,
+      startTime: availability.coursestarttime,
+      endTime: availability.coursesendtime,
+      isTentativeSchedule: availability.tentativeschedule,
+      platform: platform,
+      tags: tags.join(','),
+      experience: experience.toString(),
+      profileSummary: profilesummary,
+      linkedInProfile: linkedinprofile,
+      availableForDemo: demo,
+      _id,
+    }
+
+    console.log(enteredValues)
+
+    this.setState({ userState: enteredValues })
   }
 
   next = () => {
@@ -64,6 +114,8 @@ export class index extends Component {
           this.setState({ currentStep: currentStep - 1 });
         }, duration);
       }
+    } else {
+      this.props.backFromSteps()
     }
   };
 
@@ -151,6 +203,7 @@ export class index extends Component {
           getCurrentStep={this.getCurrentStep}
           getTotalSteps={this.getTotalSteps}
           backFromSteps={this.props.backFromSteps}
+          userState={this.state.userState}
         />
       </Animatable.View>
     );

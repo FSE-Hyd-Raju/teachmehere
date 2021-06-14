@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -32,9 +32,17 @@ import AutoCompleteTextInput from '../../../../components/common/autoComplete/Au
 
 const Step2 = props => {
   const [langError, setLangError] = useState(false);
-  const [countries] = useState(
+  const [countries, setCountries] = useState(
     require('../../../../assets/countries.json') || [],
   );
+  const defaultCountry = countries.filter(coun => coun.name == 'India') || []
+
+  useEffect(() => {
+    if (!getState().country)
+      selectLanguage(defaultCountry[0]?.language?.name)
+    // saveState({ country: defaultCountry[0] });
+
+  }, [countries])
   const [allLaunguages] = useState(
     require('../../../../assets/languages.json') || [],
   );
@@ -85,11 +93,11 @@ const Step2 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            country: getState().country || '',
+            country: getState().country || defaultCountry[0] || '',
             individualPrice: getState().individualPrice || '',
             noOfPeople: getState().noOfPeople || '',
             groupPrice: getState().groupPrice || '',
-            // languages: getState().languages || [],
+            // languages: [...getState().languages, defaultCountry[0].language.name],
           }}
           validationSchema={postStep2ValidationSchema}
           onSubmit={values => {

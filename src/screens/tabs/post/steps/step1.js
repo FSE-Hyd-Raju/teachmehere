@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -21,11 +21,15 @@ import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Header } from 'react-native-elements';
 
 const Step1 = props => {
+  const { getState, saveState } = props;
+
   const [showDailog, setshowDailog] = useState(false);
   const [content, setContent] = useState();
+  const [userState, setUserState] = useState(props.userState || {});
+
   const { colors } = props.theme;
-  const { getState, saveState } = props;
   const { contents = [] } = getState();
+
   const options = [
     { value: 'basic', label: 'Basic' },
     { value: 'intermediate', label: 'Intermediate' },
@@ -61,9 +65,9 @@ const Step1 = props => {
       <View style={styles.container}>
         <Formik
           initialValues={{
-            skillName: getState().skillName || '',
-            skillLevel: getState().skillLevel || '',
-            totalHours: getState().totalHours || '',
+            skillName: userState?.skillName || '',
+            skillLevel: userState?.skillLevel || '',
+            totalHours: userState?.totalHours || '',
           }}
           validationSchema={postStep1ValidationSchema}
           onSubmit={values => {
@@ -141,23 +145,15 @@ const Step1 = props => {
                 contents.map(data => {
                   return (
                     <View style={styles.column}>
-                      <View style={styles.row}>
-                        <View style={styles.bullet}>
-                          <Text style={{ fontSize: 22 }}>{'\u2022' + ' '}</Text>
-                        </View>
-                        <View style={styles.row}>
-                          <View style={styles.content}>
-                            <Text>{data}</Text>
-                          </View>
-                        </View>
-                        <View style={styles.row}>
-                          <TouchableOpacity
-                            style={styles.removeContent}
-                            onPress={() => removeContent(data)}>
-                            <Icon name="delete" color="#444" size={18} />
-                          </TouchableOpacity>
-                        </View>
+                      <View style={styles.bullet}>
+                        <Text style={{ fontSize: 22 }}>{'\u2022' + ' '}</Text>
+                        <Text style={{ width: '90%' }}>{data}</Text>
                       </View>
+                      <TouchableOpacity
+                        style={styles.removeContent}
+                        onPress={() => removeContent(data)}>
+                        <Icon name="delete" color="#444" size={18} />
+                      </TouchableOpacity>
                     </View>
                   );
                 })}
