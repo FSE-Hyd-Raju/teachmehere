@@ -79,7 +79,7 @@ export default function CourseCard({
             <Price price={course.price} currency={course.currency} />
           </View>
           <View style={styles.platform}>
-            <Text style={styles.platformText}>{course.totalhours} Hours</Text>
+            <Text style={styles.platformText}>{course.totalhours} Hours Skill</Text>
           </View>
         </View>
       </View>
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   platform: {
     marginTop: 15,
     marginBottom: 10,
-    width: 90,
+    width: 110,
     // backgroundColor: 'rgba(152,73,166,0.1)',
     // borderColor: 'lightgrey',
     borderWidth: 0.1,
@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 12,
     fontWeight: 'bold',
+    // paddingHorizontal: 10
     // color: 'rgba(152,73,166,1)',
   },
   usersRated: {

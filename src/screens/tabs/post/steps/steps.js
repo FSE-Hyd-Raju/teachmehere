@@ -116,7 +116,12 @@ const Steps = props => {
             postData,
             onSuccess: () => {
               setVisibleSnackbar('Skill updated successfully!');
-              props.navigation.navigate('PostedCourses')
+              // props.navigation.navigate('PostedCourses')
+              // props.navigation.goBack()
+              // props.navigation.navigate('Home')
+
+              props.navigation.navigate('Profile', { screen: 'PostedCourses' })
+
             },
           }),
         );
@@ -136,9 +141,12 @@ const Steps = props => {
             //   //   props.navigation.navigate({ routeName: 'PostedCourses' }),
             //   // ],
             // });
+            props.goToMainCategories();
+
             props.navigation.navigate('Profile', { screen: 'PostedCourses' })
 
-            // setTimeout(function() {
+
+            // setTimeout(function () {
             //   props.goToMainCategories();
             // }, 1000);
             // props.navigation.navigate('PostedCourses');

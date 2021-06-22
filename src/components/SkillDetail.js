@@ -35,7 +35,7 @@ import moment from 'moment';
 const { labelColor, buttonColor } = random_rgba();
 
 export default function SkillDetail({ route, navigation }) {
-  const { skill } = route.params;
+  const { skill, origin } = route.params;
   const { homeData } = useSelector(homeSelector);
   const { userInfo } = useSelector(loginSelector);
   const { requestedSkills } = useSelector(profileSelector);
@@ -285,11 +285,13 @@ export default function SkillDetail({ route, navigation }) {
   };
 
   const bodyComponent = () => {
+    const showEdit = userInfo._id && userInfo._id == skill.uid && origin == 'posted'
     return (
       <View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.skillName}>{skill.coursename}</Text>
-          <TouchableOpacity onPress={() => { navigation.navigate('PostPage', { editingSkill: skill }) }} style={{ alignItems: 'flex-end', padding: 15 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: showEdit ? 20 : 0 }}>
+          <Text style={[styles.skillName, showEdit && { width: '90%' }]}>{skill.coursename}</Text>
+
+          {showEdit && <TouchableOpacity onPress={() => { navigation.navigate('PostPage', { editingSkill: skill }) }} style={{ alignItems: 'flex-end', padding: 15, paddingRight: 10 }}>
             <IconMaterialIcons
               name={'edit'}
               color="black"
@@ -297,6 +299,7 @@ export default function SkillDetail({ route, navigation }) {
               style={{ height: 20 }}
             />
           </TouchableOpacity>
+          }
         </View>
         <View style={{ width: '40%', padding: 20, paddingTop: 0 }}>
           <Price price={skill.price} currency={skill.currency} />

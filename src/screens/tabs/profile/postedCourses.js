@@ -66,6 +66,7 @@ export default function PostedCoursesPage({ navigation }) {
   const courseClicked = course => {
     navigation.navigate('SkillDetail', {
       skill: course,
+      origin: 'posted'
     });
   };
 
