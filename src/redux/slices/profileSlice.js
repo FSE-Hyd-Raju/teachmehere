@@ -5,7 +5,8 @@ export const initialState = {
     reqFavPostedCount: { coursedetailscount: 0, requestedcoursescount: 0, myfavoritescount: 0 },
     postedSkills: [],
     requestedSkills: [],
-    wishlistSkills: []
+    wishlistSkills: [],
+    userRatings: []
 };
 
 const profileSlice = createSlice({
@@ -21,6 +22,9 @@ const profileSlice = createSlice({
         setRequestedSkills: (state, { payload }) => {
             state.requestedSkills = payload;
         },
+        setUserRating: (state, { payload }) => {
+            state.userRatings = payload;
+        },
         setWishlistSkills: (state, { payload }) => {
             state.requestedSkills = payload;
         },
@@ -31,7 +35,8 @@ export const {
     setReqFavPostedCount,
     setPostedSkills,
     setRequestedSkills,
-    setWishlistSkills
+    setWishlistSkills,
+    setUserRating
 } = profileSlice.actions;
 
 export const profileSelector = state => state.profile;

@@ -193,7 +193,7 @@ export default function SkillListView({ route, navigation }) {
                     }
                     onPress={() => subCategoryClicked(item.name)}
                     selected={subCatSelected.indexOf(item.name) > -1}
-                    // selectedColor="green"
+                  // selectedColor="green"
                   >
                     {item.name}
                   </Chip>
@@ -250,7 +250,7 @@ export default function SkillListView({ route, navigation }) {
   };
 
   const renderFooter = () => {
-    const disableMoreLoad = !categorySkills || !categorySkills.length < 10;
+    const disableMoreLoad = !categorySkills || categorySkills.length < 6;
 
     if (disableMoreLoad || endReached[title] || !moreDataLoading) {
       return null;
@@ -264,7 +264,7 @@ export default function SkillListView({ route, navigation }) {
   };
 
   const skillsListComponent = () => {
-    const disableMoreLoad = !categorySkills || !categorySkills.length < 10;
+    const disableMoreLoad = !categorySkills || categorySkills.length < 6;
     return (
       <View style={{ flex: 1 }}>
         {!!categorySkills && !!categorySkills.length && (

@@ -26,6 +26,7 @@ import IconMaterialIcons from 'react-native-vector-icons/FontAwesome';
 import {
   profileSelector,
   setRequestedSkills,
+  setUserRating,
 } from '../redux/slices/profileSlice';
 import PageSpinner from '../components/common/PageSpinner';
 import firestore from '@react-native-firebase/firestore';
@@ -38,18 +39,29 @@ export default function SkillDetail({ route, navigation }) {
   const { skill, origin } = route.params;
   const { homeData } = useSelector(homeSelector);
   const { userInfo } = useSelector(loginSelector);
-  const { requestedSkills } = useSelector(profileSelector);
+  const { requestedSkills, userRatings } = useSelector(profileSelector);
   const [visibleSnackbar, setVisibleSnackbar] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [requestedObj, setRequestedObj] = React.useState(null);
+  const [userRating, setCurrentRating] = useState(0)
+  const [ratingLoading, setRatingLoading] = useState(true)
+
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const currentSkillRating = userRatings.filter(ele => ele.courseid == skill._id)
+    const rating = currentSkillRating[0]?.rating
+
+    setCurrentRating(rating || 0)
+  }, [userRatings])
 
   useEffect(() => {
     if (userInfo._id
       // && (!requestedSkills || !requestedSkills.length)
     ) {
       getRequetedCourses(userInfo._id);
+      getUserRating(userInfo._id);
     }
     // else if (userInfo._id) {
     //   let reqObj = requestedSkills.filter(
@@ -90,6 +102,36 @@ export default function SkillDetail({ route, navigation }) {
       .catch(error => {
         console.error(error);
         setLoading(false);
+      });
+  };
+
+  const getUserRating = uid => {
+    setRatingLoading(true)
+    fetch('https://teachmeproject.herokuapp.com/getUserRatingById', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uid: uid,
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log('ratings', JSON.stringify(responseJson));
+        if (responseJson && responseJson.length) {
+          dispatch(setUserRating(responseJson));
+        }
+        else {
+          dispatch(setUserRating([]));
+        }
+
+        setRatingLoading(false)
+      })
+      .catch(error => {
+        console.log(error);
+        setRatingLoading(false)
       });
   };
 
@@ -180,6 +222,32 @@ export default function SkillDetail({ route, navigation }) {
     );
   };
 
+  const setRating = (rating) => {
+    let url = 'https://teachmeproject.herokuapp.com/addUserRating'
+    if (userRating) {
+      url = 'https://teachmeproject.herokuapp.com/updateUserRating'
+    }
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uid: userInfo._id,
+        courseid: skill._id,
+        rating: rating
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(JSON.stringify(responseJson));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   const imageComponent = () => {
     return (
       <View>
@@ -231,6 +299,12 @@ export default function SkillDetail({ route, navigation }) {
             }>
             View profile
           </Button>
+          {!!requestedObj && requestedObj.request_status == 'ACCEPTED' && <View style={{ flexDirection: 'row' }}>
+            <Text>Rate this skill - </Text>
+            {!ratingLoading && <Rating type='star' showRating={false} ratingTextColor="black" imageSize={20} startingValue={userRating} style={{ height: 30 }} onFinishRating={(rating) => setRating(rating)} />}
+            {!!ratingLoading && <Text>Please wait</Text>}
+          </View>
+          }
         </View>
         {/* <MaterialCommunityIcons
           style={{ marginLeft: '88%', position: 'absolute', padding: 10 }}
