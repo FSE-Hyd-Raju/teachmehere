@@ -45,6 +45,7 @@ export default function SkillDetail({ route, navigation }) {
   const [requestedObj, setRequestedObj] = React.useState(null);
   const [userRating, setCurrentRating] = useState(0)
   const [ratingLoading, setRatingLoading] = useState(true)
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
 
   const dispatch = useDispatch();
@@ -248,7 +249,33 @@ export default function SkillDetail({ route, navigation }) {
       });
   }
 
+  const deleteSkill = () => {
+    setDeleteLoading(true)
+    fetch('https://teachmeproject.herokuapp.com/updateCourseDetails', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        _id: skill._id,
+        status: 'DELETE'
+      }),
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log(JSON.stringify(responseJson));
+        setDeleteLoading(false)
+        navigation.navigate('Profile')
+      })
+      .catch(error => {
+        setDeleteLoading(false)
+        console.log(error);
+      });
+  }
+
   const imageComponent = () => {
+    const showRating = userInfo._id && userInfo._id !== skill.uid && !!requestedObj && requestedObj.request_status == 'ACCEPTED'
     return (
       <View>
         <View style={{ alignItems: 'center' }}>
@@ -290,7 +317,7 @@ export default function SkillDetail({ route, navigation }) {
             />
             <Text style={styles.usersRated}>({skill.usersrated})</Text>
           </View>
-          <Button
+          {userInfo._id != skill.uid && <Button
             mode="text"
             color={'#0052cc'}
             labelStyle={{ fontSize: 14, textTransform: 'capitalize' }}
@@ -299,7 +326,9 @@ export default function SkillDetail({ route, navigation }) {
             }>
             View profile
           </Button>
-          {!!requestedObj && requestedObj.request_status == 'ACCEPTED' && <View style={{ flexDirection: 'row' }}>
+          }
+
+          {showRating && <View style={{ flexDirection: 'row' }}>
             <Text>Rate this skill - </Text>
             {!ratingLoading && <Rating type='star' showRating={false} ratingTextColor="black" imageSize={20} startingValue={userRating} style={{ height: 30 }} onFinishRating={(rating) => setRating(rating)} />}
             {!!ratingLoading && <Text>Please wait</Text>}
@@ -360,14 +389,25 @@ export default function SkillDetail({ route, navigation }) {
 
   const bodyComponent = () => {
     const showEdit = userInfo._id && userInfo._id == skill.uid && origin == 'posted'
+    const showDelete = userInfo._id && userInfo._id === skill.uid && origin == 'posted'
+
     return (
       <View>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: showEdit ? 20 : 0 }}>
-          <Text style={[styles.skillName, showEdit && { width: '90%' }]}>{skill.coursename}</Text>
+          <Text style={[styles.skillName, showEdit && { width: '80%' }]}>{skill.coursename}</Text>
 
           {showEdit && <TouchableOpacity onPress={() => { navigation.navigate('PostPage', { editingSkill: skill }) }} style={{ alignItems: 'flex-end', padding: 15, paddingRight: 10 }}>
             <IconMaterialIcons
               name={'edit'}
+              color="black"
+              size={20}
+              style={{ height: 20 }}
+            />
+          </TouchableOpacity>
+          }
+          {showDelete && <TouchableOpacity onPress={deleteSkill} style={{ alignItems: 'flex-end', padding: 15, paddingRight: 10 }}>
+            <IconMaterialIcons
+              name={'trash-o'}
               color="black"
               size={20}
               style={{ height: 20 }}
@@ -719,7 +759,7 @@ export default function SkillDetail({ route, navigation }) {
           {contentComponent()}
           {descriptionComponent()}
         </View>
-        {/* <PageSpinner visible={loading} /> */}
+        <PageSpinner visible={deleteLoading} />
       </ScrollView>
       {snackComponent()}
     </View>
